@@ -20,8 +20,10 @@ public class Rejestracja extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String haslo = request.getParameter("password");
+		String hasloPtwierdzenie = request.getParameter("conf_password");
 		String login = request.getParameter("name");
-		String numerKartyKredytowej = request.getParameter("country");
+		String numerTelefonu = request.getParameter("telephone");
+		int nrTel = Integer.parseInt(login);
 		String errorMsg = null;
 		if (email == null || email.equals("")) {
 			errorMsg = "Email ID can't be null or empty.";
@@ -29,10 +31,13 @@ public class Rejestracja extends HttpServlet {
 		if (haslo == null || haslo.equals("")) {
 			errorMsg = "Password can't be null or empty.";
 		}
+		if (hasloPtwierdzenie == null || !hasloPtwierdzenie.equals(haslo)) {
+			errorMsg = "Password can't be null or empty, or not the same.";
+		}
 		if (login == null || login.equals("")) {
 			errorMsg = "Name can't be null or empty.";
 		}
-		if (numerKartyKredytowej == null || numerKartyKredytowej.equals("")) {
+		if (numerTelefonu == null || numerTelefonu.equals("") || nrTel ==0) {
 			errorMsg = "Country can't be null or empty.";
 		}
 
@@ -48,10 +53,10 @@ public class Rejestracja extends HttpServlet {
 					"DBConnection");
 			PreparedStatement ps = null;
 			try {
-				ps = con.prepareStatement("insert into Users(name,email,country, password) values (?,?,?,?)");
+				ps = con.prepareStatement("insert into Users(name,email,telephone, password) values (?,?,?,?)");
 				ps.setString(1, login);
 				ps.setString(2, email);
-				ps.setString(3, numerKartyKredytowej);
+				ps.setString(3, numerTelefonu);
 				ps.setString(4, haslo);
 
 				ps.execute();
