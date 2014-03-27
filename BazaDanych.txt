@@ -1,0 +1,24 @@
+/** dane do stworzenia bazy danych wymaganej przy 4. liście z Krptografii i bezpieczeństwa*/
+
+
+create database stronaInternetowa;
+use stronaInternetowa;
+
+
+
+CREATE USER sqluser IDENTIFIED BY 'sqluserpw'; 
+
+grant usage on *.* to sqluser@localhost identified by 'sqluserpw'; 
+grant all privileges on stronaInternetowa.* to sqluser@localhost; 
+
+
+
+CREATE TABLE UZYTKOWNICY (id INT NOT NULL AUTO_INCREMENT, 
+    LOGIN VARCHAR(30) NOT NULL,
+    EMAIL VARCHAR(30) NOT NULl, 
+    HASLO VARCHAR(100) NOT NULL, 
+    DATUM DATE NOT NULL, 
+    SUMMARY INT(16) NOT NULL,
+    PRIMARY KEY (ID));
+
+INSERT INTO UZYTKOWNICY values (default, 'lars', 'myemail@gmail.com','alias hasla', '2009-09-14 10:33:11', 1234567890123456);
