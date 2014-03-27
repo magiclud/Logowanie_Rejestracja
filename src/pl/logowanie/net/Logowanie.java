@@ -3,12 +3,17 @@ package pl.logowanie.net;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 
@@ -41,15 +46,27 @@ public class Logowanie extends HttpServlet {
 		String msg = " ";
 
 		if (un.endsWith(username) && pw.equals(password)) {
+			request.getSession().setAttribute("userZalogowany", un);
 			msg = "Hello " + un + "! Your login is sucessful";
 		} else {
+			String iloscProbk = (String) request.getSession().getAttribute("iloscProb");
+			if (iloscProbk != null && !iloscProbk.isEmpty()){
+				int ilosc  = Integer.valueOf(iloscProbk);
+				ilosc++;
+				request.getSession().setAttribute("iloscProb", ilosc);
+			}
+			else{
+				request.getSession().setAttribute("iloscProb",1);
+			}
 			msg = "Hello " + un + "! Your login is failed";
 		}
+		
 
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		out.println("<font size='6' color= red>" + msg + "</font>");
-
+		request.setAttribute("wynikLogowania", msg);
+		request.setAttribute("aga", "aga to los");
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+		dispatcher.forward(request, response);
 	}
 
 }

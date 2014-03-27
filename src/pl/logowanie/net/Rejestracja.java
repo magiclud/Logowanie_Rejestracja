@@ -21,9 +21,8 @@ public class Rejestracja extends HttpServlet {
 		String email = request.getParameter("email");
 		String haslo = request.getParameter("password");
 		String hasloPtwierdzenie = request.getParameter("conf_password");
-		String login = request.getParameter("name");
+		String login = request.getParameter("username");
 		String kartaKredytowa = request.getParameter("creditCard");
-		int nrTel = Integer.parseInt(login);
 		String errorMsg = null;
 		if (email == null || email.equals("")) {
 			errorMsg = "Email ID can't be null or empty.";
@@ -37,13 +36,13 @@ public class Rejestracja extends HttpServlet {
 		if (login == null || login.equals("")) {
 			errorMsg = "Name can't be null or empty.";
 		}
-		if (kartaKredytowa == null || kartaKredytowa.equals("") || nrTel == 0) {
+		if (kartaKredytowa == null || kartaKredytowa.equals("")) {
 			errorMsg = "Country can't be null or empty.";
 		}
 
 		if (errorMsg != null) {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(
-					"/register.html");
+					"/rejestracja.jsp");
 			PrintWriter out = response.getWriter();
 			out.println("<font color=red>" + errorMsg + "</font>");
 			rd.include(request, response);
@@ -51,15 +50,20 @@ public class Rejestracja extends HttpServlet {
 
 			Connection con = (Connection) getServletContext().getAttribute(
 					"DBConnection");
-			PreparedStatement ps = null;
+			PreparedStatement preparedStatement = null;
 			try {
-				ps = con.prepareStatement("insert into Users(name,email,creditCard, password) values (?,?,?,?)");
-				ps.setString(1, login);
-				ps.setString(2, email);
-				ps.setString(3, kartaKredytowa);
-				ps.setString(4, haslo);
-
-				ps.execute();
+				
+				
+			      // preparedStatements can use variables and are more efficient
+				preparedStatement = con
+			          .prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
+			      // "myuser, webpage, datum, summary, COMMENTS from FEEDBACK.COMMENTS");
+			      // parameters start with 1
+			      preparedStatement.setString(1, login);
+			      preparedStatement.setString(2, email);
+			      preparedStatement.setString(3, haslo);
+			      preparedStatement.setString(4, kartaKredytowa);
+			      preparedStatement.executeUpdate();
 
 				// logger.info("User registered with email="+email);
 
@@ -75,7 +79,8 @@ public class Rejestracja extends HttpServlet {
 				throw new ServletException("DB Connection problem.");
 			} finally {
 				try {
-					ps.close();
+					preparedStatement.close();
+					con.close();
 				} catch (SQLException e) {
 					// logger.error("SQLException in closing PreparedStatement");
 				}

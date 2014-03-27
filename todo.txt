@@ -1,24 +1,28 @@
-- zrobić coś co bedzie sprawdzało, że użytkownik wpisał e-mail, numer karty kredytowej, 
-- login ma się nie powtarzać z innymi loginami
-- hasło ma być spawdzane pod względem modyfikacji z loginem ieni
--hashowanie hasła i na hashach dokonywać sprawdzenia 
+1 zrobić coś co bedzie sprawdzało, że użytkownik wpisał e-mail, numer karty kredytowej, 
+1 login ma się nie powtarzać z innymi loginami
+1 hasło ma być spawdzane pod względem modyfikacji z loginem ieni
 
-- w razie k- krotnego blędnego logowania w czasie t minut - uniemożliwić logowanie przez  T minut 
-- informacja o tym w panelu użytkownika i administratora 
+2 hashowanie hasła i na hashach dokonywać sprawdzenia 
 
-- odzyskiwanie hasla - np. e-mailem
+4 w razie k- krotnego blędnego logowania w czasie t minut - uniemożliwić logowanie przez  T minut 
+4 informacja o tym w panelu użytkownika i administratora 
 
-- umożkliwienie wyświetlania danych użytkowanika
-- zmiana danych 
-- informacje o próbach logowania do konta
+4 odzyskiwanie hasla - np. e-mailem
 
-- zaszyfrowanie utworu muzycznego
-- mozliwosc pobrania pliku przez użytkowanika
+3 umożkliwienie wyświetlania danych użytkowanika
+3 zmiana danych 
+3 informacje o próbach logowania do konta
 
--szyfrowanie numerów kart kredytowych
-- wrzucanie danych do bazy 
+2 zaszyfrowanie utworu muzycznego
+2 mozliwosc pobrania pliku przez użytkowanika
 
-- aliassy: login+_haslo, login+_nrkarty
-- na bazie dodać unique dla loginu
+2 szyfrowanie numerów kart kredytowych
+1 wrzucanie danych do bazy 
+
+1 aliassy: login+_haslo, login+_nrkarty
+1 na bazie dodać unique dla loginu
+
+root -> 123123123 -> do bazy
+
 
 

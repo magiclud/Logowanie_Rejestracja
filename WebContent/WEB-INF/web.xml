@@ -11,7 +11,7 @@
   </welcome-file-list>
   <context-param>
     <param-name>dbURL</param-name>
-    <param-value>jdbc:mysql://localhost:3306/UserDB</param-value>
+    <param-value>jdbc:mysql://localhost/stronainternetowa?user=root</param-value>
   </context-param>
   <servlet>
     <servlet-name>Logowanie</servlet-name>
@@ -29,4 +29,7 @@
     <servlet-name>Rejestracja</servlet-name>
     <url-pattern>/rejestracja_sprawdz</url-pattern>
   </servlet-mapping>
+  <listener>
+    <listener-class>pl.logowanie.net.MyServletContextListener</listener-class>
+</listener>
 </web-app>

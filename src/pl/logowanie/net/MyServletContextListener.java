@@ -7,7 +7,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-//servletContextListener umozliwa m inasluchwianie zdarzeñ kontekstu
+//servletContextListener umozliwa m inasluchwianie zdarzeÅ„ kontekstu
 public class MyServletContextListener implements ServletContextListener{
 
 //	@Override
@@ -28,6 +28,7 @@ public class MyServletContextListener implements ServletContextListener{
         String dbURL = ctx.getInitParameter("dbURL");
          
         try {
+        	Class.forName("com.mysql.jdbc.Driver");
             DBConnectionManager connectionManager = new DBConnectionManager(dbURL);
             ctx.setAttribute("DBConnection", connectionManager.getConnection());
             System.out.println("DB Connection initialized successfully.");

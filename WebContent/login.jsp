@@ -12,17 +12,12 @@
 		</div>
 		<%@include file="menu.jsp" %>
 
-		<div id="content"
-			style="background-color: #EEEEEE; height: 200px; width: 400px; float: left;">
-			${wynikLogowania} ${aga}
-			<br />
-			ilosc prob: ${sessionScope.iloscProb}
-			lalala\
-			
-			<c:if test="${!empty sessionScope.userZalogowany}">
-				<a href="link_do_servleta_ktory_zwroci_plik">Link do pliku</a> <br>
-				http://www.mkyong.com/java/how-to-download-file-from-website-java-jsp/
-			</c:if>	
+		<div id="content">
+			<form name="loginform" action="login_sprawdz" method="post">
+				Enter User Name: <input type="text" name="username"><br />
+				Enter Password: <input name="password" type="password"><br />
+				<input type="submit" >
+			</form>	
 			
 		</div>
 
