@@ -18,3 +18,7 @@
 -szyfrowanie numerów kart kredytowych
 - wrzucanie danych do bazy 
 
+- aliassy: login+_haslo, login+_nrkarty
+- na bazie dodać unique dla loginu
+
+

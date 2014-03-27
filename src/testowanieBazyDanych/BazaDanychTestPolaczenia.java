@@ -29,11 +29,8 @@ public class BazaDanychTestPolaczenia {
 	  private PreparedStatement preparedStatement = null;
 	  private ResultSet resultSet = null;
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
-	}
 
+	  @Test
 	public void wczytajBazeDanych() throws Exception{
 		 try {
 		      // this will load the MySQL driver, each DB has its own driver
@@ -41,14 +38,14 @@ public class BazaDanychTestPolaczenia {
 		      // setup the connection with the DB.
 		      connect = DriverManager
 		          .getConnection("jdbc:mysql://localhost/stronainternetowa?"
-		              + "user=sqluser&password=sqluserpw");
+		              + "user=root");
 
 		      // statements allow to issue SQL queries to the database
 		      statement = connect.createStatement();
 		      // resultSet gets the result of the SQL query
 		      resultSet = statement
 		          .executeQuery("select * from stronainternetowa.UZYTKOWNICY");
-		      writeResultSet(resultSet);
+//		      writeResultSet(resultSet);
 
 		      // preparedStatements can use variables and are more efficient
 		      preparedStatement = connect
@@ -57,31 +54,25 @@ public class BazaDanychTestPolaczenia {
 		      // parameters start with 1
 		      preparedStatement.setString(1, "Test");
 		      preparedStatement.setString(2, "TestEmail");
-		      preparedStatement.setString(3, "TestWebpage");
-		      preparedStatement.setDate(4, new java.sql.Date(2009, 12, 11));
-		      preparedStatement.setString(5, "TestSummary");
-		      preparedStatement.setString(6, "TestComment");
+		      preparedStatement.setString(3, "TestHaslo");
+		      preparedStatement.setString(4, "1234567890123456");
 		      preparedStatement.executeUpdate();
 
 		      preparedStatement = connect
-		          .prepareStatement("SELECT myuser, webpage, datum, summary, COMMENTS from stronainternetowa.UZYTKOWNICY");
+		          .prepareStatement("SELECT login, email,haslo, kartak_redytowa from stronainternetowa.UZYTKOWNICY");
 		      resultSet = preparedStatement.executeQuery();
-		      writeResultSet(resultSet);
+//		      writeResultSet(resultSet);
 
 		      // remove again the insert comment
 		      preparedStatement = connect
-		      .prepareStatement("delete from FEEDBACK.COMMENTS where myuser= ? ; ");
+		      .prepareStatement("delete from stronainternetowa.UZYTKOWNICY where login= ? ; ");
 		      preparedStatement.setString(1, "Test");
-		      preparedStatement.executeUpdate();
-		      
-		      resultSet = statement
-		      .executeQuery("select * from FEEDBACK.COMMENTS");
-		      writeMetaData(resultSet);
+		      preparedStatement.executeUpdate();		   
 		      
 		    } catch (Exception e) {
 		      throw e;
 		    } finally {
-		      close();
+		      connect.close();
 		    }
 
 		  }
@@ -102,33 +93,18 @@ public class BazaDanychTestPolaczenia {
 		      // also possible to get the columns via the column number
 		      // which starts at 1
 		      // e.g., resultSet.getSTring(2);
-		      String user = resultSet.getString("myuser");
-		      String website = resultSet.getString("webpage");
-		      String summary = resultSet.getString("summary");
+		      String user = resultSet.getString("login");
+		      String e_mail = resultSet.getString("email");
+		      String hasslo = resultSet.getString("haslo");
 		      Date date = resultSet.getDate("datum");
-		      String comment = resultSet.getString("comments");
+		      String nrKarty = resultSet.getString("summary");
 		      System.out.println("User: " + user);
-		      System.out.println("Website: " + website);
-		      System.out.println("Summary: " + summary);
+		      System.out.println("Website: " + e_mail);
+		      System.out.println("Summary: " + hasslo);
 		      System.out.println("Date: " + date);
-		      System.out.println("Comment: " + comment);
+		      System.out.println("Comment: " + nrKarty);
 		    }
 		  }
 
-		  // you need to close all three to make sure
-		  private void close() {
-//		    close((Closeable) resultSet);
-//		    close((Closeable) statement);
-//		    close((Closeable) connect);
-		  }
-		  private void close(Closeable c) {
-		    try {
-		      if (c != null) {
-		        c.close();
-		      }
-		    } catch (Exception e) {
-		    // don't throw now as it might leave following closables in undefined state
-		    }
-		  }
 
 }

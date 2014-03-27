@@ -26,11 +26,9 @@ public class MyServletContextListener implements ServletContextListener{
          
         //initialize DB Connection
         String dbURL = ctx.getInitParameter("dbURL");
-        String user = ctx.getInitParameter("dbUser");
-        String pwd = ctx.getInitParameter("dbPassword");
          
         try {
-            DBConnectionManager connectionManager = new DBConnectionManager(dbURL, user, pwd);
+            DBConnectionManager connectionManager = new DBConnectionManager(dbURL);
             ctx.setAttribute("DBConnection", connectionManager.getConnection());
             System.out.println("DB Connection initialized successfully.");
         } catch (ClassNotFoundException e) {

@@ -8,9 +8,9 @@ public class DBConnectionManager {
 
 	 private Connection connection;
      
-	    public DBConnectionManager(String dbURL, String user, String pwd) throws ClassNotFoundException, SQLException{
+	    public DBConnectionManager(String dbURL) throws ClassNotFoundException, SQLException{
 	        Class.forName("com.mysql.jdbc.Driver");
-	        this.connection = DriverManager.getConnection(dbURL, user, pwd);
+	        this.connection = DriverManager.getConnection(dbURL);
 	    }
 	     
 	    public Connection getConnection(){
