@@ -1,0 +1,20 @@
+- zrobić coś co bedzie sprawdzało, że użytkownik wpisał e-mail, numer karty kredytowej, 
+- login ma się nie powtarzać z innymi loginami
+- hasło ma być spawdzane pod względem modyfikacji z loginem ieni
+-hashowanie hasła i na hashach dokonywać sprawdzenia 
+
+- w razie k- krotnego blędnego logowania w czasie t minut - uniemożliwić logowanie przez  T minut 
+- informacja o tym w panelu użytkownika i administratora 
+
+- odzyskiwanie hasla - np. e-mailem
+
+- umożkliwienie wyświetlania danych użytkowanika
+- zmiana danych 
+- informacje o próbach logowania do konta
+
+- zaszyfrowanie utworu muzycznego
+- mozliwosc pobrania pliku przez użytkowanika
+
+-szyfrowanie numerów kart kredytowych
+- wrzucanie danych do bazy 
+

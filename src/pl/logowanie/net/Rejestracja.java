@@ -22,7 +22,7 @@ public class Rejestracja extends HttpServlet {
 		String haslo = request.getParameter("password");
 		String hasloPtwierdzenie = request.getParameter("conf_password");
 		String login = request.getParameter("name");
-		String numerTelefonu = request.getParameter("telephone");
+		String kartaKredytowa = request.getParameter("creditCard");
 		int nrTel = Integer.parseInt(login);
 		String errorMsg = null;
 		if (email == null || email.equals("")) {
@@ -37,7 +37,7 @@ public class Rejestracja extends HttpServlet {
 		if (login == null || login.equals("")) {
 			errorMsg = "Name can't be null or empty.";
 		}
-		if (numerTelefonu == null || numerTelefonu.equals("") || nrTel ==0) {
+		if (kartaKredytowa == null || kartaKredytowa.equals("") || nrTel == 0) {
 			errorMsg = "Country can't be null or empty.";
 		}
 
@@ -53,10 +53,10 @@ public class Rejestracja extends HttpServlet {
 					"DBConnection");
 			PreparedStatement ps = null;
 			try {
-				ps = con.prepareStatement("insert into Users(name,email,telephone, password) values (?,?,?,?)");
+				ps = con.prepareStatement("insert into Users(name,email,creditCard, password) values (?,?,?,?)");
 				ps.setString(1, login);
 				ps.setString(2, email);
-				ps.setString(3, numerTelefonu);
+				ps.setString(3, kartaKredytowa);
 				ps.setString(4, haslo);
 
 				ps.execute();
