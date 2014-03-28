@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,24 +45,18 @@ public class Rejestracja extends HttpServlet {
 		if (kartaKredytowa == null || kartaKredytowa.equals("")) {
 			msg = "Country can't be null or empty.";
 		}
-		if (msg != null) {
-			request.setAttribute(
-					"Registration unsuccessful, please register one more time.",
-					"registrationm");
-			rd = request.getRequestDispatcher("login.jsp");
-		} else {
-			request.getSession().setAttribute("userZarejestrowany", login);
-
-			msg = "Hello " + login + "! Zostales poprawnie zarejestrowany";
-			// RequestDispatcher rd = getServletContext().getRequestDispatcher(
-			// "/rejestracja.jsp");
-			// PrintWriter out = response.getWriter();
-			// out.println("<font color=red>" + msg + "</font>");
-			// rd.include(request, response);
+		if (msg == null) {
 
 			con = (Connection) getServletContext().getAttribute("DBConnection");
-
 			try {
+				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= "+login;
+				Statement statement = con.createStatement();
+				ResultSet result = statement.executeQuery(zapytanie);
+				if ((result.getString(1)).equals(login)) {
+					msg = "The user " + login
+							+ " - is in date base, use another login name";
+				}
+
 				// preparedStatements can use variables and are more efficient
 				preparedStatement = con
 						.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
@@ -72,19 +68,26 @@ public class Rejestracja extends HttpServlet {
 				preparedStatement.setString(4, kartaKredytowa);
 				preparedStatement.executeUpdate();
 
+				request.getSession().setAttribute("userZarejestrowany", login);
+
+				msg = "Hello " + login + "! Zostales poprawnie zarejestrowany";
+
 				request.setAttribute(
 						"Registration successful, please login below.",
 						"registrationm");
 				rd = request.getRequestDispatcher("index.jsp");
-				
 
 			} catch (SQLException e) {
 				e.printStackTrace();
 				// logger.error("Database connection problem");
 				throw new ServletException("DB Connection problem.");
 			}
+		} else {
+			request.setAttribute(
+					"Registration unsuccessful, please register one more time.",
+					"registrationm");
+			rd = request.getRequestDispatcher("login.jsp");
 		}
-
 		request.setAttribute("wynikRejestracji", msg);
 
 		rd.forward(request, response);
