@@ -20,9 +20,16 @@
 1 wrzucanie danych do bazy 
 
 1 aliassy: login+_haslo, login+_nrkarty
-1 na bazie dodać unique dla loginu
+
+2.udosudostępnienie bazy innym użytkownikom 
 
 root -> 123123123 -> do bazy
 
 
+
+
+
+zrobione: 
+
+1 na bazie dodać unique dla loginu
 

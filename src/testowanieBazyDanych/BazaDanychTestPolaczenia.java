@@ -33,35 +33,35 @@ public class BazaDanychTestPolaczenia {
 	  @Test
 	public void wczytajBazeDanych() throws Exception{
 		 try {
-		      // this will load the MySQL driver, each DB has its own driver
+		      // zaladowanie sterownika do bazy danych 
 		      Class.forName("com.mysql.jdbc.Driver");
-		      // setup the connection with the DB.
+		      // nawiazywanie polaczenia z baza danych , mozna jeszcze dodać haslo jesli potrzeba
 		      connect = DriverManager
 		          .getConnection("jdbc:mysql://localhost/stronainternetowa?"
 		              + "user=root");
 
-		      // statements allow to issue SQL queries to the database
+		      // stworzenie obiektu polecenia
 		      statement = connect.createStatement();
-		      // resultSet gets the result of the SQL query
+		      // wykonanie polecenia
 		      resultSet = statement
 		          .executeQuery("select * from stronainternetowa.UZYTKOWNICY");
-//		      writeResultSet(resultSet);
+		      writeResultSet(resultSet);
 
 		      // preparedStatements can use variables and are more efficient
 		      preparedStatement = connect
 		          .prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
-		      // "myuser, webpage, datum, summary, COMMENTS from FEEDBACK.COMMENTS");
+		      // "login, e-mail, haslo, katakredyt");
 		      // parameters start with 1
 		      preparedStatement.setString(1, "Test");
 		      preparedStatement.setString(2, "TestEmail");
 		      preparedStatement.setString(3, "TestHaslo");
-		      preparedStatement.setString(4, "1234567890123456");
+		      preparedStatement.setString(4, "TestCarta");
 		      preparedStatement.executeUpdate();
 
 		      preparedStatement = connect
 		          .prepareStatement("SELECT login, email,haslo, kartak_redytowa from stronainternetowa.UZYTKOWNICY");
 		      resultSet = preparedStatement.executeQuery();
-//		      writeResultSet(resultSet);
+		      writeResultSet(resultSet);
 
 		      // remove again the insert comment
 		      preparedStatement = connect
@@ -87,21 +87,15 @@ public class BazaDanychTestPolaczenia {
 		  }
 
 		  private void writeResultSet(ResultSet resultSet) throws SQLException {
-		    // resultSet is initialised before the first data set
+		    // zapisanie i wyswietlanie wynikow
 		    while (resultSet.next()) {
-		      // it is possible to get the columns via name
-		      // also possible to get the columns via the column number
-		      // which starts at 1
-		      // e.g., resultSet.getSTring(2);
-		      String user = resultSet.getString("login");
+		      String uzytkownik = resultSet.getString("login");
 		      String e_mail = resultSet.getString("email");
 		      String hasslo = resultSet.getString("haslo");
-		      Date date = resultSet.getDate("datum");
-		      String nrKarty = resultSet.getString("summary");
-		      System.out.println("User: " + user);
+		      String nrKarty = resultSet.getString("kartak_redytowa");
+		      System.out.println("User: " + uzytkownik);
 		      System.out.println("Website: " + e_mail);
 		      System.out.println("Summary: " + hasslo);
-		      System.out.println("Date: " + date);
 		      System.out.println("Comment: " + nrKarty);
 		    }
 		  }

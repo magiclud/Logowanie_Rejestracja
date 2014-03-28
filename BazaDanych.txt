@@ -5,20 +5,19 @@ create database stronaInternetowa;
 use stronaInternetowa;
 
 
-
+/**** to nie działa - nie używać, automatycznie user to root, 
+hasła nie ma  -  zrobic innym razem możliwosć dodawania innych użytkowników***/
 CREATE USER sqluser IDENTIFIED BY 'sqluserpw'; 
-
 grant usage on *.* to sqluser@localhost identified by 'sqluserpw'; 
 grant all privileges on stronaInternetowa.* to sqluser@localhost; 
-
+/*********************/
 
 
 CREATE TABLE UZYTKOWNICY (id INT NOT NULL AUTO_INCREMENT, 
-    LOGIN VARCHAR(30) NOT NULL,
+    LOGIN VARCHAR(30) NOT NULL UNIQUE,
     EMAIL VARCHAR(30) NOT NULl, 
     HASLO VARCHAR(100) NOT NULL, 
-    DATUM DATE NOT NULL, 
-    KARTAK	REDYTOWA VARCHAR(16) NOT NULL,
+    KARTAK_REDYTOWA VARCHAR(16) NOT NULL UNIQUE,
     PRIMARY KEY (ID));
 
-INSERT INTO UZYTKOWNICY values (default, 'lars', 'myemail@gmail.com','alias hasla', '2009-09-14 10:33:11', 1234567890123456);
+INSERT INTO UZYTKOWNICY values (default, 'lars', 'myemail@gmail.com','alias hasla', '1234567890123456');

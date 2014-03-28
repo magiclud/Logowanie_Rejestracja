@@ -14,7 +14,7 @@
 
 		<div id="content"
 			style="background-color: #EEEEEE; height: 200px; width: 400px; float: left;">
-			${wynikLogowania} ${aga}
+			${wynikLogowania} ${aga} ${wynikRejestracji} 
 			<br />
 			ilosc prob: ${sessionScope.iloscProb}
 			lalala\

@@ -25,7 +25,7 @@ public class Logowanie extends HttpServlet {
 
 	
 	//snippet
-	private final static Logger LOGGER = Logger.getLogger(Logowanie.class .getName()); 
+	//private final static Logger LOGGER = Logger.getLogger(Logowanie.class .getName()); 
 	
 	public Logowanie() {
 		super();

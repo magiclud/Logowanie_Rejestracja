@@ -23,25 +23,37 @@ public class Walidacja extends HttpServlet {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static boolean checkUser(String email, String pass) {
-		boolean st = false;
-		try {
-
-			// loading driver
-			Class.forName("com.mysql.jbdc.Driver");
-
-			// creating connection with the database
-			Connection con = DriverManager.getConnection(
-					"jdbc:mysql:/localhost:8000/test", "root", "abhijit");
-			PreparedStatement ps = con
-					.prepareStatement("select * from register ehere email =? and pass=?");
-			ps.setString(1, email);
-			ps.setString(2, pass);
-			ResultSet rs = ps.executeQuery();
-			st = rs.next();
-		} catch (Exception e) {
-			e.printStackTrace();
+//	public static boolean checkUser(String email, String pass) {
+//		boolean st = false;
+//		try {
+//
+//			// loading driver
+//			Class.forName("com.mysql.jbdc.Driver");
+//
+//			// creating connection with the database
+//			Connection connect = DriverManager
+//			          .getConnection("jdbc:mysql://localhost/stronainternetowa?"
+//				              + "user=root");
+//			PreparedStatement ps = connect
+//					.prepareStatement("select * from register where email =? and pass=?");
+//			ps.setString(1, email);
+//			ps.setString(2, pass);
+//			ResultSet rs = ps.executeQuery();
+//			st = rs.next();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return st;
+//	}
+	
+	public static boolean sprawdzEmail(String email)
+	{
+		String testEmail = "^([A-Za-z0-9]w*)@([A-Za-z0-9]w*(.[A-Za-z]w*)+)$";
+		if (!email.matches(testEmail))
+		{
+			//alert("Proszę wpisać poprawny adres e-mail!");
+			return false;
 		}
-		return st;
+			return true;
 	}
 }

@@ -16,6 +16,10 @@ public class Rejestracja extends HttpServlet {
 
 	// static Logowanie logger = Logowanie.getLogger( Rejestracja.class);
 
+	PreparedStatement preparedStatement = null;
+	Connection con;
+	RequestDispatcher rd;
+
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
@@ -23,70 +27,76 @@ public class Rejestracja extends HttpServlet {
 		String hasloPtwierdzenie = request.getParameter("conf_password");
 		String login = request.getParameter("username");
 		String kartaKredytowa = request.getParameter("creditCard");
-		String errorMsg = null;
+		String msg = null;
 		if (email == null || email.equals("")) {
-			errorMsg = "Email ID can't be null or empty.";
+			msg = "Email ID can't be null or empty.";
 		}
 		if (haslo == null || haslo.equals("")) {
-			errorMsg = "Password can't be null or empty.";
+			msg = "Password can't be null or empty.";
 		}
 		if (hasloPtwierdzenie == null || !hasloPtwierdzenie.equals(haslo)) {
-			errorMsg = "Password can't be null or empty, or not the same.";
+			msg = "Password can't be null or empty, or not the same.";
 		}
 		if (login == null || login.equals("")) {
-			errorMsg = "Name can't be null or empty.";
+			msg = "Name can't be null or empty.";
 		}
 		if (kartaKredytowa == null || kartaKredytowa.equals("")) {
-			errorMsg = "Country can't be null or empty.";
+			msg = "Country can't be null or empty.";
 		}
-
-		if (errorMsg != null) {
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(
-					"/rejestracja.jsp");
-			PrintWriter out = response.getWriter();
-			out.println("<font color=red>" + errorMsg + "</font>");
-			rd.include(request, response);
+		if (msg != null) {
+			request.setAttribute(
+					"Registration unsuccessful, please register one more time.",
+					"registrationm");
+			rd = request.getRequestDispatcher("login.jsp");
 		} else {
+			request.getSession().setAttribute("userZarejestrowany", login);
 
-			Connection con = (Connection) getServletContext().getAttribute(
-					"DBConnection");
-			PreparedStatement preparedStatement = null;
+			msg = "Hello " + login + "! Zostales poprawnie zarejestrowany";
+			// RequestDispatcher rd = getServletContext().getRequestDispatcher(
+			// "/rejestracja.jsp");
+			// PrintWriter out = response.getWriter();
+			// out.println("<font color=red>" + msg + "</font>");
+			// rd.include(request, response);
+
+			con = (Connection) getServletContext().getAttribute("DBConnection");
+
 			try {
-				
-				
-			      // preparedStatements can use variables and are more efficient
+				// preparedStatements can use variables and are more efficient
 				preparedStatement = con
-			          .prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
-			      // "myuser, webpage, datum, summary, COMMENTS from FEEDBACK.COMMENTS");
-			      // parameters start with 1
-			      preparedStatement.setString(1, login);
-			      preparedStatement.setString(2, email);
-			      preparedStatement.setString(3, haslo);
-			      preparedStatement.setString(4, kartaKredytowa);
-			      preparedStatement.executeUpdate();
+						.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
+				// "myuser, webpage, datum, summary, COMMENTS from FEEDBACK.COMMENTS");
+				// parameters start with 1
+				preparedStatement.setString(1, login);
+				preparedStatement.setString(2, email);
+				preparedStatement.setString(3, haslo);
+				preparedStatement.setString(4, kartaKredytowa);
+				preparedStatement.executeUpdate();
 
-				// logger.info("User registered with email="+email);
+				request.setAttribute(
+						"Registration successful, please login below.",
+						"registrationm");
+				rd = request.getRequestDispatcher("index.jsp");
+				
 
-				// forward to login page to login
-				RequestDispatcher rd = getServletContext()
-						.getRequestDispatcher("/login.html");
-				PrintWriter out = response.getWriter();
-				out.println("<font color=green>Registration successful, please login below.</font>");
-				rd.include(request, response);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				// logger.error("Database connection problem");
 				throw new ServletException("DB Connection problem.");
-			} finally {
-				try {
-					preparedStatement.close();
-					con.close();
-				} catch (SQLException e) {
-					// logger.error("SQLException in closing PreparedStatement");
-				}
 			}
 		}
 
-	}
+		request.setAttribute("wynikRejestracji", msg);
 
+		rd.forward(request, response);
+
+		try {
+			preparedStatement.close();
+
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }
