@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Rejestracja extends HttpServlet {
 
-	// static Logowanie logger = Logowanie.getLogger( Rejestracja.class);
-
 	PreparedStatement preparedStatement = null;
 	Connection con;
 	RequestDispatcher rd;
+	String poprawnyEMail = "^(.[A-Za-z0-9\\-]*\\w)+@+([A-Za-z0-9\\-]*\\w)+(\\.[A-Za-z]*\\w)+$";
+	String poprawnyNrKartyKredytowej = "[0-9]{16}";
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -33,17 +33,23 @@ public class Rejestracja extends HttpServlet {
 		if (email == null || email.equals("")) {
 			msg = "Email ID can't be null or empty.";
 		}
+		if (!email.matches(poprawnyEMail)) {
+			msg = "Wrong e-mail adress.";
+		}
 		if (haslo == null || haslo.equals("")) {
 			msg = "Password can't be null or empty.";
 		}
 		if (hasloPtwierdzenie == null || !hasloPtwierdzenie.equals(haslo)) {
-			msg = "Password can't be null or empty, or not the same.";
+			msg = "Password can't be null or empty and have to be the same with confirm password.";
 		}
 		if (login == null || login.equals("")) {
 			msg = "Name can't be null or empty.";
 		}
 		if (kartaKredytowa == null || kartaKredytowa.equals("")) {
 			msg = "Country can't be null or empty.";
+		}
+		if (kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
+			msg = "Wrong numer credit card.";
 		}
 		if (msg == null) {
 
@@ -52,10 +58,10 @@ public class Rejestracja extends HttpServlet {
 				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= login";
 				Statement statement = con.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
-				if (result.next() && (result.getString(1)).equals(login)  ) {
+				if (result.next() && (result.getString(1)).equals(login)) {
 					msg = "The user " + login
 							+ " - is in date base, use another login name";
-					rd = request.getRequestDispatcher("login.jsp");
+
 				} else {
 
 					preparedStatement = con
@@ -76,7 +82,8 @@ public class Rejestracja extends HttpServlet {
 					request.setAttribute(
 							"Registration successful, please login below.",
 							"registrationm");
-					rd = request.getRequestDispatcher("index.jsp");
+					// rd = request.getRequestDispatcher("login.jsp");
+
 					preparedStatement.close();
 
 				}
@@ -90,10 +97,9 @@ public class Rejestracja extends HttpServlet {
 			request.setAttribute(
 					"Registration unsuccessful, please register one more time.",
 					"registrationm");
-			rd = request.getRequestDispatcher("login.jsp");
 		}
 		request.setAttribute("wynikRejestracji", msg);
-
+		rd = request.getRequestDispatcher("index.jsp");
 		rd.forward(request, response);
 
 	}
