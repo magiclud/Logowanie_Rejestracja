@@ -35,8 +35,7 @@ public class TestZapytaniaDoBazyDanych {
 			String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= "+ login;
 			statement = connect.createStatement();
 			result = statement.executeQuery(zapytanie);
-			if (result.next()) {
-				if ((result.getString(1)).equals(login)) {
+			if (result.next()&& (result.getString(1)).equals(login)) {
 					System.out
 							.println("Jestem w ifie, czyli isnieje taki uzytkownik w bazie");
 					writeResultSet(result);
@@ -44,7 +43,7 @@ public class TestZapytaniaDoBazyDanych {
 					System.out.println("nie ma takiego uzytkownika w bazie");
 					writeResultSet(result);
 				}
-			}
+			
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

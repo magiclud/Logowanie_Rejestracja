@@ -17,7 +17,6 @@
 2 mozliwosc pobrania pliku przez użytkowanika
 
 2 szyfrowanie numerów kart kredytowych
-1 wrzucanie danych do bazy 
 
 1 aliassy: login+_haslo, login+_nrkarty
 
@@ -31,5 +30,5 @@ root -> 123123123 -> do bazy
 
 zrobione: 
 
-1 na bazie dodać unique dla loginu
-
+- na bazie dodać unique dla loginu
+- wrzucanie danych do bazy 

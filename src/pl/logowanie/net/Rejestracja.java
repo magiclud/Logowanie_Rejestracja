@@ -52,34 +52,34 @@ public class Rejestracja extends HttpServlet {
 				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= login";
 				Statement statement = con.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
-			if(result.next()) {
-					if ((result.getString(1)).equals(login)) {
-						msg = "The user " + login
-								+ " - is in date base, use another login name";
-					} else {
+				if (result.next() && (result.getString(1)).equals(login)  ) {
+					msg = "The user " + login
+							+ " - is in date base, use another login name";
+					rd = request.getRequestDispatcher("login.jsp");
+				} else {
 
-						preparedStatement = con
-								.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
-						// parameters start with 1
-						preparedStatement.setString(1, login);
-						preparedStatement.setString(2, email);
-						preparedStatement.setString(3, haslo);
-						preparedStatement.setString(4, kartaKredytowa);
-						preparedStatement.executeUpdate();
+					preparedStatement = con
+							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
+					// parameters start with 1
+					preparedStatement.setString(1, login);
+					preparedStatement.setString(2, email);
+					preparedStatement.setString(3, haslo);
+					preparedStatement.setString(4, kartaKredytowa);
+					preparedStatement.executeUpdate();
 
-						request.getSession().setAttribute("userZarejestrowany",
-								login);
+					request.getSession().setAttribute("userZarejestrowany",
+							login);
 
-						msg = "Hello " + login
-								+ "! Zostales poprawnie zarejestrowany";
+					msg = "Hello " + login
+							+ "! Zostales poprawnie zarejestrowany";
 
-						request.setAttribute(
-								"Registration successful, please login below.",
-								"registrationm");
-						rd = request.getRequestDispatcher("index.jsp");
+					request.setAttribute(
+							"Registration successful, please login below.",
+							"registrationm");
+					rd = request.getRequestDispatcher("index.jsp");
+					preparedStatement.close();
 
-					}
-			}
+				}
 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -95,15 +95,6 @@ public class Rejestracja extends HttpServlet {
 		request.setAttribute("wynikRejestracji", msg);
 
 		rd.forward(request, response);
-
-		try {
-			preparedStatement.close();
-
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 }
