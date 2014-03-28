@@ -31,5 +31,5 @@
   </servlet-mapping>
   <listener>
     <listener-class>pl.logowanie.net.MyServletContextListener</listener-class>
-</listener>
+  </listener>
 </web-app>

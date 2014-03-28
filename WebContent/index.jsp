@@ -8,14 +8,13 @@
 	<div id="container" style="width: 500px">
 
 		<div id="header" style="background-color: #FFA500;">
-			<h1 style="margin-bottom: 0;">Main Title of Web Page</h1>
+			<h1 style="margin-bottom: 0;">Zaszyfrowany plik muzyczny</h1>
 		</div>
 		<%@include file="menu.jsp"%>
 
 		<div id="content"
 			style="background-color: #EEEEEE; height: 200px; width: 400px; float: left;">
-			${wynikLogowania} ${aga} ${wynikRejestracji} <br /> ilosc prob:
-			${sessionScope.iloscProb} lalala\
+			${wynikLogowania} ${aga} ${wynikRejestracji} <br />
 
 			<c:if test="${!empty sessionScope.userZalogowany}">
 				<a href="link_do_servleta_ktory_zwroci_plik">Link do pliku</a>
@@ -27,19 +26,18 @@
 				${wynikLogowania}<br /> <br /> 
 				<a href="login.jsp">Logowanie</a>
 				<br /> 
-				http://www.mkyong.com/java/how-to-download-file-from-website-java-jsp/
+				ilosc prob: ${sessionScope.iloscProb}
 			</c:if>
 
 			<c:if test="${empty sessionScope.userZarejestrowany}">
 				 ${sessionScope.wynikRejestracji} <br /><br /><br />
-				<a href="rejestracja.jsp">Zarejestruj sie ponownie</a>
+				<a href="rejestracja.jsp">Zarejestruj sie</a>
 			</c:if>
 
 		</div>
 
 		<div id="footer"
-			style="background-color: #FFA500; clear: both; text-align: center;">Copyright
-			© W3Schools.com</div>
+			style="background-color: #FFA500; clear: both; text-align: center;">Jesli potrzeba jest matka wynalazkow, to zapewne zagrozenie jest matka kryptoanalizy.</div>
 
 	</div>
 

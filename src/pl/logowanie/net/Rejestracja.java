@@ -48,7 +48,7 @@ public class Rejestracja extends HttpServlet {
 		if (kartaKredytowa == null || kartaKredytowa.equals("")) {
 			msg = "Country can't be null or empty.";
 		}
-		if (kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
+		if (!kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
 			msg = "Wrong numer credit card.";
 		}
 		if (msg == null) {

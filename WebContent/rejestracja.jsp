@@ -9,7 +9,7 @@
 	<div id="container" style="width: 500px">
 
 		<div id="header" style="background-color: #FFA500;">
-			<h1 style="margin-bottom: 0;">Main Title of Web Page</h1>
+			<h1 style="margin-bottom: 0;">Rejestracja</h1>
 		</div>
 		<%@include file="menu.jsp"%>
 		
@@ -27,8 +27,7 @@
 		</div>
 
 		<div id="footer"
-			style="background-color: #FFA500; clear: both; text-align: center;">Copyright
-			© W3Schools.com</div>
+			style="background-color: #FFA500; clear: both; text-align: center;">Jesli potrzeba jest matka wynalazkow, to zapewne zagrozenie jest matka kryptoanalizy.</div>
 
 	</div>
 
