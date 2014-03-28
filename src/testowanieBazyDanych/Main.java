@@ -5,7 +5,10 @@ public class Main {
 //		MySQLAccess dao = new MySQLAccess();
 //		dao.readDataBase();
 		
-		BazaDanychTestPolaczenia baza = new BazaDanychTestPolaczenia();
-		baza.wczytajBazeDanych();
+//		BazaDanychTestPolaczenia baza = new BazaDanychTestPolaczenia();
+//		baza.wczytajBazeDanych();
+		
+		TestZapytaniaDoBazyDanych baza = new TestZapytaniaDoBazyDanych();
+		baza.test();
 	}
 }

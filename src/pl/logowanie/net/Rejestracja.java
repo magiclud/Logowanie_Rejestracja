@@ -49,33 +49,37 @@ public class Rejestracja extends HttpServlet {
 
 			con = (Connection) getServletContext().getAttribute("DBConnection");
 			try {
-				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= "+login;
+				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= login";
 				Statement statement = con.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
-				if ((result.getString(1)).equals(login)) {
-					msg = "The user " + login
-							+ " - is in date base, use another login name";
-				}
+			if(result.next()) {
+					if ((result.getString(1)).equals(login)) {
+						msg = "The user " + login
+								+ " - is in date base, use another login name";
+					} else {
 
-				// preparedStatements can use variables and are more efficient
-				preparedStatement = con
-						.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
-				// "myuser, webpage, datum, summary, COMMENTS from FEEDBACK.COMMENTS");
-				// parameters start with 1
-				preparedStatement.setString(1, login);
-				preparedStatement.setString(2, email);
-				preparedStatement.setString(3, haslo);
-				preparedStatement.setString(4, kartaKredytowa);
-				preparedStatement.executeUpdate();
+						preparedStatement = con
+								.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
+						// parameters start with 1
+						preparedStatement.setString(1, login);
+						preparedStatement.setString(2, email);
+						preparedStatement.setString(3, haslo);
+						preparedStatement.setString(4, kartaKredytowa);
+						preparedStatement.executeUpdate();
 
-				request.getSession().setAttribute("userZarejestrowany", login);
+						request.getSession().setAttribute("userZarejestrowany",
+								login);
 
-				msg = "Hello " + login + "! Zostales poprawnie zarejestrowany";
+						msg = "Hello " + login
+								+ "! Zostales poprawnie zarejestrowany";
 
-				request.setAttribute(
-						"Registration successful, please login below.",
-						"registrationm");
-				rd = request.getRequestDispatcher("index.jsp");
+						request.setAttribute(
+								"Registration successful, please login below.",
+								"registrationm");
+						rd = request.getRequestDispatcher("index.jsp");
+
+					}
+			}
 
 			} catch (SQLException e) {
 				e.printStackTrace();
