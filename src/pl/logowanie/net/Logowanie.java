@@ -69,7 +69,7 @@ public class Logowanie extends HttpServlet {
 				Long czasT = (Long) request.getSession().getAttribute(
 						"czasOczekiwania");
 				long czasSesji = request.getSession().getCreationTime();
-				//if (!(czasT >= czasSesji)) {
+//				if (czasT==null || !(czasT >= czasSesji)) {
 					if (!result.next()) {
 						Integer iloscProbk = (Integer) request.getSession()
 								.getAttribute("iloscProb");
@@ -77,13 +77,15 @@ public class Logowanie extends HttpServlet {
 						if (iloscProbk != null) {
 
 							int ilosc = iloscProbk;
-							// if(ilosc==dozwolonaIloscProbLogowan){
+							 if(ilosc==dozwolonaIloscProbLogowan-1){
 							// TODO czekaj T minut
-							// getData
+							
 							long time = czasSesji + 3000;
 							request.getSession().setAttribute(
 									"czasOczekiwania", time);
-							// }
+							request.getSession().setAttribute("iloscProb",
+									0);
+							 }
 							ilosc++;
 							request.getSession().setAttribute("iloscProb",
 									ilosc);

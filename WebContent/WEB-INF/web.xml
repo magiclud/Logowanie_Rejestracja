@@ -40,7 +40,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Wylogowanie</servlet-name>
-		<url-pattern>/Lwyloguj</url-pattern>
+		<url-pattern>/wyloguj</url-pattern>
 	</servlet-mapping>
 
 

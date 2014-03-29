@@ -33,6 +33,8 @@ public class Wylogowanie extends HttpServlet {
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("jestem w sevice method w wylogowaniu ");
+		request.getSession().invalidate();
+		response.sendRedirect(request.getContextPath() + "/wylogowanie.jsp");
 	}
 
 }
