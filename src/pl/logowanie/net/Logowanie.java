@@ -22,7 +22,8 @@ public class Logowanie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private int dozwolonaIloscProbLogowan = 3;
-	private int czasOczekiwaniaPoNieporrawnymLogowaniu = 3; //3 minuty
+	private int czasOczekiwaniaPoNieporrawnymLogowaniu = 3000; // w milisekundach
+
 	// snippet
 	// private final static Logger LOGGER = Logger.getLogger(Logowanie.class
 	// .getName());
@@ -64,33 +65,44 @@ public class Logowanie extends HttpServlet {
 						+ "\"";
 				Statement statement = con.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
-				
-				if (!result.next()) {
-					Integer iloscProbk = (Integer) request.getSession()
-							.getAttribute("iloscProb");
-					Long caszToczekiwania = (Long) request.getSession().getAttribute("czasOczekiwania");
-					if (iloscProbk != null) {
-	
-						int ilosc = iloscProbk;
-					//	if(ilosc==dozwolonaIloscProbLogowan){
-							//TODO czekaj T minut 
-							//getData
-						long time=	request.getSession().getCreationTime() + 3000;
-						request.getSession().setAttribute("czasOczekiwania", time);
-					//	}
-						ilosc++;
-						request.getSession().setAttribute("iloscProb", ilosc);
+
+				Long czasT = (Long) request.getSession().getAttribute(
+						"czasOczekiwania");
+				long czasSesji = request.getSession().getCreationTime();
+				//if (!(czasT >= czasSesji)) {
+					if (!result.next()) {
+						Integer iloscProbk = (Integer) request.getSession()
+								.getAttribute("iloscProb");
+
+						if (iloscProbk != null) {
+
+							int ilosc = iloscProbk;
+							// if(ilosc==dozwolonaIloscProbLogowan){
+							// TODO czekaj T minut
+							// getData
+							long time = czasSesji + 3000;
+							request.getSession().setAttribute(
+									"czasOczekiwania", time);
+							// }
+							ilosc++;
+							request.getSession().setAttribute("iloscProb",
+									ilosc);
+						} else {
+							request.getSession().setAttribute("iloscProb", 1);
+						}
+						msg = "Czesc " + uzytkownik
+								+ "! Twoje logowanie jest niepoprawne";
 					} else {
-						request.getSession().setAttribute("iloscProb", 1);
+						request.getSession().setAttribute("userZalogowany",
+								uzytkownik);
+						msg = "Czesc " + uzytkownik
+								+ "! Zostales poprawnie zalogowany";
 					}
-					msg = "Czesc " + uzytkownik
-							+ "! Twoje logowanie jest niepoprawne";
-				} else {
-					request.getSession().setAttribute("userZalogowany",
-							uzytkownik);
-					msg = "Czesc " + uzytkownik
-							+ "! Zostales poprawnie zalogowany";
-				}
+//				} else {
+//					long czekaj = czasT - czasSesji;
+//					msg = "Nieporpawne logowanie, musisz poczekac " + czekaj
+//							+ " milisekund";
+//				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -98,6 +110,7 @@ public class Logowanie extends HttpServlet {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
 		} else {
 			request.setAttribute("aga", "spróbuj jeszcze raz");
 		}
@@ -108,5 +121,4 @@ public class Logowanie extends HttpServlet {
 				.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}
-
 }
