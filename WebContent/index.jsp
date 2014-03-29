@@ -23,12 +23,16 @@
 				http://www.mkyong.com/java/how-to-download-file-from-website-java-jsp/
 			</c:if>
 
-			<c:if test="${empty sessionScope.userZalogowany}">
+	
 				${wynikLogowania}<br />
 				<br />
 				<a href="login.jsp">Logowanie</a>
 				<br /> 
 				ilosc prob: ${sessionScope.iloscProb}
+				
+				<c:if test="${empty sessionScope.czasOczekiwania}">
+				
+				
 				<br />
 				<c:if test="${empty sessionScope.userZarejestrowany}">
 				 ${sessionScope.wynikRejestracji} <br />

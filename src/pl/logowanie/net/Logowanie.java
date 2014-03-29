@@ -21,6 +21,8 @@ import java.sql.Statement;
 public class Logowanie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private int dozwolonaIloscProbLogowan = 3;
+	private int czasOczekiwaniaPoNieporrawnymLogowaniu = 3; //3 minuty
 	// snippet
 	// private final static Logger LOGGER = Logger.getLogger(Logowanie.class
 	// .getName());
@@ -66,9 +68,16 @@ public class Logowanie extends HttpServlet {
 				if (!result.next()) {
 					Integer iloscProbk = (Integer) request.getSession()
 							.getAttribute("iloscProb");
+					Long caszToczekiwania = (Long) request.getSession().getAttribute("czasOczekiwania");
 					if (iloscProbk != null) {
-						System.out.println("udalo sie wejsc do ifa");
+	
 						int ilosc = iloscProbk;
+					//	if(ilosc==dozwolonaIloscProbLogowan){
+							//TODO czekaj T minut 
+							//getData
+						long time=	request.getSession().getCreationTime() + 3000;
+						request.getSession().setAttribute("czasOczekiwania", time);
+					//	}
 						ilosc++;
 						request.getSession().setAttribute("iloscProb", ilosc);
 					} else {

@@ -1,6 +1,7 @@
 package pl.logowanie.net;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ public class Wylogowanie extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.getSession().invalidate();
-		response.sendRedirect(request.getContextPath() + "Logowanie.login.jsp");
+		//response.sendRedirect(request.getContextPath() + "Logowanie.login.jsp");
 	}
 
 	/**
@@ -28,6 +29,10 @@ public class Wylogowanie extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+	}
+	protected void service(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("jestem w sevice method w wylogowaniu ");
 	}
 
 }
