@@ -9,6 +9,7 @@ public class Main {
 //		baza.wczytajBazeDanych();
 		
 		TestZapytaniaDoBazyDanych baza = new TestZapytaniaDoBazyDanych();
-		baza.test();
+		//baza.test();
+		baza.testWyszukiwaniaUzytkownikaZHaslem();;
 	}
 }

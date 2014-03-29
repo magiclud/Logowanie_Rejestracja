@@ -17,27 +17,34 @@
 			${wynikLogowania} ${aga} ${wynikRejestracji} <br />
 
 			<c:if test="${!empty sessionScope.userZalogowany}">
+				<br />
 				<a href="link_do_servleta_ktory_zwroci_plik">Link do pliku</a>
-				<br>
+				<br />
 				http://www.mkyong.com/java/how-to-download-file-from-website-java-jsp/
 			</c:if>
-			
+
 			<c:if test="${empty sessionScope.userZalogowany}">
-				${wynikLogowania}<br /> <br /> 
+				${wynikLogowania}<br />
+				<br />
 				<a href="login.jsp">Logowanie</a>
 				<br /> 
 				ilosc prob: ${sessionScope.iloscProb}
+				<br />
+				<c:if test="${empty sessionScope.userZarejestrowany}">
+				 ${sessionScope.wynikRejestracji} <br />
+					<br />
+					<a href="rejestracja.jsp">Zarejestruj sie</a>
+				</c:if>
 			</c:if>
 
-			<c:if test="${empty sessionScope.userZarejestrowany}">
-				 ${sessionScope.wynikRejestracji} <br /><br /><br />
-				<a href="rejestracja.jsp">Zarejestruj sie</a>
-			</c:if>
+
 
 		</div>
 
 		<div id="footer"
-			style="background-color: #FFA500; clear: both; text-align: center;">Jesli potrzeba jest matka wynalazkow, to zapewne zagrozenie jest matka kryptoanalizy.</div>
+			style="background-color: #FFA500; clear: both; text-align: center;">"Jesli
+			potrzeba jest matka wynalazkow, to zapewne zagrozenie jest matka
+			kryptoanalizy." Simon Singh „Ksiega szyfrow”</div>
 
 	</div>
 

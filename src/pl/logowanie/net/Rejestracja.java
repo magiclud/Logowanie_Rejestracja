@@ -55,10 +55,10 @@ public class Rejestracja extends HttpServlet {
 
 			con = (Connection) getServletContext().getAttribute("DBConnection");
 			try {
-				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= login";
+				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""+login+"\"";
 				Statement statement = con.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
-				if (result.next() && (result.getString(1)).equals(login)) {
+				if (result.next()) {
 					msg = "The user " + login
 							+ " - is in date base, use another login name";
 
