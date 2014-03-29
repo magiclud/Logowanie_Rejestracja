@@ -19,6 +19,7 @@
 2 szyfrowanie numerów kart kredytowych
 
 1 aliassy: login+_haslo, login+_nrkarty
+1 możliwość kilkukrotnego logowanias
 
 2.udosudostępnienie bazy innym użytkownikom 
 

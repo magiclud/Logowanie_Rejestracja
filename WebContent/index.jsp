@@ -8,7 +8,7 @@
 	<div id="container" style="width: 500px">
 
 		<div id="header" style="background-color: #FFA500;">
-			<h1 style="margin-bottom: 0;">Zaszyfrowany plik muzyczny</h1>
+			<h1 style="margin-bottom: 0;">Zaszyfrowane pliki muzyczne</h1>
 		</div>
 		<%@include file="menu.jsp"%>
 

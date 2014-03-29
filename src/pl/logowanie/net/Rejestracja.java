@@ -76,7 +76,7 @@ public class Rejestracja extends HttpServlet {
 					request.getSession().setAttribute("userZarejestrowany",
 							login);
 
-					msg = "Hello " + login
+					msg = "Witaj " + login
 							+ "! Zostales poprawnie zarejestrowany";
 
 					request.setAttribute(

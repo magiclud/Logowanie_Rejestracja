@@ -6,8 +6,10 @@
 			<c:if test="${empty sessionScope.userZalogowany}">
 				<a href="/Logowanie/login.jsp">Logowanie</a> <br>
 			</c:if>
-			<c:if test="${!empty sessionScope.userZalogowany}">
-				<a href="/Logowanie/wylogowanie.jsp">Wylogowanie</a> <br>
+			<br />
+			<c:if test="${empty sessionScope.userZarejestrowany}">
+				 ${sessionScope.wynikRejestracji} <br /><br /><br />
+				<a href="rejestracja.jsp">Zarejestruj sie</a>
 			</c:if>
 			 
 			<br />

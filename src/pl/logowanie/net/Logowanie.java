@@ -13,9 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
-
 
 /**
  * Servlet implementation class Login
@@ -23,10 +24,10 @@ import java.util.logging.Logger;
 public class Logowanie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	
-	//snippet
-	//private final static Logger LOGGER = Logger.getLogger(Logowanie.class .getName()); 
-	
+	// snippet
+	// private final static Logger LOGGER = Logger.getLogger(Logowanie.class
+	// .getName());
+
 	public Logowanie() {
 		super();
 	}
@@ -37,35 +38,57 @@ public class Logowanie extends HttpServlet {
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("We are in service method of selvlet");
-		String username = "user";
-		String password = "root";
 
 		String un = request.getParameter("username");
 		String pw = request.getParameter("password");
 
-		String msg = " ";
+		String msg = null;
 
-		if (un.endsWith(username) && pw.equals(password)) {
-			request.getSession().setAttribute("userZalogowany", un);
-			msg = "Hello " + un + "! Your login is sucessful";
-		} else {
-			String iloscProbk = (String) request.getSession().getAttribute("iloscProb");
-			if (iloscProbk != null && !iloscProbk.isEmpty()){
-				int ilosc  = Integer.valueOf(iloscProbk);
-				ilosc++;
-				request.getSession().setAttribute("iloscProb", ilosc);
-			}
-			else{
-				request.getSession().setAttribute("iloscProb",1);
-			}
-			msg = "Hello " + un + "! Your login is failed";
+		if (un == null || un.equals("") || pw == null || pw.equals("")) {
+			msg = "Wrong user name or password";
 		}
-		
+		if (msg == null) {
+			Connection con = (Connection) getServletContext().getAttribute(
+					"DBConnection");
+
+			String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login= login and haslo = password";
+			Statement statement;
+			try {
+				statement = con.createStatement();
+
+				ResultSet result = statement.executeQuery(zapytanie);
+				if (result.next() && (result.getString(1)).equals(un)
+						&& (result.getString(3)).equals(pw)) {
+//					String iloscProbk = (String) request.getSession()
+//							.getAttribute("iloscProb");
+					int ilosc = Integer.valueOf((String) request.getSession()
+							.getAttribute("iloscProb"));
+					//if (iloscProbk != null && !iloscProbk.isEmpty()) {
+						if (ilosc != 0) {
+						System.out.println("udalo sie wejsc do ifa");
+						
+						ilosc++;
+						request.getSession().setAttribute("iloscProb", ilosc);
+					} else {
+						request.getSession().setAttribute("iloscProb", 1);
+					}
+					msg = "Czesc " + un + "! Twoje logowanie jest niepoprawne";
+				} else {
+					request.getSession().setAttribute("userZalogowany", un);
+					msg = "Czesc " + un + "! Zostales poprawnie zalogowany";
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			request.setAttribute("aga", "spróbuj jeszcze raz");
+		}
 
 		request.setAttribute("wynikLogowania", msg);
-		request.setAttribute("aga", "aga to los");
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+
+		RequestDispatcher dispatcher = request
+				.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}
 
