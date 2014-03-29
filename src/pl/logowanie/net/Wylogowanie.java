@@ -19,7 +19,7 @@ public class Wylogowanie extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		System.out.println("jestem w doGet method w wylogowaniu ");
 		request.getSession().invalidate();
 		//response.sendRedirect(request.getContextPath() + "Logowanie.login.jsp");
 	}
