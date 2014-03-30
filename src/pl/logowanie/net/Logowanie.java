@@ -1,6 +1,7 @@
 package pl.logowanie.net;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -61,7 +64,7 @@ public class Logowanie extends HttpServlet {
 				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
 						+ uzytkownik
 						+ "\" and haslo = \""
-						+ hasloUzytkownika
+						+ hashString(hasloUzytkownika)
 						+ "\"";
 				Statement statement = con.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
@@ -69,7 +72,7 @@ public class Logowanie extends HttpServlet {
 				Long czasT = (Long) request.getSession().getAttribute(
 						"czasOczekiwania");
 				long czasSesji = request.getSession().getCreationTime();
-//				if (czasT==null || !(czasT >= czasSesji)) {
+				if (czasT==null || !(czasT >= czasSesji)) {
 					if (!result.next()) {
 						Integer iloscProbk = (Integer) request.getSession()
 								.getAttribute("iloscProb");
@@ -100,11 +103,11 @@ public class Logowanie extends HttpServlet {
 						msg = "Czesc " + uzytkownik
 								+ "! Zostales poprawnie zalogowany";
 					}
-//				} else {
-//					long czekaj = czasT - czasSesji;
-//					msg = "Nieporpawne logowanie, musisz poczekac " + czekaj
-//							+ " milisekund";
-//				}
+				} else {
+					long czekaj = czasT - czasSesji;
+					msg = "Nieporpawne logowanie, musisz poczekac " + czekaj
+							+ " milisekund";
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -122,5 +125,29 @@ public class Logowanie extends HttpServlet {
 		RequestDispatcher dispatcher = request
 				.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
+	}
+	private String hashString(String haslo) {
+
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+
+			byte[] hash = md.digest(haslo.getBytes("UTF-8"));
+			// converting byte array to Hexadecimal String
+			StringBuilder sb = new StringBuilder(2 * hash.length);
+			for (byte b : hash) {
+				sb.append(String.format("%02x", b & 0xff));
+			}
+			String hashString = sb.toString();
+			return hashString;
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 }
