@@ -72,16 +72,18 @@ public class Rejestracja extends HttpServlet {
 
 				} else {
 					//hashString(haslo);
+					
+					Kodowanie zakoduj = new Kodowanie();
 					preparedStatement = connection
 							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
 					// parameters start with 1
-					String hashHasla = hashString(haslo);
-					String aliasHasla = login +hashHasla; 
-					String sciezkaDoPlikuZhaslem = Kodowanie.zakoduj(hashHasla, aliasHasla, login);
+					//String hashHasla = hashString(haslo);
+//					String aliasHasla = login +hashHasla; 
+//					String sciezkaDoPlikuZhaslem = Kodowanie.zakoduj(hashHasla, aliasHasla, login);
 					
 					preparedStatement.setString(1, login);
 					preparedStatement.setString(2, email);
-					preparedStatement.setString(3, sciezkaDoPlikuZhaslem);//haslo
+					preparedStatement.setString(3, zakoduj.hashString(haslo));//haslo
 					preparedStatement.setString(4, kartaKredytowa);
 					preparedStatement.executeUpdate();
 
@@ -116,28 +118,5 @@ public class Rejestracja extends HttpServlet {
 
 	}
 
-	private String hashString(String haslo) {
 
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-
-			byte[] hash = md.digest(haslo.getBytes("UTF-8"));
-			// converting byte array to Hexadecimal String
-			StringBuilder sb = new StringBuilder(2 * hash.length);
-			for (byte b : hash) {
-				sb.append(String.format("%02x", b & 0xff));
-			}
-			String hashString = sb.toString();
-			return hashString;
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-
-	}
 }

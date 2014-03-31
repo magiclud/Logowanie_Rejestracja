@@ -7,11 +7,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
@@ -29,6 +31,32 @@ public class Kodowanie {
 	static String trybSzyfrowania = "OFB";
 	static String hasloDoKeystora = "ala ma kota";
 
+	String hashString(String haslo) {
+
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+
+			byte[] hash = md.digest(haslo.getBytes("UTF-8"));
+			// converting byte array to Hexadecimal String
+			StringBuilder sb = new StringBuilder(2 * hash.length);
+			for (byte b : hash) {
+				sb.append(String.format("%02x", b & 0xff));
+			}
+			String hashString = sb.toString();
+			return hashString;
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	
 	public static String zakoduj(String wiadomosc, String aliasHasla, String login) {
 		try {
 			Key key = dodajKlucz(aliasHasla);
