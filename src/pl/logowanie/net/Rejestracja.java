@@ -19,9 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Rejestracja extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	PreparedStatement preparedStatement = null;
-	Connection con;
-	RequestDispatcher rd;
+	Connection connection;
+	RequestDispatcher requestDispatcher;
 	String poprawnyEMail = "^(.[A-Za-z0-9\\-]*\\w)+@+([A-Za-z0-9\\-]*\\w)+(\\.[A-Za-z]*\\w)+$";
 	String poprawnyNrKartyKredytowej = "[0-9]{16}";
 
@@ -32,59 +36,63 @@ public class Rejestracja extends HttpServlet {
 		String hasloPtwierdzenie = request.getParameter("conf_password");
 		String login = request.getParameter("username");
 		String kartaKredytowa = request.getParameter("creditCard");
-		String msg = null;
+		String wiadomosc = null;
 		if (email == null || email.equals("")) {
-			msg = "Email ID can't be null or empty.";
+			wiadomosc = "Adres e-mail nie moze być null lub pusty.";
 		}
 		if (!email.matches(poprawnyEMail)) {
-			msg = "Wrong e-mail adress.";
+			wiadomosc = "Niepoprawny e-mail adres.";
 		}
 		if (haslo == null || haslo.equals("")) {
-			msg = "Password can't be null or empty.";
+			wiadomosc = "Halo nie moze być null lub puste.";
 		}
 		if (hasloPtwierdzenie == null || !hasloPtwierdzenie.equals(haslo)) {
-			msg = "Password can't be null or empty and have to be the same with confirm password.";
+			wiadomosc = "Haslo potwerdzajace nie moze byc null lub puste lub inne niz haslo.";
 		}
 		if (login == null || login.equals("")) {
-			msg = "Name can't be null or empty.";
+			wiadomosc = "Login nie moze byc null lub pusty.";
 		}
 		if (kartaKredytowa == null || kartaKredytowa.equals("")) {
-			msg = "Country can't be null or empty.";
+			wiadomosc = "Numer katy kredystowej nie moze byc null.";
 		}
 		if (!kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
-			msg = "Wrong numer credit card.";
+			wiadomosc = "Nieprawidlowy numer karty kredytowej, ma ona 16 cyfr.";
 		}
-		if (msg == null) {
+		if (wiadomosc == null) {
 
-			con = (Connection) getServletContext().getAttribute("DBConnection");
+			connection = (Connection) getServletContext().getAttribute("DBConnection");
 			try {
 				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
 						+ login + "\"";
-				Statement statement = con.createStatement();
+				Statement statement = connection.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
 				if (result.next()) {
-					msg = "The user " + login
-							+ " - is in date base, use another login name";
+					wiadomosc = "Uzytkownik " + login
+							+ " - jest juz w bazie, uzyj innej nazwy";
 
 				} else {
-					hashString(haslo);
-					preparedStatement = con
+					//hashString(haslo);
+					preparedStatement = connection
 							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
 					// parameters start with 1
+					String hashHasla = hashString(haslo);
+					String aliasHasla = login +hashHasla; 
+					String sciezkaDoPlikuZhaslem = Kodowanie.zakoduj(hashHasla, aliasHasla, login);
+					
 					preparedStatement.setString(1, login);
 					preparedStatement.setString(2, email);
-					preparedStatement.setString(3, hashString(haslo));
+					preparedStatement.setString(3, sciezkaDoPlikuZhaslem);//haslo
 					preparedStatement.setString(4, kartaKredytowa);
 					preparedStatement.executeUpdate();
 
 					request.getSession().setAttribute("userZarejestrowany",
 							login);
 
-					msg = "Witaj " + login
+					wiadomosc = "Witaj " + login
 							+ "! Zostales poprawnie zarejestrowany";
 
 					request.setAttribute(
-							"Registration successful, please login below.",
+							"Rejestracja zakonczona powodzeniem, mozesz sie teraz zalogowac.",
 							"registrationm");
 					// rd = request.getRequestDispatcher("login.jsp");
 
@@ -95,16 +103,16 @@ public class Rejestracja extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 				// logger.error("Database connection problem");
-				throw new ServletException("DB Connection problem.");
+				throw new ServletException("Problem z polaczeniem z baza danych .");
 			}
 		} else {
 			request.setAttribute(
-					"Registration unsuccessful, please register one more time.",
+					"Rejestracja zakonczona niepowodzeniem, sprobuj jeszcze raz.",
 					"registrationm");
 		}
-		request.setAttribute("wynikRejestracji", msg);
-		rd = request.getRequestDispatcher("index.jsp");
-		rd.forward(request, response);
+		request.setAttribute("wynikRejestracji", wiadomosc);
+		requestDispatcher = request.getRequestDispatcher("index.jsp");
+		requestDispatcher.forward(request, response);
 
 	}
 

@@ -22,15 +22,15 @@ public class MyServletContextListener implements ServletContextListener{
 //	}
 	
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-        ServletContext ctx = servletContextEvent.getServletContext();
+        ServletContext contex = servletContextEvent.getServletContext();
          
         //initialize DB Connection
-        String dbURL = ctx.getInitParameter("dbURL");
+        String dbURL = contex.getInitParameter("dbURL");
          
         try {
         	Class.forName("com.mysql.jdbc.Driver");
             DBConnectionManager connectionManager = new DBConnectionManager(dbURL);
-            ctx.setAttribute("DBConnection", connectionManager.getConnection());
+            contex.setAttribute("DBConnection", connectionManager.getConnection());
             System.out.println("DB Connection initialized successfully.");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -40,9 +40,9 @@ public class MyServletContextListener implements ServletContextListener{
     }
  
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        Connection con = (Connection) servletContextEvent.getServletContext().getAttribute("DBConnection");
+        Connection connection = (Connection) servletContextEvent.getServletContext().getAttribute("DBConnection");
         try {
-            con.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

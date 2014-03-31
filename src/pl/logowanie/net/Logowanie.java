@@ -25,11 +25,8 @@ public class Logowanie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private int dozwolonaIloscProbLogowan = 3;
-	private int czasOczekiwaniaPoNieporrawnymLogowaniu = 3000; // w milisekundach
-
-	// snippet
-	// private final static Logger LOGGER = Logger.getLogger(Logowanie.class
-	// .getName());
+	private int czasOczekiwaniaPoNieporrawnymLogowaniu = 3000; // w
+																// milisekundach
 
 	public Logowanie() {
 		super();
@@ -40,18 +37,18 @@ public class Logowanie extends HttpServlet {
 
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("We are in service method of selvlet");
+		System.out.println("Jestem w  service method of selvlet");
 
 		String uzytkownik = request.getParameter("username");
 		String hasloUzytkownika = request.getParameter("password");
 
-		String msg = null;
+		String message = null;
 
 		if (uzytkownik == null || uzytkownik.equals("")
 				|| hasloUzytkownika == null || hasloUzytkownika.equals("")) {
-			msg = "Wrong user name or password";
+			message = "Zla nazwa uzytkownika lub haslo";
 		}
-		if (msg == null) {
+		if (message == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 
@@ -61,52 +58,68 @@ public class Logowanie extends HttpServlet {
 						.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 								+ "user=root");
 
-				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
-						+ uzytkownik
-						+ "\" and haslo = \""
-						+ hashString(hasloUzytkownika)
-						+ "\"";
+				String zapytanieHaslo = "SELECT login, haslo from stronainternetowa.UZYTKOWNICY where login = \""
+						+ uzytkownik + "\"";
 				Statement statement = con.createStatement();
-				ResultSet result = statement.executeQuery(zapytanie);
+				ResultSet result = statement.executeQuery(zapytanieHaslo);
+				String siezkaDoPlikuZHaslem = null;
+				if (result.next()) {
+					siezkaDoPlikuZHaslem = result.getString("haslo");
 
-				Long czasT = (Long) request.getSession().getAttribute(
-						"czasOczekiwania");
-				long czasSesji = request.getSession().getCreationTime();
-				if (czasT==null || !(czasT >= czasSesji)) {
-					if (!result.next()) {
-						Integer iloscProbk = (Integer) request.getSession()
-								.getAttribute("iloscProb");
+					String aliasHasla = uzytkownik + hasloUzytkownika;
+					// ponizej co gdy sciezkaDoPlikuJest null lub jakies smieci
+					// //TODO
+					hasloUzytkownika = Kodowanie.dekoduj(siezkaDoPlikuZHaslem,
+							aliasHasla);
 
-						if (iloscProbk != null) {
+					String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
+							+ uzytkownik
+							+ "\" and haslo = \""
+							+ hashString(hasloUzytkownika) + "\"";
+					statement = con.createStatement();
+					result = statement.executeQuery(zapytanie);
 
-							int ilosc = iloscProbk;
-							 if(ilosc==dozwolonaIloscProbLogowan-1){
-							// TODO czekaj T minut
-							
-							long time = czasSesji + 3000;
-							request.getSession().setAttribute(
-									"czasOczekiwania", time);
-							request.getSession().setAttribute("iloscProb",
-									0);
-							 }
-							ilosc++;
-							request.getSession().setAttribute("iloscProb",
-									ilosc);
+					Long czasT = (Long) request.getSession().getAttribute(
+							"czasOczekiwania");
+					long czasSesji = request.getSession().getCreationTime();
+					if (czasT == null || !(czasT >= czasSesji)) {
+						if (!result.next()) {
+							Integer iloscProbk = (Integer) request.getSession()
+									.getAttribute("iloscProb");
+
+							if (iloscProbk != null) {
+
+								int ilosc = iloscProbk;
+								if (ilosc == dozwolonaIloscProbLogowan - 1) {
+									// TODO czekaj T minut
+
+									long time = czasSesji + 300;
+									request.getSession().setAttribute(
+											"czasOczekiwania", time);
+									request.getSession().setAttribute(
+											"iloscProb", 1);
+								}
+								ilosc++;
+								request.getSession().setAttribute("iloscProb",
+										ilosc);
+							} else {
+								request.getSession().setAttribute("iloscProb",
+										1);
+							}
+							message = "Czesc " + uzytkownik
+									+ "! Twoje logowanie jest niepoprawne";
 						} else {
-							request.getSession().setAttribute("iloscProb", 1);
+							request.getSession().setAttribute("userZalogowany",
+									uzytkownik);
+							message = "Czesc " + uzytkownik
+									+ "! Zostales poprawnie zalogowany";
 						}
-						msg = "Czesc " + uzytkownik
-								+ "! Twoje logowanie jest niepoprawne";
 					} else {
-						request.getSession().setAttribute("userZalogowany",
-								uzytkownik);
-						msg = "Czesc " + uzytkownik
-								+ "! Zostales poprawnie zalogowany";
+						long czekaj = czasT - czasSesji;
+						message = "Nieporpawne logowanie, musisz poczekac "
+								+ czekaj + " milisekund";
+
 					}
-				} else {
-					long czekaj = czasT - czasSesji;
-					msg = "Nieporpawne logowanie, musisz poczekac " + czekaj
-							+ " milisekund";
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -120,12 +133,13 @@ public class Logowanie extends HttpServlet {
 			request.setAttribute("aga", "spróbuj jeszcze raz");
 		}
 
-		request.setAttribute("wynikLogowania", msg);
+		request.setAttribute("wynikLogowania", message);
 
 		RequestDispatcher dispatcher = request
 				.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}
+
 	private String hashString(String haslo) {
 
 		MessageDigest md;

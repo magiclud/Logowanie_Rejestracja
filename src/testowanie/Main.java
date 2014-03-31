@@ -8,8 +8,11 @@ public class Main {
 //		BazaDanychTestPolaczenia baza = new BazaDanychTestPolaczenia();
 //		baza.wczytajBazeDanych();
 		
-		TestZapytaniaDoBazyDanych baza = new TestZapytaniaDoBazyDanych();
-		//baza.test();
-		baza.testWyszukiwaniaUzytkownikaZHaslem();;
+//		TestZapytaniaDoBazyDanych baza = new TestZapytaniaDoBazyDanych();
+//		//baza.test();
+//		baza.testWyszukiwaniaUzytkownikaZHaslem();;
+		
+		KodowanieTest  kod = new KodowanieTest ();
+		kod.test();
 	}
 }
