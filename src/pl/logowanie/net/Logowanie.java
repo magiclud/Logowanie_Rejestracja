@@ -23,7 +23,7 @@ public class Logowanie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private int dozwolonaIloscProbLogowan = 3;
-	private int czasOczekiwaniaPoNieporrawnymLogowaniu = 3000; // w
+	private int czasCzekaniaGdyNieprawneLog = 30000; // w
 																// milisekundach
 
 	public Logowanie() {
@@ -76,9 +76,8 @@ public class Logowanie extends HttpServlet {
 
 							int ilosc = iloscProbk;
 							if (ilosc >= dozwolonaIloscProbLogowan - 1) {
-								// TODO czekaj T minut
 
-								long time = dataLogowania + 3000;
+								long time = dataLogowania + czasCzekaniaGdyNieprawneLog ;
 								request.getSession().setAttribute(
 										"czasOczekiwania", time);
 								request.getSession().setAttribute("iloscProb",
