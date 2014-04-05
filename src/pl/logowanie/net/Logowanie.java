@@ -94,6 +94,7 @@ public class Logowanie extends HttpServlet {
 					} else {
 						request.getSession().setAttribute("userZalogowany",
 								uzytkownik);
+						request.
 						message = "Czesc " + uzytkownik
 								+ "! Zostales poprawnie zalogowany";
 					}

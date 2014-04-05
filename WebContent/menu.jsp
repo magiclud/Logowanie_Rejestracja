@@ -18,7 +18,7 @@
 	<br />
 	<c:if test="${!empty sessionScope.userZalogowany}">
 		<a href="/Logowanie/wyloguj">Wylogowanie</a>
-		<br>
+		<br />
+	<br /> <a href="/Logowanie/uzytkownik">Dane uzytkownika</a>
 	</c:if>
-	<br /> cos tu jeszcze dodaj np zobacz inf o uzytkowinku
 </div>
