@@ -12,7 +12,10 @@ public class Main {
 //		//baza.test();
 //		baza.testWyszukiwaniaUzytkownikaZHaslem();;
 		
-		KodowanieTest  kod = new KodowanieTest ();
-		kod.test();
+		PrzesylaniePliku plik = new PrzesylaniePliku();
+		plik.test();
+		
+//		KodowanieTest  kod = new KodowanieTest ();
+//		kod.test();
 	}
 }

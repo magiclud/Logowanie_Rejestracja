@@ -1,8 +1,5 @@
-1 zrobić coś co bedzie sprawdzało, że użytkownik wpisał e-mail, numer karty kredytowej, 
-1 login ma się nie powtarzać z innymi loginami
-1 hasło ma być spawdzane pod względem modyfikacji z loginem ieni
-
-2 hashowanie hasła i na hashach dokonywać sprawdzenia 
+1 zrobić coś co bedzie sprawdzało, że użytkownik wpisał e-mail, numer karty kredytowej, <- biblioteki java.script
+1 hasło ma być spawdzane pod względem modyfikacji z loginem, czy haslo jest trudne
 
 4 w razie k- krotnego blędnego logowania w czasie t minut - uniemożliwić logowanie przez  T minut 
 4 informacja o tym w panelu użytkownika i administratora 
@@ -19,7 +16,6 @@
 2 szyfrowanie numerów kart kredytowych
 
 1 aliassy: login+_haslo, login+_nrkarty
-1 możliwość kilkukrotnego logowanias
 
 2.udosudostępnienie bazy innym użytkownikom 
 
@@ -33,3 +29,6 @@ zrobione:
 
 - na bazie dodać unique dla loginu
 - wrzucanie danych do bazy 
+- login ma się nie powtarzać z innymi loginami
+- hashowanie hasła i na hashach dokonywać sprawdzenia 
+- możliwość kilkukrotnego logowanias

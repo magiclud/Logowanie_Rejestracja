@@ -29,7 +29,7 @@ public class MyServletContextListener implements ServletContextListener{
          
         try {
         	Class.forName("com.mysql.jdbc.Driver");
-            DBConnectionManager connectionManager = new DBConnectionManager(dbURL);
+            PolaczenieZBazaDanych connectionManager = new PolaczenieZBazaDanych(dbURL);
             contex.setAttribute("DBConnection", connectionManager.getConnection());
             System.out.println("DB Connection initialized successfully.");
         } catch (ClassNotFoundException e) {

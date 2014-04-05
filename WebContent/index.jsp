@@ -18,9 +18,12 @@
 
 			<c:if test="${!empty sessionScope.userZalogowany}">
 				<br />
-				<a href="link_do_servleta_ktory_zwroci_plik">Link do pliku</a>
+				Pobierz i zobacz co jest w zaszyfrowanym pliku muzycznym
 				<br />
-				http://www.mkyong.com/java/how-to-download-file-from-website-java-jsp/
+				<a href="/Logowanie/pobierz">Pobierz Plik</a>
+				<br />
+				<br />
+				<br />
 			</c:if>
 
 	
@@ -48,7 +51,7 @@
 		<div id="footer"
 			style="background-color: #FFA500; clear: both; text-align: center;">"Jesli
 			potrzeba jest matka wynalazkow, to zapewne zagrozenie jest matka
-			kryptoanalizy." Simon Singh „Ksiega szyfrow”</div>
+			kryptoanalizy." Simon Singh -Ksiega szyfrow-</div>
 
 	</div>
 

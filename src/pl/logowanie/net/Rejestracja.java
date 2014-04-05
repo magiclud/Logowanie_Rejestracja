@@ -73,7 +73,7 @@ public class Rejestracja extends HttpServlet {
 				} else {
 					//hashString(haslo);
 					
-					Kodowanie zakoduj = new Kodowanie();
+					Szyfrowanie zakoduj = new Szyfrowanie();
 					preparedStatement = connection
 							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
 					// parameters start with 1

@@ -20,5 +20,5 @@
 		<a href="/Logowanie/wyloguj">Wylogowanie</a>
 		<br>
 	</c:if>
-	<br /> cos tu jeszcze dodaj
+	<br /> cos tu jeszcze dodaj np zobacz inf o uzytkowinku
 </div>

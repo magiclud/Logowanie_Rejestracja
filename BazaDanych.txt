@@ -1,4 +1,4 @@
-/** dane do stworzenia bazy danych wymaganej przy 4. liście z Krptografii i bezpieczeństwa*/
+﻿/** dane do stworzenia bazy danych wymaganej przy 4. liście z Krptografii i bezpieczeństwa*/
 
 
 create database stronaInternetowa;
@@ -21,3 +21,13 @@ CREATE TABLE UZYTKOWNICY (id INT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (ID));
 
 INSERT INTO UZYTKOWNICY values (default, 'lars', 'myemail@gmail.com','alias hasla', '1234567890123456');
+
+
+
+
+CREATE TABLE PLIKI (id INT NOT NULL AUTO_INCREMENT, 
+    nazwa VARCHAR(100) NOT NULL,
+    uzytkownik VARCHAR(30) , 
+    PRIMARY KEY (ID));
+
+INSERT INTO PLIKI values (default, 'D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\pikTestowy.txt', '');

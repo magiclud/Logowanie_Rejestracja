@@ -60,7 +60,7 @@ public class Logowanie extends HttpServlet {
 							.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 									+ "user=root");
 
-					Kodowanie zakoduj = new Kodowanie();
+					Szyfrowanie zakoduj = new Szyfrowanie();
 					String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
 							+ uzytkownik
 							+ "\" and haslo = \""

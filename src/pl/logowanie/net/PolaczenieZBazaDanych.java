@@ -4,13 +4,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBConnectionManager {
+public class PolaczenieZBazaDanych {
 
 	 private Connection connection;
      
-	    public DBConnectionManager(String dbURL) throws ClassNotFoundException, SQLException{
+	    public PolaczenieZBazaDanych(String dbURL) throws ClassNotFoundException, SQLException{
 	        Class.forName("com.mysql.jdbc.Driver");
-	        this.connection = DriverManager.getConnection(dbURL);
+	    this.connection = DriverManager
+					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
+							+ "user=root");
 	    }
 	     
 	    public Connection getConnection(){
