@@ -190,17 +190,24 @@ public class Szyfrowanie {
 			CipherOutputStream inCipherStream = new CipherOutputStream(bOut,
 					aesCipher);
 
-			int ch;
-			while ((ch = fileIn.read()) >= 0) {
-				inCipherStream.write(ch);
-			}
-//			byte[] outputByte = new byte[4096];
+//			int ch;
+//			while ((ch = fileIn.read()) >= 0) {
+//				inCipherStream.write(ch);
+//			}
+			byte[] outputByte = new byte[4096];
 //			// copy binary contect to output stream
-//			while (fileIn.read(outputByte, 0, 4096) != -1) {
+//			while (fileIn.read(bOut) != -1) {
 //				inCipherStream.write(outputByte, 0, 4096);
 //			}
-
-			byte[] cipherText = bOut.toByteArray();
+//			byte[] outputByte = new byte[4096];
+			//copy binary contect to output stream
+			while(fileIn.read(outputByte, 0, 4096) != -1)
+			{
+				inCipherStream.write(outputByte, 0, 4096);
+			}
+			
+			byte[]cipherText = bOut.toByteArray();
+	//		byte[] cipherText = bOut.toByteArray();
 
 			fileIn.close();
 			inCipherStream.close();

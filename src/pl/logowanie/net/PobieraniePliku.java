@@ -51,7 +51,7 @@ public class PobieraniePliku extends HttpServlet {
 		// normalnej strony html
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition",
-				"attachment;filename=input.wav");
+				"attachment;filename=music.wav");
 
 		//String sciezkaDoPliku = polaczZbazaIZnajdzPlik();
 		String sciezkaDoPliku = "D:\\eclipse\\Semestr4\\AESplikMuzyczny\\input.wav";
