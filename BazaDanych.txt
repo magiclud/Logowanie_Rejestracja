@@ -26,8 +26,9 @@ INSERT INTO UZYTKOWNICY values (default, 'lars', 'myemail@gmail.com','alias hasl
 
 
 CREATE TABLE PLIKI (id INT NOT NULL AUTO_INCREMENT, 
-    nazwa VARCHAR(100) NOT NULL,
+    nazwa VARCHAR(30) NOT NULL,
+    sciezka VARCHAR(100) NOT NULL,
     uzytkownik VARCHAR(30) , 
     PRIMARY KEY (ID));
 
-INSERT INTO PLIKI values (default, 'D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\pikTestowy.txt', '');
+INSERT INTO PLIKI values (default,'soft', 'D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\pikTestowy.txt', '');

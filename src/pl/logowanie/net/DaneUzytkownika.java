@@ -28,6 +28,25 @@ public class DaneUzytkownika extends HttpServlet {
 			String uzytkownik =  request; //TODO
 			System.out.println("Uzytkownik "+ uzytkownik); 
 			request.setAttribute("login", uzytkownik);
+			
+		    PreparedStatement updateUserInfo = (PreparedStatement) conn  
+                    .prepareStatement("insert into userInfo ( UserName, userPW) values(?,?)");  
+            //since first column is  AI, no need to include that for updates  
+            updateUserInfo.setString(1, nUser);  
+            updateUserInfo.setString(2, nPW);  
+  
+            updateUserInfo.executeUpdate();  
+            
+            lub 
+            
+            
+            String sql ="update names set first_name=?, last_name=? where id=?";
+            PrearedStatement ps = oon.prepareStatement(sql);
+            Connnection.prepareStatement();
+            ps.setString(1,"firstName");
+            ps.setString(2,"lastName");
+            ps.setId(3,1);
+            ps.executeUpdate();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

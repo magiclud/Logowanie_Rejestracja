@@ -54,7 +54,7 @@ public class PobieraniePliku extends HttpServlet {
 				"attachment;filename=music.wav");
 
 		//String sciezkaDoPliku = polaczZbazaIZnajdzPlik();
-		String sciezkaDoPliku = "D:\\eclipse\\Semestr4\\AESplikMuzyczny\\input.wav";
+		String sciezkaDoPliku = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\ZaszyfrowanyPlik.wav";
 		byte[] zdekodowanyPlik = Szyfrowanie.deszyfrowaniePliku(Szyfrowanie.pobierzKlucz(
 				sciezkaDoKeyStore, new String(aliasHasla), new String(
 						hasloDoKeystora)),  sciezkaDoPliku);
