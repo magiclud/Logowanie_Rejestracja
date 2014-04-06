@@ -5,7 +5,7 @@
 <html>
 <body>
 
-	<div id="container" style="width: 500px">
+	<div id="container" style="width: 650px">
 
 		<div id="header" style="background-color: #FFA500;">
 			<h1 style="margin-bottom: 0;">Zaszyfrowane pliki muzyczne</h1>
@@ -13,7 +13,7 @@
 		<%@include file="menu.jsp"%>
 
 		<div id="content"
-			style="background-color: #EEEEEE; height: 200px; width: 400px; float: left;">
+			style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
 			${wynikLogowania} ${aga} ${wynikRejestracji} <br />
 
 			<c:if test="${!empty sessionScope.userZalogowany}">

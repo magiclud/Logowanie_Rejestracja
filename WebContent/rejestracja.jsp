@@ -6,7 +6,7 @@
 </head>
 <body>
 
-	<div id="container" style="width: 500px">
+	<div id="container" style="width: 650px">
 
 		<div id="header" style="background-color: #FFA500;">
 			<h1 style="margin-bottom: 0;">Rejestracja</h1>

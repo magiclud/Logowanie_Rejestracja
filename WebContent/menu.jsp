@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div id="menu"
-	style="background-color: #FFD700; height: 200px; width: 100px; float: left;">
+	style="background-color: #FFD700; height: 400px; width: 150px; float: left;">
 	<c:if test="${empty sessionScope.userZalogowany}">
 		<br />
 		<a href="/Logowanie/login.jsp">Logowanie</a>
@@ -20,6 +20,6 @@
 		<a href="/Logowanie/wyloguj">Wylogowanie</a>
 		<br />
 		<br />
-		<a href="uzytkownik.jsp">Dane uzytkownika</a>
+		<a href="/Logowanie/uzytkownik.jsp">Dane uzytkownika</a>
 	</c:if>
 </div>
