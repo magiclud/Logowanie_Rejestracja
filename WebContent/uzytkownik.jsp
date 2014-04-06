@@ -16,7 +16,12 @@
 		<div id="content"
 			style="background-color: #EEEEEE; height: 200px; width: 400px; float: left;">
 					 ${e_mail} ${nrKarty}  <br />
-	
+			<output form="text" name="${sessionScope.userZalogowany }" method="post"></output> 
+			<form name="loginform" action="login_sprawdz" method="post">
+				Enter User Name: <input type="text" name="username"><br />
+				Enter Password: <input name="password" type="password"><br />
+				<input type="submit" >
+			</form>	
 
 			<table>
 				<TR>

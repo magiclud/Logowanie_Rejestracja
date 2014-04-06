@@ -11,16 +11,12 @@
 3 informacje o próbach logowania do konta
 
 2 zaszyfrowanie utworu muzycznego
-2 mozliwosc pobrania pliku przez użytkowanika
-
-2 szyfrowanie numerów kart kredytowych
 
 1 aliassy: login+_haslo, login+_nrkarty
 
 2.udosudostępnienie bazy innym użytkownikom 
 
 root -> 123123123 -> do bazy
-
 
 
 
@@ -32,3 +28,5 @@ zrobione:
 - login ma się nie powtarzać z innymi loginami
 - hashowanie hasła i na hashach dokonywać sprawdzenia 
 - możliwość kilkukrotnego logowanias
+- mozliwosc pobrania pliku przez użytkowanika
+- szyfrowanie numerów kart kredytowych

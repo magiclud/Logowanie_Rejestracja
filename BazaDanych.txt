@@ -32,3 +32,8 @@ CREATE TABLE PLIKI (id INT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (ID));
 
 INSERT INTO PLIKI values (default,'soft', 'D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\pikTestowy.txt', '');
+
+
+
+przykladowa aktualizacja: 
+UPDATE `stronainternetowa`.`pliki` SET `sciezka` = 'D:\\\\Programy\\\\eclipseEE\\\\wokspace\\\\Logowanie\\\\ZaszyfrowanyPlik.wav' WHERE `pliki`.`id` =1;

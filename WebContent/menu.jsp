@@ -19,6 +19,7 @@
 	<c:if test="${!empty sessionScope.userZalogowany}">
 		<a href="/Logowanie/wyloguj">Wylogowanie</a>
 		<br />
-	<br /> <a href="/Logowanie/uzytkownik">Dane uzytkownika</a>
+		<br />
+		<a href="uzytkownik.jsp">Dane uzytkownika</a>
 	</c:if>
 </div>
