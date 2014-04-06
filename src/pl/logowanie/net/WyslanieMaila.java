@@ -26,12 +26,12 @@ public class WyslanieMaila extends HttpServlet {
 	}
 
 	RequestDispatcher requestDispatcher;
-	private static String HOST = "smtp.gmail.com";
-	private static int PORT = 465;
+	private static String HOST = "http://localhost:8000/Logowanie/new_haslo";
+	private static int PORT = 8000;
 	// Adres email osby która wysyła maila
-	private static String FROM = "muminki.zDoliny@gmail.com";
+	private static String FROM = "agnieszkalud@gmail.com";
 	// Hasło do konta osoby która wysyła maila
-	private static String PASSWORD = "xxx";
+	private static String PASSWORD = "aaaaa";
 	// Adres email osoby do której wysyłany jest mail
 	private static String TO;
 	// Temat wiadomości
