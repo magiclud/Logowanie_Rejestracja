@@ -33,6 +33,10 @@
     <servlet-name>DaneUzytkownika</servlet-name>
     <servlet-class>pl.logowanie.net.DaneUzytkownika</servlet-class>
   </servlet>
+    <servlet>
+    <servlet-name>HasloNaMaila</servlet-name>
+    <servlet-class>pl.logowanie.net.WyslanieMaila</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>Logowanie</servlet-name>
     <url-pattern>/login_sprawdz</url-pattern>
@@ -52,6 +56,10 @@
   <servlet-mapping>
     <servlet-name>DaneUzytkownika</servlet-name>
     <url-pattern>/uzytkownik</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HasloNaMaila</servlet-name>
+    <url-pattern>/new_haslo</url-pattern>
   </servlet-mapping>
   <listener>
     <listener-class>pl.logowanie.net.MyServletContextListener</listener-class>

@@ -14,7 +14,7 @@
 
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
-			${wynikLogowania} ${aga} ${wynikRejestracji} <br />
+			${wynikLogowania} ${aga} ${wynikRejestracji} ${mail}  <br />
 
 			<c:if test="${!empty sessionScope.userZalogowany}">
 				<br />
@@ -26,7 +26,7 @@
 				<br />
 			</c:if>
 
-	
+				 ${mail}<br />
 				${wynikLogowania}<br />
 				<br />
 				<a href="login.jsp">Logowanie</a>

@@ -17,6 +17,7 @@
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 			<form name="dane_uzytkownika" action="uzytkownik" method="get"></form>
 			${e_mail} ${nrKarty} <br />
+			Dane uzytkownika:
 			<table>
 				<TR>
 					<TD>Login:</TD>

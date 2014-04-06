@@ -18,6 +18,11 @@
 				Enter Password: <input name="password" type="password"><br />
 				<input type="submit" >
 			</form>	
+			<br />
+			<br />
+			Zapomniales hasla? <br />
+			-> kliknij a otrzymasz nowe haslo na poczcie 
+			<a href="/Logowanie/zapomnianeHaslo.jsp">KLIK</a>
 			
 		</div>
 
