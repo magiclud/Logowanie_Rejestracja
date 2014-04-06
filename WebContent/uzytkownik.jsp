@@ -15,7 +15,7 @@
 
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
-			<form name="dane_uzytkownika" action="uzytkownik" method="post">
+			<form name="dane_uzytkownika" action="uzytkownik" method="get"></form>
 			${e_mail} ${nrKarty} <br />
 			<table>
 				<TR>
@@ -26,10 +26,7 @@
 					<TD>E-mail:</TD>
 					<TD>${e_mail}</TD>
 				</TR>
-				<TR>
-					<TD>Nr karty kredytowej:</TD>
-					<TD>D</TD>
-				</TR>
+			
 			</table>
 			<br /> Formularz do zmiany danych: <br />
 			<form name="registerform" action="rejestracja_sprawdz" method="post">

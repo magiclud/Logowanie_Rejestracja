@@ -142,7 +142,7 @@ public class DaneUzytkownika extends HttpServlet {
 					wiadomosc += "Haslo potwerdzajace nie moze byc null lub puste lub inne niz haslo.";
 				}
 			}
-			if (kartaKredytowa != null || !kartaKredytowa.equals("")) {
+			if (kartaKredytowa != null) {
 				if (!kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
 					wiadomosc += "Nieprawidlowy numer karty kredytowej, ma ona 16 cyfr.";
 				} else {
