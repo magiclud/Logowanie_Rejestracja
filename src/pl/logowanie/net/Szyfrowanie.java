@@ -35,7 +35,7 @@ public class Szyfrowanie {
 	static String hasloDoKeystora = "ala ma kota";
 	static String aliasHasla = "mojAlias";
 
-	String hashString(String haslo) {
+	static String hashString(String haslo) {
 
 		MessageDigest md;
 		try {

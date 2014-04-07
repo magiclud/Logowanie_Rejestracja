@@ -1,12 +1,18 @@
 package pl.logowanie.net;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Message;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.servlet.RequestDispatcher;
@@ -26,52 +32,58 @@ public class WyslanieMaila extends HttpServlet {
 	}
 
 	RequestDispatcher requestDispatcher;
-	private static String HOST = "smtp.poczta.onet.pl";
-	private static int PORT = 465;
 	// Adres email osby która wysyła maila
 	private static String FROM = "agnieszkalud@op.pl";
 	// Hasło do konta osoby która wysyła maila
 	private static String PASSWORD = "senga1";
 	// Adres email osoby do której wysyłany jest mail
-	private static String TO;
+	private static String adresat;
 	// Temat wiadomości
-	private static String SUBJECT = "Hello World";
+	private static String temat = "Nowe haslo do serwisu Zaszyfrowana muzyka";
 	// Treść wiadomości
-	private static String CONTENT = "To mój pierwszy mail wysłany za pomocą JavaMailAPI.";
+	private static String wiadomosc;
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  doPost method w WyslanieMaila");
 
 		String email = request.getParameter("email");
-		this.TO = email;
+		this.adresat = email;
 		System.out.println("email: " + email);
-		
-		Properties props = new Properties();
-		props.put("mail.transport.protocol", "smtps");
-		props.put("mail.smtps.auth", "true");
 
-		// Get the default Session object.
-		Session session = Session.getDefaultInstance(props);
+		Properties props = new Properties();
+		props.put("mail.smtp.host", "smtp.poczta.onet.pl");
+		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.socketFactory.class",
+				"javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", "465");
+
+		// Get Session
+		Session session = Session.getInstance(props,
+				new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(FROM, PASSWORD);
+					}
+				});
 
 		// Tworzenie wiadomości email
 		MimeMessage message = new MimeMessage(session);
 		try {
-			message.setSubject(SUBJECT);
-			message.setContent(CONTENT, "text/plain; charset=ISO-8859-2");
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					TO));
+			message.setFrom(new InternetAddress(FROM));
 
-			Transport transport;
-
-			transport = session.getTransport();
-
-			transport.connect(HOST, PORT, FROM, PASSWORD);
+			message.setRecipients(Message.RecipientType.TO,
+					InternetAddress.parse(adresat));// adres uzytkownika
+			message.setSubject(temat);
+			long dataLogowania = new Date().getTime();
+			String dataString = String.valueOf(dataLogowania);
+			wiadomosc = Szyfrowanie.hashString(dataString);
+			message.setText(wiadomosc);
 
 			// wysłanie wiadomości
-			transport.sendMessage(message,
-					message.getRecipients(Message.RecipientType.TO));
-			transport.close();
+			Transport.send(message);
+			// transport.close();
+			System.out.println("Wyslano e-maila");
 
 			request.setAttribute("mail",
 					"Na dany adres e-mail zostal wyslana wiadomosc.");
@@ -79,18 +91,10 @@ public class WyslanieMaila extends HttpServlet {
 			requestDispatcher = request.getRequestDispatcher("index.jsp");
 			requestDispatcher.forward(request, response);
 		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	// SimpleEmail email = new
-	// SimpleEmail("smtp.gmail.com",465,"myUsername","myPassword");
-	// email.setHostName("mail.myserver.com");
-	// email.addTo("jdoe@somewhere.org", "John Doe");
-	// email.setFrom("me@apache.org", "Me");
-	// email.setSubject("Test message");
-	// email.setMsg("This is a simple test of commons-email");
-	// email.send();
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {

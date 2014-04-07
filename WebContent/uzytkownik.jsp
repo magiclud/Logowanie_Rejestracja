@@ -16,7 +16,7 @@
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 			<form name="dane_uzytkownika" action="uzytkownik" method="get"></form>
-			${e_mail} ${nrKarty} <br />
+			<br />
 			Dane uzytkownika:
 			<table>
 				<TR>
@@ -25,12 +25,14 @@
 				</TR>
 				<TR>
 					<TD>E-mail:</TD>
-					<TD>${e_mail}</TD>
+					<TD>${email}</TD>
 				</TR>
 			
 			</table>
+			<br />
 			<br /> Formularz do zmiany danych: <br />
-			<form name="registerform" action="rejestracja_sprawdz" method="post">
+			(wypelnij wszystkie pola) <br />
+			<form name="zmianaDanych" action="zmiana_danych" method="post">
 				<strong>User Name:</strong> <input type="text" name="username"><br />
 				<strong>Password:</strong> <input type="password" name="password"><br />
 				<strong>Confirm Password:</strong><input type="password"

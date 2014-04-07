@@ -20,6 +20,6 @@
 		<a href="/Logowanie/wyloguj">Wylogowanie</a>
 		<br />
 		<br />
-		<a href="/Logowanie/uzytkownik.jsp">Dane uzytkownika</a>
+		<a href="/Logowanie/uzytkownik">Dane uzytkownika</a>
 	</c:if>
 </div>
