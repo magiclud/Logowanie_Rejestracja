@@ -14,16 +14,14 @@
 
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
-			${wynikLogowania} ${aga} ${wynikRejestracji} ${mail}  <br />
+			${wynikLogowania} ${aga} ${wynikRejestracji}   
 
 			<c:if test="${!empty sessionScope.userZalogowany}">
-				<br />
 				Pobierz i zobacz co jest w zaszyfrowanym pliku muzycznym
 				<br />
 				<a href="/Logowanie/pobierz">Pobierz Plik</a>
 				<br />
-				<br />
-				<br />
+				
 			</c:if>
 
 				 ${mail}<br />
@@ -31,15 +29,14 @@
 				<br />
 				<a href="login.jsp">Logowanie</a>
 				<br /> 
+				<c:if test="${empty sessionScope.userZalogowany}">
 				ilosc prob: ${sessionScope.iloscProb}
+			</c:if>
 				
 				<c:if test="${empty sessionScope.czasOczekiwania}">
-				
-				
 				<br />
 				<c:if test="${empty sessionScope.userZarejestrowany}">
 				 ${sessionScope.wynikRejestracji} <br />
-					<br />
 					<a href="rejestracja.jsp">Zarejestruj sie</a>
 				</c:if>
 			</c:if>

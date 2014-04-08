@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -13,14 +13,14 @@
 		</div>
 		<%@include file="menu.jsp"%>
 		
-		<div id="content">
+		<div id="content" style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
 			<form name="registerform" action="rejestracja_sprawdz" method="post">
-				<strong>User Name:</strong> <input type="text" name="username"><br />
-				<strong>Password:</strong> <input type="password" name="password"><br />
-				<strong>Confirm Password:</strong><input type="password"
-					name="conf_password"><br /> <strong>Email: </strong> <input
-					type="text" name="email"><br /> <strong>Number
-					credit card:</strong> <input type="text" name="creditCard"><br /> <input
+				<br /><strong>User Name:</strong> <input type="text" name="username"><br />
+				<br /><strong>Password:</strong> <input type="password" name="password"><br />
+				<br /><strong>Confirm Password:</strong><input type="password"
+					name="conf_password"><br /> <br /><strong>Email: </strong> <input
+					type="text" name="email"><br /><br /> <strong>Number
+					credit card:</strong> <input type="text" name="creditCard"><br /><br /> <input
 					type="submit">
 			</form>
 

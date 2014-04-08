@@ -85,6 +85,7 @@ public class Rejestracja extends HttpServlet {
 					preparedStatement.setString(2, email);
 					preparedStatement.setString(3, zakoduj.hashString(haslo));//haslo
 					preparedStatement.setString(4, zakoduj.hashString(kartaKredytowa));
+					System.out.println(preparedStatement);
 					preparedStatement.executeUpdate();
 
 					request.getSession().setAttribute("userZarejestrowany",

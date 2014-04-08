@@ -5,6 +5,8 @@
 	style="background-color: #FFD700; height: 400px; width: 150px; float: left;">
 	<c:if test="${empty sessionScope.userZalogowany}">
 		<br />
+		<br />
+		<br />
 		<a href="/Logowanie/login.jsp">Logowanie</a>
 		<br />
 		<c:if test="${empty sessionScope.userZarejestrowany}">
@@ -18,7 +20,6 @@
 	<br />
 	<c:if test="${!empty sessionScope.userZalogowany}">
 		<a href="/Logowanie/wyloguj">Wylogowanie</a>
-		<br />
 		<br />
 		<a href="/Logowanie/uzytkownik">Dane uzytkownika</a>
 	</c:if>

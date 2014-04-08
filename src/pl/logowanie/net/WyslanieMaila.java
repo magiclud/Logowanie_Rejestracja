@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.Properties;
 
@@ -48,52 +53,71 @@ public class WyslanieMaila extends HttpServlet {
 		System.out.println("Jestem w  doPost method w WyslanieMaila");
 
 		String email = request.getParameter("email");
-		this.adresat = email;
-		System.out.println("email: " + email);
 
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.poczta.onet.pl");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class",
-				"javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
-
-		// Get Session
-		Session session = Session.getInstance(props,
-				new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(FROM, PASSWORD);
-					}
-				});
-
-		// Tworzenie wiadomości email
-		MimeMessage message = new MimeMessage(session);
 		try {
-			message.setFrom(new InternetAddress(FROM));
+			Class.forName("com.mysql.jdbc.Driver");
 
-			message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse(adresat));// adres uzytkownika
-			message.setSubject(temat);
-			long dataLogowania = new Date().getTime();
-			String dataString = String.valueOf(dataLogowania);
-			wiadomosc = Szyfrowanie.hashString(dataString);
-			message.setText(wiadomosc);
+			Connection con = DriverManager
+					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
+							+ "user=root");
 
-			// wysłanie wiadomości
-			Transport.send(message);
-			// transport.close();
-			System.out.println("Wyslano e-maila");
+			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY where email = \""
+					+ email + "\" ";
+			Statement statement = con.createStatement();
+			ResultSet result = statement.executeQuery(zapytanie);
 
-			request.setAttribute("mail",
-					"Na dany adres e-mail zostal wyslana wiadomosc.");
+			if (result.next()) {
+				this.adresat = email;
+				System.out.println("email: " + email);
 
+				Properties props = new Properties();
+				props.put("mail.smtp.host", "smtp.poczta.onet.pl");
+				props.put("mail.smtp.socketFactory.port", "465");
+				props.put("mail.smtp.socketFactory.class",
+						"javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", "465");
+
+				// Get Session
+				Session session = Session.getInstance(props,
+						new javax.mail.Authenticator() {
+							protected PasswordAuthentication getPasswordAuthentication() {
+								return new PasswordAuthentication(FROM,
+										PASSWORD);
+							}
+						});
+
+				// Tworzenie wiadomości email
+				MimeMessage message = new MimeMessage(session);
+				message.setFrom(new InternetAddress(FROM));
+
+				message.setRecipients(Message.RecipientType.TO,
+						InternetAddress.parse(adresat));// adres uzytkownika
+				message.setSubject(temat);
+				long dataLogowania = new Date().getTime();
+				String dataString = String.valueOf(dataLogowania);
+				wiadomosc = Szyfrowanie.hashString(dataString);
+				message.setText(wiadomosc);
+
+				// wysłanie wiadomości
+				Transport.send(message);
+				// transport.close();
+				System.out.println("Wyslano e-maila");
+
+				request.setAttribute("mail",
+						"Na dany adres e-mail zostal wyslana wiadomosc.");
+
+			} else {
+				request.getSession().setAttribute("mail",
+						"Nie ma takiego emaila w bazie");
+			}
 			requestDispatcher = request.getRequestDispatcher("index.jsp");
 			requestDispatcher.forward(request, response);
-		} catch (MessagingException e) {
+		} catch (ClassNotFoundException | MessagingException | SQLException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+
 	}
 
 	protected void doGet(HttpServletRequest request,

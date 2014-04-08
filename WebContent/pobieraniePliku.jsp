@@ -15,7 +15,7 @@
 		</div>
 		<%@include file="menu.jsp"%>
 
-		<div id="content">
+		<div id="content" style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
 			<form name="pobierzPlik" action="pobierz" method="post">
 				Dziekujemy za pobranie pliku <br /> 
 				<br /> 

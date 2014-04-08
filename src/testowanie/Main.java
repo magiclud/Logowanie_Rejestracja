@@ -12,8 +12,11 @@ public class Main {
 //		//baza.test();
 //		baza.testWyszukiwaniaUzytkownikaZHaslem();;
 		
-		PrzesylaniePliku plik = new PrzesylaniePliku();
-		plik.test();
+//		PrzesylaniePliku plik = new PrzesylaniePliku();
+//		plik.test();
+		
+		SzyfrowanieKartyKredytowej kkk = new SzyfrowanieKartyKredytowej();
+		kkk.test();
 		
 //		KodowanieTest  kod = new KodowanieTest ();
 //		kod.test();

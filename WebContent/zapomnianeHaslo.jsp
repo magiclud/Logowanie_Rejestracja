@@ -16,13 +16,14 @@
 		</div>
 		<%@include file="menu.jsp"%>
 
-		<div id="content">
+		<div id="content" style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
 			<form name="wyslijNoweHaslo" action="new_haslo" method="post">
 				<br /> <br />Na address email zostanie wyslane nowe haslo.<br />
-				Po zalgowaniu zalecana jest zmiana hasla. <br /> Enter e-mail
+				Enter e-mail
 				address: <input type="text" name="email"><br /> <input
 					type="submit">
 			</form>
+			<br />Po zalgowaniu zalecana jest zmiana hasla. <br /> 
 			<br /> <a href="login.jsp">Logowanie</a>
 
 		</div>
