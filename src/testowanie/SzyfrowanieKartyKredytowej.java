@@ -2,6 +2,7 @@ package testowanie;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,11 +55,14 @@ public class SzyfrowanieKartyKredytowej {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String uzytkownik = "Tomasz";
+			String uzytkownik = "Pietraszek";
 			String aliasHasla = uzytkownik;
 			String nrKartyKredytowej = "1234432112344321";
 			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
-
+			// Key k1 = dodajKlucz(sciezkaDoKeyStore, aliasHasla);
+			// Key k2 = pobierzKlucz(sciezkaDoKeyStore, aliasHasla);
+			// System.out.println(k1);
+			// System.out.println(k2);
 			byte[] zaszyfrowanaWiadomosv = zaszyfrowanieWiadomosci(
 					dodajKlucz(sciezkaDoKeyStore, aliasHasla),
 					nrKartyKredytowej);
@@ -85,7 +89,7 @@ public class SzyfrowanieKartyKredytowej {
 				System.out.println("klucz " + klucz);
 				byte[] odszyfrowanyTekst = dekoduj(numer, klucz);
 
-				System.out.println("KARTA_KREDYTOWA: " + odszyfrowanyTekst);
+				System.out.println("KARTA_KREDYTOWA: " + new String(odszyfrowanyTekst));
 			} else {
 				System.out.println("nie ma takiego uzytkownika w bazie");
 				// String uzytkownik = result.getString("login");
@@ -107,9 +111,21 @@ public class SzyfrowanieKartyKredytowej {
 
 			KeyGenerator keyGen = KeyGenerator.getInstance("ARC4", "BC");
 			Key secretKey = keyGen.generateKey();
+
+			// inputStream.close();
+			// zaladuj zawartosc keyStore
+			File keystoreFile = new File(sciezkaDoKeyStore);
+			FileInputStream in = new FileInputStream(keystoreFile);
+			keyStore.load(in, hasloDoKeystora.toCharArray());
+			in.close();
+			// dodaj klucz
 			keyStore.setKeyEntry(aliasHasla, secretKey,
 					hasloDoKeystora.toCharArray(), null);
-			inputStream.close();
+			// zapisz nowy KeyStore
+			// Save the new keystore contents
+			FileOutputStream out = new FileOutputStream(keystoreFile);
+			keyStore.store(out, hasloDoKeystora.toCharArray());
+			out.close();
 			// ProtectionParameter protParam = new KeyStore.PasswordProtection(
 			// hasloDoKeystora.toCharArray());
 			// keyStore.setEntry(aliasHasla, entry, protParam);
@@ -145,7 +161,7 @@ public class SzyfrowanieKartyKredytowej {
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
 			ks.load(inputStream, hasloDoKeystora.toCharArray());
 			inputStream.close();
-			//inputStream.flush();
+			// inputStream.flush();
 			Key klucz = ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
 			inputStream.close();
 			return klucz;
