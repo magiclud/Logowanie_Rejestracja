@@ -13,16 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public class PobieraniePliku extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private Connection connect = null;
 	private Statement statement = null;
 	private ResultSet result = null;
-	
+
 	static String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
-	static String hasloDoKeystora = "ala ma kota";
 	static String aliasHasla = "mojAlias";
 
 	public PobieraniePliku() {
@@ -39,38 +37,37 @@ public class PobieraniePliku extends HttpServlet {
 		response.setHeader("Content-Disposition",
 				"attachment;filename=music.wav");
 
-		//String sciezkaDoPliku = polaczZbazaIZnajdzPlik();
+		// String sciezkaDoPliku = polaczZbazaIZnajdzPlik();
 		String sciezkaDoPliku = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\ZaszyfrowanyPlik.wav";
-		byte[] zdekodowanyPlik = Szyfrowanie.deszyfrowaniePliku(Szyfrowanie.pobierzKlucz(
-				sciezkaDoKeyStore, new String(aliasHasla), new String(
-						hasloDoKeystora)),  sciezkaDoPliku);
+		byte[] zdekodowanyPlik = Szyfrowanie.deszyfrowaniePliku(Szyfrowanie
+				.pobierzKlucz(sciezkaDoKeyStore, new String(aliasHasla)),
+				sciezkaDoPliku);
 		ServletOutputStream out = response.getOutputStream();
 		out.write(zdekodowanyPlik);
 
-//		AudioInputStream outSteream;
-//		try {
-//			outSteream = AudioSystem
-//					.getAudioInputStream(new ByteArrayInputStream(
-//							zdekodowanyTekst));
-//			Clip clip = AudioSystem.getClip();
-//			clip.open(outSteream);
-//			clip.start();
-//		} catch (UnsupportedAudioFileException | LineUnavailableException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		JFrame a = new JFrame();
-////		a.setVisible(true);
-//
-//	}
-//		
+		// AudioInputStream outSteream;
+		// try {
+		// outSteream = AudioSystem
+		// .getAudioInputStream(new ByteArrayInputStream(
+		// zdekodowanyTekst));
+		// Clip clip = AudioSystem.getClip();
+		// clip.open(outSteream);
+		// clip.start();
+		// } catch (UnsupportedAudioFileException | LineUnavailableException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// JFrame a = new JFrame();
+		// // a.setVisible(true);
+		//
+		// }
+		//
 		out.flush();
 		out.close();
 
 	}
-		
-
 
 	private String polaczZbazaIZnajdzPlik() {
 		try {

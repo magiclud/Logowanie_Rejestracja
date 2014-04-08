@@ -27,6 +27,10 @@
 					<TD>E-mail:</TD>
 					<TD>${email}</TD>
 				</TR>
+				<TR>
+					<TD>Nr karty kredyt.:</TD>
+					<TD>${nrKaty}</TD>
+				</TR>
 			
 			</table>
 			<br />

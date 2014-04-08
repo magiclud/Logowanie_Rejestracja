@@ -15,10 +15,11 @@
 		</div>
 		<%@include file="menu.jsp"%>
 
-		<div id="content" style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
+		<div id="content"
+			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 			<form name="wylog" action="wyloguj" method="post">
-				Zostales wylogowany <br /> <a
-					href="/Logowanie/login.jsp">Zaloguj sie ponownie</a>
+				<br /> <br /> <br /> Zostales wylogowany <br /> <br />
+				<a href="/Logowanie/login.jsp">Zaloguj sie ponownie</a>
 			</form>
 
 		</div>

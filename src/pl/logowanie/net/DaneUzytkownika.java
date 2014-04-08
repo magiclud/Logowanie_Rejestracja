@@ -1,6 +1,7 @@
 package pl.logowanie.net;
 
 import java.io.IOException;
+import java.security.Key;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -45,16 +46,23 @@ public class DaneUzytkownika extends HttpServlet {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY where login = \""
+			String zapytanie = "SELECT email, KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
 					+ uzytkownik + "\" ";
 			Statement statement = con.createStatement();
 			ResultSet result = statement.executeQuery(zapytanie);
 			String e_mail = null;
+			byte[] nrKarty = null;
 			if (result.next()) {
 				e_mail = result.getString("email");
+				nrKarty = result.getBytes("karta_kredytowa");
 			}
-			System.out.println(e_mail);
-			request.getSession().setAttribute("email", e_mail); // TODO
+			String aliasHasla = uzytkownik;
+			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty, Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
+			String numerKartyKredytowej =  new String(odszyfrowanyNumer);
+			
+			request.getSession().setAttribute("email", e_mail); 
+			request.getSession().setAttribute("nrKaty", numerKartyKredytowej);// TODO
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher("uzytkownik.jsp");
 			dispatcher.forward(request, response);

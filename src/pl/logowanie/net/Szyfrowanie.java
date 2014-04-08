@@ -97,15 +97,15 @@ public class Szyfrowanie {
 
 	}
 
-	public static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla,
-			String hasloDoKeystora) {
+	public static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla) {
 
 		try {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
 			ks.load(inputStream, hasloDoKeystora.toCharArray());
-
-			return ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
+			Key klucz = ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
+			inputStream.close();
+			return klucz;
 		} catch (UnrecoverableKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,7 +131,7 @@ public class Szyfrowanie {
 		return null;
 	}
 
-	public static byte[] zaszyfrowanieWiadomosci(Key klucz,
+	public static byte[] zaszyfrowaniePliku(Key klucz,
 			String sciezkaWejsciowa) {
 		IvParameterSpec ivSpec = new IvParameterSpec(new byte[16]);
 		Cipher aesCipher;
@@ -236,5 +236,112 @@ public class Szyfrowanie {
 		}
 		return null;
 
+	}
+	
+	static Key dodajKlucz(String sciezkaDoKeyStore, String aliasHasla) {
+		try {
+			System.out.println("aliash Hasla w dodaj klucz: " + aliasHasla);
+			KeyStore keyStore = KeyStore.getInstance("UBER", "BC");
+			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
+
+			keyStore.load(inputStream, hasloDoKeystora.toCharArray());
+
+			KeyGenerator keyGen = KeyGenerator.getInstance("ARC4", "BC");
+			Key secretKey = keyGen.generateKey();
+
+			// inputStream.close();
+			// zaladuj zawartosc keyStore
+			File keystoreFile = new File(sciezkaDoKeyStore);
+			FileInputStream in = new FileInputStream(keystoreFile);
+			keyStore.load(in, hasloDoKeystora.toCharArray());
+			in.close();
+			// dodaj klucz
+			keyStore.setKeyEntry(aliasHasla, secretKey,
+					hasloDoKeystora.toCharArray(), null);
+			// zapisz nowy KeyStore
+			// Save the new keystore contents
+			FileOutputStream out = new FileOutputStream(keystoreFile);
+			keyStore.store(out, hasloDoKeystora.toCharArray());
+			out.close();
+			// ProtectionParameter protParam = new KeyStore.PasswordProtection(
+			// hasloDoKeystora.toCharArray());
+			// keyStore.setEntry(aliasHasla, entry, protParam);
+			// inputStream.close();
+			return secretKey;
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static byte[] zaszyfrowanieWiadomosci(Key klucz, String wiadomosc) {
+		IvParameterSpec ivSpec = new IvParameterSpec(new byte[16]);
+		Cipher aesCipher;
+		try {
+			aesCipher = Cipher.getInstance("AES/CTR/NoPadding", "BC");
+			aesCipher.init(Cipher.ENCRYPT_MODE, klucz, ivSpec);
+			return aesCipher.doFinal(wiadomosc.getBytes());
+		} catch (NoSuchAlgorithmException | NoSuchProviderException
+				| NoSuchPaddingException | InvalidKeyException
+				| InvalidAlgorithmParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	static byte[] dekodujWiadomosc(byte[] kryptogram, Key klucz) {
+
+		IvParameterSpec ivSpec = new IvParameterSpec(new byte[16]);
+		Cipher cipher;
+		try {
+			cipher = Cipher.getInstance("AES/CTR/NoPadding", "BC");
+			cipher.init(Cipher.DECRYPT_MODE, klucz, ivSpec);
+			return cipher.doFinal(kryptogram);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidAlgorithmParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return kryptogram;
 	}
 }

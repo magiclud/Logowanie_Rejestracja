@@ -32,6 +32,11 @@ public class ZmianaDanych extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
+		String uzytkownik = (String) request.getSession().getAttribute(
+				"userZalogowany");
+		System.out.println("****  "+ uzytkownik);
+		
 		String email = request.getParameter("email");
 		String haslo = request.getParameter("password");
 		String hasloPtwierdzenie = request.getParameter("conf_password");
@@ -42,7 +47,7 @@ public class ZmianaDanych extends HttpServlet {
 		connection = (Connection) getServletContext().getAttribute(
 				"DBConnection");
 		try {
-			if (login != null && !login.equals("")) {
+			if ( !login.equals("") && !login.equals(uzytkownik)) {
 				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
 						+ login + "\"";
 				Statement statement = connection.createStatement();

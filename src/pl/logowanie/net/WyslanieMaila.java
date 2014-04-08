@@ -53,6 +53,7 @@ public class WyslanieMaila extends HttpServlet {
 		System.out.println("Jestem w  doPost method w WyslanieMaila");
 
 		String email = request.getParameter("email");
+		String uzytkownik = request.getParameter("username");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -61,13 +62,14 @@ public class WyslanieMaila extends HttpServlet {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY where email = \""
-					+ email + "\" ";
+			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY where login = \""
+					+ uzytkownik + "\" and email = \""+email+"\" ";
 			Statement statement = con.createStatement();
 			ResultSet result = statement.executeQuery(zapytanie);
 
 			if (result.next()) {
 				this.adresat = email;
+				
 				System.out.println("email: " + email);
 
 				Properties props = new Properties();
@@ -97,11 +99,22 @@ public class WyslanieMaila extends HttpServlet {
 				long dataLogowania = new Date().getTime();
 				String dataString = String.valueOf(dataLogowania);
 				wiadomosc = Szyfrowanie.hashString(dataString);
-				message.setText(wiadomosc);
+				message.setText(dataString);
 
 				// wysłanie wiadomości
 				Transport.send(message);
 				// transport.close();
+				
+				//aktalizacja w bazie danych 
+				statement = con.createStatement();
+				// wykonanie polecenia
+				//TODO
+				statement.executeUpdate("update stronainternetowa.UZYTKOWNICY SET `HASLO` =\""
+								+ wiadomosc
+								+ "\"  where uzytkownicy.login = \""
+								+ uzytkownik
+								+ "\"");
+				
 				System.out.println("Wyslano e-maila");
 
 				request.setAttribute("mail",
@@ -109,7 +122,7 @@ public class WyslanieMaila extends HttpServlet {
 
 			} else {
 				request.getSession().setAttribute("mail",
-						"Nie ma takiego emaila w bazie");
+						"Nie ma takiego uzytkownika o takim adresie e-mail w bazie");
 			}
 			requestDispatcher = request.getRequestDispatcher("index.jsp");
 			requestDispatcher.forward(request, response);

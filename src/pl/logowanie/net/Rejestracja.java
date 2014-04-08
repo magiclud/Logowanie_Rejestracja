@@ -76,15 +76,15 @@ public class Rejestracja extends HttpServlet {
 					Szyfrowanie zakoduj = new Szyfrowanie();
 					preparedStatement = connection
 							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
-					// parameters start with 1
-					//String hashHasla = hashString(haslo);
-//					String aliasHasla = login +hashHasla; 
-//					String sciezkaDoPlikuZhaslem = Kodowanie.zakoduj(hashHasla, aliasHasla, login);
-					
+					String aliasHasla = login;
+					String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+					byte[] zaszyfrowanyNumer = Szyfrowanie.zaszyfrowanieWiadomosci(
+							Szyfrowanie.dodajKlucz(sciezkaDoKeyStore, aliasHasla),
+							kartaKredytowa);
 					preparedStatement.setString(1, login);
 					preparedStatement.setString(2, email);
 					preparedStatement.setString(3, zakoduj.hashString(haslo));//haslo
-					preparedStatement.setString(4, zakoduj.hashString(kartaKredytowa));
+					preparedStatement.setBytes(4, zaszyfrowanyNumer);
 					System.out.println(preparedStatement);
 					preparedStatement.executeUpdate();
 

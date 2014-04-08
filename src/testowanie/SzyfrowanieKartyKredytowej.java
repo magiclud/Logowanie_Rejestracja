@@ -87,9 +87,10 @@ public class SzyfrowanieKartyKredytowej {
 				byte[] numer = result.getBytes("KARTA_KREDYTOWA");
 				Key klucz = pobierzKlucz(sciezkaDoKeyStore, aliasHasla);
 				System.out.println("klucz " + klucz);
-				byte[] odszyfrowanyTekst = dekoduj(numer, klucz);
+				byte[] odszyfrowanyTekst = dekodujWiadomosc(numer, klucz);
 
-				System.out.println("KARTA_KREDYTOWA: " + new String(odszyfrowanyTekst));
+				System.out.println("KARTA_KREDYTOWA: "
+						+ new String(odszyfrowanyTekst));
 			} else {
 				System.out.println("nie ma takiego uzytkownika w bazie");
 				// String uzytkownik = result.getString("login");
@@ -155,7 +156,6 @@ public class SzyfrowanieKartyKredytowej {
 	}
 
 	static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla) {
-		System.out.println("aliash Hasla w pobierz klucz: " + aliasHasla);
 		try {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
@@ -212,7 +212,7 @@ public class SzyfrowanieKartyKredytowej {
 		return null;
 	}
 
-	static byte[] dekoduj(byte[] kryptogram, Key klucz) {
+	static byte[] dekodujWiadomosc(byte[] kryptogram, Key klucz) {
 
 		IvParameterSpec ivSpec = new IvParameterSpec(new byte[16]);
 		Cipher cipher;

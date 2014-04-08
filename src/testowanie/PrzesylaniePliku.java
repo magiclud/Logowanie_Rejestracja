@@ -36,22 +36,21 @@ public class PrzesylaniePliku {
 
 	@Test
 	public void test() {
-		
+
 		String sciezkaDoPliku = polaczZbazaIZnajdzPlik();
-		
-		String filename="plikTestowy.txt";
-		String hasloDoKeystora = "ala ma kota";
+
+		String filename = "plikTestowy.txt";
 		String aliasHasla = "mojAlias";
 		String sciezkaDoKeyStore = "D:\\eclipse\\Semestr4\\AESplikMuzyczny\\keyStore.ks";
-    
-		byte[] zaszyfrowanyPlik = Szyfrowanie.zaszyfrowanieWiadomosci(Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore,
-				new String(aliasHasla), new String(hasloDoKeystora)),
-				sciezkaDoPliku);
+
+		byte[] zaszyfrowanyPlik = Szyfrowanie.zaszyfrowanieWiadomosci(
+				Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, new String(
+						aliasHasla)), sciezkaDoPliku);
 		String sciezkaWyjsciowa = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\wyjscie.wav";
-		byte[] zdekodowanyTekst = Szyfrowanie.deszyfrowanieWiadomosci(Szyfrowanie.pobierzKlucz(
-				sciezkaDoKeyStore, new String(aliasHasla), new String(
-						hasloDoKeystora)), zaszyfrowanyPlik, sciezkaWyjsciowa);
-		
+		byte[] zdekodowanyTekst = Szyfrowanie.deszyfrowanieWiadomosci(
+				Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, new String(
+						aliasHasla)), zaszyfrowanyPlik, sciezkaWyjsciowa);
+
 		AudioInputStream outSteream;
 		try {
 			outSteream = AudioSystem
@@ -60,7 +59,7 @@ public class PrzesylaniePliku {
 			Clip clip = AudioSystem.getClip();
 			clip.open(outSteream);
 			clip.start();
-		
+
 		} catch (UnsupportedAudioFileException | LineUnavailableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,7 +67,7 @@ public class PrzesylaniePliku {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		JFrame a = new JFrame();
 		a.setVisible(true);
 
@@ -83,10 +82,10 @@ public class PrzesylaniePliku {
 			connect = DriverManager
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
-			
+
 			String nazwaPliku = "\"soft\"";
 			String lokalizacjaPliku = null;
-			
+
 			String zapytanie = "SELECT sciezka from stronainternetowa.PLIKI where nazwa = "
 					+ nazwaPliku;
 			statement = connect.createStatement();

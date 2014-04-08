@@ -35,7 +35,7 @@
   </servlet>
     <servlet>
     <servlet-name>ZmianaDanych</servlet-name>
-    <servlet-class>pl.logowanie.net.Rejestracja</servlet-class>
+    <servlet-class>pl.logowanie.net.ZmianaDanych</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>HasloNaMaila</servlet-name>

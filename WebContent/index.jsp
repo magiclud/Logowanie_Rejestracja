@@ -13,33 +13,38 @@
 		<%@include file="menu.jsp"%>
 
 		<div id="content"
-			style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
-			${wynikLogowania} ${aga} ${wynikRejestracji}   
+			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 
+			${aga}${wynikRejestracji} <br/ > ${wynikLogowania}
 			<c:if test="${!empty sessionScope.userZalogowany}">
+
+				<br />
 				Pobierz i zobacz co jest w zaszyfrowanym pliku muzycznym
 				<br />
 				<a href="/Logowanie/pobierz">Pobierz Plik</a>
-				<br />
-				
+
+
 			</c:if>
 
-				 ${mail}<br />
-				${wynikLogowania}<br />
+			<c:if test="${empty sessionScope.userZalogowany}">
+				
+					 ${wynikLogowania}<br />
+				<br />
 				<br />
 				<a href="login.jsp">Logowanie</a>
-				<br /> 
-				<c:if test="${empty sessionScope.userZalogowany}">
-				ilosc prob: ${sessionScope.iloscProb}
-			</c:if>
-				
-				<c:if test="${empty sessionScope.czasOczekiwania}">
 				<br />
-				<c:if test="${empty sessionScope.userZarejestrowany}">
+				ilosc prob: ${sessionScope.iloscProb}
+				<c:if test="${empty sessionScope.czasOczekiwania}">
+
+					<c:if test="${empty sessionScope.userZarejestrowany}">
 				 ${sessionScope.wynikRejestracji} <br />
-					<a href="rejestracja.jsp">Zarejestruj sie</a>
+						<br />
+						<a href="rejestracja.jsp">Zarejestruj sie</a>
+					</c:if>
 				</c:if>
 			</c:if>
+
+
 
 
 
