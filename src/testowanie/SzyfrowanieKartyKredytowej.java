@@ -54,7 +54,7 @@ public class SzyfrowanieKartyKredytowej {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String uzytkownik = "Wieskaa";
+			String uzytkownik = "Tomasz";
 			String aliasHasla = uzytkownik;
 			String nrKartyKredytowej = "1234432112344321";
 			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
@@ -109,6 +109,7 @@ public class SzyfrowanieKartyKredytowej {
 			Key secretKey = keyGen.generateKey();
 			keyStore.setKeyEntry(aliasHasla, secretKey,
 					hasloDoKeystora.toCharArray(), null);
+			inputStream.close();
 			// ProtectionParameter protParam = new KeyStore.PasswordProtection(
 			// hasloDoKeystora.toCharArray());
 			// keyStore.setEntry(aliasHasla, entry, protParam);
@@ -143,8 +144,11 @@ public class SzyfrowanieKartyKredytowej {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
 			ks.load(inputStream, hasloDoKeystora.toCharArray());
-
-			return ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
+			inputStream.close();
+			//inputStream.flush();
+			Key klucz = ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
+			inputStream.close();
+			return klucz;
 		} catch (UnrecoverableKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
