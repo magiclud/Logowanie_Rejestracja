@@ -22,7 +22,11 @@
 				Pobierz i zobacz co jest w zaszyfrowanym pliku muzycznym
 				<br />
 				<a href="/Logowanie/pobierz">Pobierz Plik</a>
-
+				<br />
+				<br />
+				Przeslij wlasne pliki 
+				<br />
+				<a href="przesylaniePliku.jsp">Przeslij wlasne pliki</a>
 
 			</c:if>
 
