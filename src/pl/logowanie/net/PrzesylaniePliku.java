@@ -5,21 +5,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
-
+ 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+ 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-
-@WebServlet("/yourPattern")
-@MultipartConfig
 public class PrzesylaniePliku extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     //private final String UPLOAD_DIRECTORY = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\pobranePliki\\"; 
@@ -61,7 +56,7 @@ public class PrzesylaniePliku extends HttpServlet {
          
         try {
             // parses the request's content to extract file data
-            List formItems = upload.parseRequest((RequestContext) request);//wymuszone rzutowanie 
+            List formItems = upload.parseRequest( request);//wymuszone rzutowanie 
             Iterator iter = formItems.iterator();
              
             // iterates over form's fields
@@ -79,6 +74,7 @@ public class PrzesylaniePliku extends HttpServlet {
             }
             request.setAttribute("message", "Upload has been done successfully!");
         } catch (Exception ex) {
+        	ex.printStackTrace();
         	System.err.println(ex);
             request.setAttribute("message", "There was an error: " + ex.getMessage());
         }
