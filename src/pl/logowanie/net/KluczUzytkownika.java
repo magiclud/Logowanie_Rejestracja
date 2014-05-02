@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/KluczUzytkownika")
-// do rejestracji servleta w tomkacie
+// do rejestracji servleta w tomcacie
 public class KluczUzytkownika extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;

@@ -37,3 +37,11 @@ INSERT INTO PLIKI values (default,'soft', 'D:\\Programy\\eclipseEE\\wokspace\\Lo
 
 przykladowa aktualizacja: 
 UPDATE `stronainternetowa`.`pliki` SET `sciezka` = 'D:\\\\Programy\\\\eclipseEE\\\\wokspace\\\\Logowanie\\\\ZaszyfrowanyPlik.wav' WHERE `pliki`.`id` =1;
+
+
+
+CREATE TABLE PLIKI_MUZYCZNE (id INT NOT NULL AUTO_INCREMENT, 
+    TYTUL VARCHAR(30) ,
+    WYKONAWCA VARCHAR(50) , 
+    GATUNEK VARCHAR(50),
+    PRIMARY KEY (ID));

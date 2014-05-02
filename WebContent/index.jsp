@@ -27,6 +27,11 @@
 				Przeslij wlasne pliki 
 				<br />
 				<a href="przesylaniePliku.jsp">Przeslij wlasne pliki</a>
+				<br />
+				<br />
+				Przejrzyj piosenki
+				<br />
+				<a href="danePiosenki.jsp">Dane piosenki</a>
 
 			</c:if>
 
