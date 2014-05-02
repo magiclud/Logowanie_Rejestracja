@@ -22,7 +22,7 @@
 				<form name="przeslijPlik" action="przeslij" method="post"
 					enctype="multipart/form-data">
 
-					<input type="file" name="file" /> <input type="submit"
+					<input type="file" name="uploadFile" /> <input type="submit"
 						value="upload" />
 				</form>
 			</div>
