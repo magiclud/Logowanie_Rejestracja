@@ -48,6 +48,7 @@ public class PrzesylaniePliku extends HttpServlet {
         // constructs the directory path to store upload file
         String uploadPath = getServletContext().getRealPath("")
             + File.separator + UPLOAD_DIRECTORY;
+        System.out.println("Plik jest w " + uploadPath);
         // creates the directory if it does not exist
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -72,11 +73,11 @@ public class PrzesylaniePliku extends HttpServlet {
                     item.write(storeFile);
                 }
             }
-            request.setAttribute("message", "Upload has been done successfully!");
+            request.setAttribute("message", "Przeslanie pliku zakonczylo sie sukcesem!");
         } catch (Exception ex) {
         	ex.printStackTrace();
         	System.err.println(ex);
-            request.setAttribute("message", "There was an error: " + ex.getMessage());
+            request.setAttribute("message", "Blad przesylania: " + ex.getMessage());
         }
         getServletContext().getRequestDispatcher("/rezultPrzeslaniaPliku.jsp").forward(request, response);
     }
