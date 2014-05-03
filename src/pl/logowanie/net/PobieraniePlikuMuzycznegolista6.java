@@ -1,13 +1,18 @@
 package pl.logowanie.net;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -18,10 +23,6 @@ import org.farng.mp3.TagException;
 
 public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	private Connection connect = null;
-	private Statement statement = null;
-	private ResultSet result = null;
 
 	static String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
 	static String aliasHasla = "mojAlias";
@@ -49,9 +50,7 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 		try {
 			sciezkaDoPliku = plikMuzyczny.znajdzPlikiPasujaceDoTytulu(katalog, tytul);
 	
-		byte[] zdekodowanyPlik = Szyfrowanie.deszyfrowaniePliku(Szyfrowanie
-				.pobierzKlucz(sciezkaDoKeyStore, new String(aliasHasla)),
-				sciezkaDoPliku);
+		byte[] zdekodowanyPlik = przygotujPlikDoPrzeslania(sciezkaDoPliku);
 		ServletOutputStream out = response.getOutputStream();
 		out.write(zdekodowanyPlik);
 
@@ -76,41 +75,84 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 		//
 		out.flush();
 		out.close();
+		
 		} catch (TagException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	private String polaczZbazaIZnajdzPlik() {
+		String uzytkownik = (String) request.getSession().getAttribute(
+				"userZalogowany");
+		
+		System.out.println("Uzytkownik " + uzytkownik);
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
-			// nawiazywanie polaczenia z baza danych , mozna jeszcze dodać haslo
-			// jesli potrzeba
-			connect = DriverManager
+			// nawiazywanie polaczenia z baza danych , mozna jeszcze
+			// dodać haslo jesli potrzeba
+			Connection con = DriverManager
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String nazwaPliku = "\"soft\"";
-			String lokalizacjaPliku = null;
-
-			String zapytanie = "SELECT sciezka from stronainternetowa.PLIKI where nazwa = "
-					+ nazwaPliku;
-			statement = connect.createStatement();
-			result = statement.executeQuery(zapytanie);
+			String zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
+					+ uzytkownik + "\" ";
+			Statement statement = con.createStatement();
+			ResultSet result = statement.executeQuery(zapytanie);
+			byte[] nrKarty = null;
 			if (result.next()) {
-				System.out.println("Jestem w ifie, czyli isnieje taki plik");
-				lokalizacjaPliku = result.getString("sciezka");
-				System.out.println("Plik jest tutaj: " + lokalizacjaPliku);
-			} else {
-				System.out.println("nie ma takiego pliku w bazie");
+				nrKarty = result.getBytes("karta_kredytowa");
 			}
-			return lokalizacjaPliku;
+			String aliasHasla = uzytkownik;
+			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty, Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
+			String numerKartyKredytowej =  new String(odszyfrowanyNumer);
+			
+			char[] nrKartyKred = numerKartyKredytowej.toCharArray();
+			String message = null;
+			for (int i=0; i<nrKartyKred.length; i++){
+				if(i>=11){
+					message +=nrKartyKred[i];
+				}
+				 message +="*"; 
+			}
+			
+			request.setAttribute("fragmentNrKarty", message);
+			RequestDispatcher dispatcher = request
+					.getRequestDispatcher("pobieraniePliku.jsp");
+			dispatcher.forward(request, response);
+			
 		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	
+	}
+
+	private byte[] przygotujPlikDoPrzeslania(String sciezkaDoPliku) {
+		try {
+			File file = new File(sciezkaDoPliku);
+			FileInputStream fileIn = new FileInputStream(file);
+			ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+			OutputStream outStr = new DataOutputStream(bOut);
+			byte[] outputByte = new byte[4096];
+
+			while(fileIn.read(outputByte, 0, 4096) != -1)
+			{
+				outStr.write(outputByte, 0, 4096);
+			}
+			
+			byte[]cipherText = bOut.toByteArray();
+
+			fileIn.close();
+			outStr.close();
+			return cipherText;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		return null;
+
 	}
 
 }

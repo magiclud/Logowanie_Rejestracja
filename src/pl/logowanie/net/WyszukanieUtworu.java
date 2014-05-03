@@ -170,6 +170,7 @@ public class WyszukanieUtworu extends HttpServlet {
 					pasujacePlikiMuzyczne.add(tag.getTitle());
 					System.out.println("Plik" + i + ": " + pliki[i].getName());
 					sciezkaDostepu = pliki[i].getAbsolutePath();
+					System.out.println("sciezkaDost "+ pliki[i].getAbsolutePath());
 				}
 			}
 
