@@ -47,6 +47,10 @@
     <servlet-class>pl.logowanie.net.DaneUzytkownika</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>WyszukanieUtworu</servlet-name>
+    <servlet-class>pl.logowanie.net.WyszukanieUtworu</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>DanePlikuMuzycznego</servlet-name>
     <servlet-class>pl.logowanie.net.DanePlikuMuzycznego</servlet-class>
   </servlet>
@@ -81,6 +85,10 @@
   <servlet-mapping>
     <servlet-name>DaneUzytkownika</servlet-name>
     <url-pattern>/uzytkownik</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WyszukanieUtworu</servlet-name>
+    <url-pattern>/znajdz_utor</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>DanePlikuMuzycznego</servlet-name>

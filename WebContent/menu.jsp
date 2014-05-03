@@ -24,6 +24,6 @@
 		<a href="/Logowanie/uzytkownik">Dane uzytkownika</a>
 		<br />
 		<br />
-		<a href="/Logowanie/szukajMuzyki">Szukaj utoru</a>
+		<a href="wyszukajUtworu.jsp">Szukaj utoru</a>
 	</c:if>
 </div>

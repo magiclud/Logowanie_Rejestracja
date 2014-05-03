@@ -16,7 +16,23 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DanePlikuMuzycznego extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private String tabGatunkow[] = { "Blues", "Classic Rock", "Country",
+			"Dance", "Disco", "Funk", "Grunge", "Hip-Hop", "Jazz", "Metal",
+			"New Age", "Oldies", "Other", "Pop", "R&B", "Rap", "Reggae",
+			"Rock", "Techno", "Industrial", "Alternative", "Ska",
+			"Death Metal", "Pranks", "Soundtrack", "Euro-Techno", "Ambient",
+			"Trip-Hop", "Vocal", "Jazz+Funk", "Fusion", "Trance", "Classical",
+			"Instrumental", "Acid", "House", "Game", "Sound Clip", "Gospel",
+			"Noise", "AlternRock", "Bass", "Soul", "Punk", "Space",
+			"Meditative", "Instrumental Pop", "Instrumental Rock", "Ethnic",
+			"Gothic", "Darkwave", "Techno-Industrial", "Electronic",
+			"Pop-Folk", "Eurodance", "Dream", "Southern Rock", "Comedy",
+			"Cult", "Gangsta", "Top 40", "Christian Rap", "Pop/Funk", "Jungle",
+			"Native American", "Cabaret", "New Wave", "Psychadelic", "Rave",
+			"Showtunes", "Trailer", "Lo-Fi", "Tribal", "Acid Punk",
+			"Acid Jazz", "Polka", "Retro", "Musical", "Rock & Roll",
+			"Hard Rock" };
+	
     public DanePlikuMuzycznego() {
         super();
     }
@@ -26,8 +42,7 @@ public class DanePlikuMuzycznego extends HttpServlet {
 		
 
 //TODO tutaj co na ten wzor, ze jak niby klinknie na jakas nazwe pliku to tu to sie przekaze
-		String tytul = (String) request.getSession().getAttribute(
-				"tytul");
+		String tytul = (String) request.getParameter("tytul");
 		
 		System.out.println("Tytul " + tytul);
 		request.setAttribute("tytul", tytul);
@@ -53,7 +68,7 @@ public class DanePlikuMuzycznego extends HttpServlet {
 			}
 			
 			request.getSession().setAttribute("wykonawca", wykonawca); 
-			request.getSession().setAttribute("gatunek", gatunek);
+			request.getSession().setAttribute("gatunek", tabGatunkow[Integer.parseInt(gatunek)]);
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher("danePiosenki.jsp");
 			dispatcher.forward(request, response);

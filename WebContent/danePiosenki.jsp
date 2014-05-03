@@ -16,8 +16,7 @@
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 			<form name="dane_piosenki" action="piosenka" method="get"></form>
-			<br />
-			Dane utworu:
+			<br /> Dane utworu:
 			<table>
 				<TR>
 					<TD>Tytul:</TD>
@@ -31,29 +30,23 @@
 					<TD>Gartnek:</TD>
 					<TD>${gatunek}</TD>
 				</TR>
-			
+
 			</table>
-			<br />
-			<br /> Formularz do zmiany danych: <br />
-			(wypelnij wszystkie pola) <br />
-			<form name="zmianaDanych" action="zmiana_danych" method="post">
-				<strong>User Name:</strong> <input type="text" name="username"><br />
-				<strong>Password:</strong> <input type="password" name="password"><br />
-				<strong>Confirm Password:</strong><input type="password"
-					name="conf_password"><br /> <strong>Email: </strong> <input
-					type="text" name="email"><br /> <strong>Number
-					credit card:</strong> <input type="text" name="creditCard"><br /> <input
-					type="submit">
+			<br /> <br />
+			<form name="pobierzPlikMuzyczny" action="pobierzMuzyczke"
+				method="post">
+
+				<br /> Pobierz <input type="submit" name="tytul" value="${tytul}"><br />
+				<br />
+
 			</form>
-
+			<br />
 		</div>
-
 		<div id="footer"
 			style="background-color: #FFA500; clear: both; text-align: center;">Jesli
 			potrzeba jest matka wynalazkow, to zapewne zagrozenie jest matka
 			kryptoanalizy.</div>
 
 	</div>
-
 </body>
 </html>

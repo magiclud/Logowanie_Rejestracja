@@ -15,14 +15,14 @@
 
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
-			<form name="szukaj_utworu" action="szukajMuzyki" method="get"></form>
-			<br /> <br /> Wyszukaj utworu muzycznego: <br /> (wypelnij
-			przynajmniej jedno pole) <br />
+			<br /> Wyszukaj utworu muzycznego: <br /> (wypelnij przynajmniej
+			jedno pole, <br />pisz prosze nazwy wlasne z duzej litery i bez
+			polskich znakow) <br /> <br />
 			<form name="szukajPiosenki" action="znajdz_utor" method="post">
 				<strong>Tytul:</strong> <input type="text" name="tytul"><br />
 				<strong>Wykonawca:</strong> <input type="text" name="wykonawca"><br />
 				<strong>Gatunek:</strong><input type="text" name="gatunek"><br />
-				<input type="submit">
+				<br /> <input type="submit">
 			</form>
 
 		</div>

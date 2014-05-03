@@ -20,7 +20,24 @@ import org.farng.mp3.id3.ID3v1;
 public class WyszukanieUtworu extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RequestDispatcher requestDispatcher;
-	private ArrayList<File> pasujacePlikiMuzyczne = new ArrayList<File>();
+	private ArrayList<String> pasujacePlikiMuzyczne = new ArrayList<String>();
+
+	private String tabGatunkow[] = { "Blues", "Classic Rock", "Country",
+			"Dance", "Disco", "Funk", "Grunge", "Hip-Hop", "Jazz", "Metal",
+			"New Age", "Oldies", "Other", "Pop", "R&B", "Rap", "Reggae",
+			"Rock", "Techno", "Industrial", "Alternative", "Ska",
+			"Death Metal", "Pranks", "Soundtrack", "Euro-Techno", "Ambient",
+			"Trip-Hop", "Vocal", "Jazz+Funk", "Fusion", "Trance", "Classical",
+			"Instrumental", "Acid", "House", "Game", "Sound Clip", "Gospel",
+			"Noise", "AlternRock", "Bass", "Soul", "Punk", "Space",
+			"Meditative", "Instrumental Pop", "Instrumental Rock", "Ethnic",
+			"Gothic", "Darkwave", "Techno-Industrial", "Electronic",
+			"Pop-Folk", "Eurodance", "Dream", "Southern Rock", "Comedy",
+			"Cult", "Gangsta", "Top 40", "Christian Rap", "Pop/Funk", "Jungle",
+			"Native American", "Cabaret", "New Wave", "Psychadelic", "Rave",
+			"Showtunes", "Trailer", "Lo-Fi", "Tribal", "Acid Punk",
+			"Acid Jazz", "Polka", "Retro", "Musical", "Rock & Roll",
+			"Hard Rock" };
 
 	public WyszukanieUtworu() {
 		super();
@@ -52,49 +69,71 @@ public class WyszukanieUtworu extends HttpServlet {
 			// kredytowej
 
 			try { // znjaduj plki pasujace do jednego ze wzorca i dodaj do
-					// wsolenj listy wynikow
+					// listy wynikow
 				if (!tytul.equals("")) {
 					znajdzPlikiPasujaceDoTytulu(katalog, tytul);
 				}
 				if (!wykonawca.equals("")) {
 					znajdzPlikiPasujaceDoWykonawcy(katalog, wykonawca);
 				}
-				if(!gatunek.equals("")){
+				if (!gatunek.equals("")) {
 					znajdzPlikiPasujaceDoGatunku(katalog, gatunek);
+				}
+				if (pasujacePlikiMuzyczne.size() != 0) {
+					wiadomosc = "Oto specjalne utwory dla Ciebie: \n";
+					for (int i = 0; i < pasujacePlikiMuzyczne.size(); i++) {
+						System.out.println("Pasujace pliki "
+								+ pasujacePlikiMuzyczne.get(i));
+						// TODO wyswietlenie informacji o ppiosenkach i
+						// umozliwienie ich pobrania
+						request.getSession().setAttribute("piosenki",
+								pasujacePlikiMuzyczne);
+					}
+				} else {
+					wiadomosc = "Nie znaleziono utwrów \n";
 				}
 			} catch (TagException e) {
 				e.printStackTrace();
 			}
 		}
-		request.setAttribute("wynikRejestracji", wiadomosc);
-		requestDispatcher = request.getRequestDispatcher("index.jsp");// TODO
-																		// albo
-																		// listaDOstepnychUtworow.jsp
+
+		request.setAttribute("wynikWyszukiwania", wiadomosc);
+		requestDispatcher = request
+				.getRequestDispatcher("listaDostepnychUtworow.jsp");// TODO
+		// albo
+		// listaDOstepnychUtworow.jsp
 		requestDispatcher.forward(request, response);
 	}
 
-	private void znajdzPlikiPasujaceDoGatunku(File katalog, String gatunek) throws IOException, TagException {
+	private void znajdzPlikiPasujaceDoGatunku(File katalog, String gatunek)
+			throws IOException, TagException {
+		int wartoscGatunku = -1;
+		for (int i = 0; i < tabGatunkow.length; i++) {
+			if (tabGatunkow[i].equals(gatunek)) {
+				wartoscGatunku = i;
+			}
+		}
 		File pliki[] = katalog.listFiles();
 		for (int i = 0; i < pliki.length; i++) {
 			if (pliki[i].isDirectory())
-				znajdzPlikiPasujaceDoWykonawcy(new File(katalog.getName()
+				znajdzPlikiPasujaceDoTytulu(new File(katalog.getName()
 						+ File.separatorChar + pliki[i].getName()), gatunek);
 			else if (pliki[i].isFile()) {
 				String lokalizacja = pliki[i].getAbsolutePath();
 				// System.out.println("Sciezka " + lokalizacja);
 				MP3File mp3file = new MP3File(lokalizacja);
 				ID3v1 tag = mp3file.getID3v1Tag();
-				if (tag.getGenre().equals( GatunekUtworu.valueOf(gatunek))) {
-					pasujacePlikiMuzyczne.add(pliki[i]);
+				if (tag.getGenre() == wartoscGatunku) {
+					pasujacePlikiMuzyczne.add(tag.getTitle());
 					System.out.println("Plik" + i + ": " + pliki[i].getName());
 				}
 			}
 
-		}		
-		
+		}
 	}
 
-	private void znajdzPlikiPasujaceDoWykonawcy(File katalog, String wykonawca) throws IOException, TagException {
+	private void znajdzPlikiPasujaceDoWykonawcy(File katalog, String wykonawca)
+			throws IOException, TagException {
 		File pliki[] = katalog.listFiles();
 		for (int i = 0; i < pliki.length; i++) {
 			if (pliki[i].isDirectory())
@@ -105,17 +144,18 @@ public class WyszukanieUtworu extends HttpServlet {
 				// System.out.println("Sciezka " + lokalizacja);
 				MP3File mp3file = new MP3File(lokalizacja);
 				ID3v1 tag = mp3file.getID3v1Tag();
-				if (tag.getArtist().equals(wykonawca)) {
-					pasujacePlikiMuzyczne.add(pliki[i]);
+				if (tag.getArtist().equals(wykonawca)|| tag.getArtist().equals(wykonawca.toLowerCase())|| tag.getArtist().equals(wykonawca.toUpperCase())) {
+					pasujacePlikiMuzyczne.add(tag.getTitle());
 					System.out.println("Plik" + i + ": " + pliki[i].getName());
 				}
 			}
 
-		}		
+		}
 	}
 
-	private void znajdzPlikiPasujaceDoTytulu(File katalog, String tytul)
+	String znajdzPlikiPasujaceDoTytulu(File katalog, String tytul)
 			throws IOException, TagException {
+		String sciezkaDostepu = null; //wykorzystywane przy pobiernaiu pliku 
 		File pliki[] = katalog.listFiles();
 		for (int i = 0; i < pliki.length; i++) {
 			if (pliki[i].isDirectory())
@@ -126,13 +166,15 @@ public class WyszukanieUtworu extends HttpServlet {
 				// System.out.println("Sciezka " + lokalizacja);
 				MP3File mp3file = new MP3File(lokalizacja);
 				ID3v1 tag = mp3file.getID3v1Tag();
-				if (tag.getTitle().equals(tytul)) {
-					pasujacePlikiMuzyczne.add(pliki[i]);
+				if (tag.getTitle().equals(tytul) ||tag.getTitle().equals(tytul.toLowerCase()) ||tag.getTitle().equals(tytul.toUpperCase()) ) {
+					pasujacePlikiMuzyczne.add(tag.getTitle());
 					System.out.println("Plik" + i + ": " + pliki[i].getName());
+					sciezkaDostepu = pliki[i].getAbsolutePath();
 				}
 			}
 
 		}
+		return sciezkaDostepu;
 	}
 
 }

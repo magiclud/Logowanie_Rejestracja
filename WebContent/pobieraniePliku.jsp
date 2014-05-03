@@ -19,6 +19,7 @@
 			<form name="pobierzPlik" action="pobierz" method="post">
 				Dziekujemy za pobranie pliku <br /> 
 				<br /> 
+				Pobrano nalezna oplate z karty kredytowej o nr: <br />${fragmentNrKarty}  <br />
 				<br /> 
 			</form>
 
