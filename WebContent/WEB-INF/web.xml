@@ -46,7 +46,7 @@
     <servlet-name>DaneUzytkownika</servlet-name>
     <servlet-class>pl.logowanie.net.DaneUzytkownika</servlet-class>
   </servlet>
-   <servlet>
+  <servlet>
     <servlet-name>DanePlikuMuzycznego</servlet-name>
     <servlet-class>pl.logowanie.net.DanePlikuMuzycznego</servlet-class>
   </servlet>
@@ -82,11 +82,10 @@
     <servlet-name>DaneUzytkownika</servlet-name>
     <url-pattern>/uzytkownik</url-pattern>
   </servlet-mapping>
-   <servlet-mapping>
+  <servlet-mapping>
     <servlet-name>DanePlikuMuzycznego</servlet-name>
     <url-pattern>/piosenka</url-pattern>
   </servlet-mapping>
-  
   <servlet-mapping>
     <servlet-name>ZmianaDanych</servlet-name>
     <url-pattern>/zmiana_danych</url-pattern>
