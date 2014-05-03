@@ -15,7 +15,7 @@
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 
-			${aga}${wynikRejestracji} <br/ > ${wynikLogowania}
+			${aga}${wynikRejestracji} <br > ${wynikLogowania}
 			<c:if test="${!empty sessionScope.userZalogowany}">
 
 				<br />
