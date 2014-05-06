@@ -49,19 +49,19 @@ public class Komentarze extends HttpServlet {
 		try {
 
 			String zapytanie = "SELECT uzytkownik, komentarz from stronainternetowa.KOMENTARZE where tytul = \""
-						+ tytul + "\"";
+					+ tytul + "\"";
 			statement = connection.createStatement();
 			result = statement.executeQuery(zapytanie);
 			while (result.next()) {
-				String login = result.getString("uzytkownik")+": ";
+				String login = result.getString("uzytkownik") + ": ";
 				String wczesniejszyKomentarz = result.getString("komentarz");
 				System.out.println("Uzytk. " + login + " komen.: "
 						+ wczesniejszyKomentarz);
 				poprzednieKomentarze.add(login);
 				poprzednieKomentarze.add(wczesniejszyKomentarz);
 			}
-			if(poprzednieKomentarze.size() != 0){
-				for (int i=0; i<poprzednieKomentarze.size(); i++){
+			if (poprzednieKomentarze.size() != 0) {
+				for (int i = 0; i < poprzednieKomentarze.size(); i++) {
 					request.getSession().setAttribute("komentarzeWbazie",
 							poprzednieKomentarze.get(i));
 				}
@@ -81,13 +81,15 @@ public class Komentarze extends HttpServlet {
 				request.getSession().setAttribute("nowyKomentarz", komentarz);
 
 				preparedStatement.close();
-			}
-		
+				requestDispatcher = request
+						.getRequestDispatcher("/listaDostepnychUtworow.jsp");
+				requestDispatcher.forward(request, response);
+			} else {
 
-		// TODO przekierowanie do kolenjej strony
-		requestDispatcher = request
-				.getRequestDispatcher("/listaKomentarzy.jsp");
-		requestDispatcher.forward(request, response);
+				requestDispatcher = request
+						.getRequestDispatcher("/listaKomentarzy.jsp");
+				requestDispatcher.forward(request, response);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

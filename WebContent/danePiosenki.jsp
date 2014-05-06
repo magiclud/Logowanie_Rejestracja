@@ -45,10 +45,11 @@
 			<c:forEach var="kom" items="${komentarzeWbazie}">
 
 				<c:out value="${kom}" />
+					<br />
 			</c:forEach>
 			<br />
 			<br />
-			<a href="wyslijKomentarz.jsp">Skomentuj</a>
+			<a href="wyslijKomentarz">Skomentuj</a>
 
 
 		</div>
