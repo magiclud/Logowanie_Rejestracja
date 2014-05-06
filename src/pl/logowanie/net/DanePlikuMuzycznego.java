@@ -39,11 +39,12 @@ public class DanePlikuMuzycznego extends HttpServlet {
     protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  service method w DanePlikuMuzycznego");
-		
 
-//TODO tutaj co na ten wzor, ze jak niby klinknie na jakas nazwe pliku to tu to sie przekaze
 		String tytul = (String) request.getParameter("tytul");
-		
+		String uzytkownik = (String) request.getSession().getAttribute(
+				"userZalogowany");
+
+		System.out.println("Uzytkownik " + uzytkownik);
 		System.out.println("Tytul " + tytul);
 		request.getSession().setAttribute("tytul", tytul);
 
@@ -69,6 +70,34 @@ public class DanePlikuMuzycznego extends HttpServlet {
 			
 			request.getSession().setAttribute("wykonawca", wykonawca); 
 			request.getSession().setAttribute("gatunek", tabGatunkow[Integer.parseInt(gatunek)]);
+			
+			 zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
+					+ uzytkownik + "\" ";
+			statement = con.createStatement();
+			 result = statement.executeQuery(zapytanie);
+			byte[] nrKarty = null;
+			if (result.next()) {
+				nrKarty = result.getBytes("karta_kredytowa");
+			}
+			String aliasHasla = uzytkownik;
+			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty,
+					Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
+			String numerKartyKredytowej = new String(odszyfrowanyNumer);
+			System.out.println("Nr karty kredyt. " + numerKartyKredytowej);
+
+			char[] nrKartyKred = numerKartyKredytowej.toCharArray();
+			String message = "";
+			for (int i = 0; i < nrKartyKred.length; i++) {
+				if (i >= 11) {
+					message += nrKartyKred[i];
+				} else {
+					message += "*";
+				}
+			}
+			System.out.println("Nr karty kredyt. z * " + message);
+			request.setAttribute("fragmentNrKarty", message);
+			
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher("danePiosenki.jsp");
 			dispatcher.forward(request, response);

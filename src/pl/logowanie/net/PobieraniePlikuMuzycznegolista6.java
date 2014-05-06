@@ -35,58 +35,6 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out
 				.println("jestem w sevice method w pobieraniu muzyki z listy 6 ");
-		
-		
-		String uzytkownik = (String) request.getSession().getAttribute(
-				"userZalogowany");
-
-		System.out.println("Uzytkownik " + uzytkownik);
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-
-			// nawiazywanie polaczenia z baza danych , mozna jeszcze
-			// dodać haslo jesli potrzeba
-			Connection con = DriverManager
-					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
-							+ "user=root");
-
-			String zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
-					+ uzytkownik + "\" ";
-			Statement statement = con.createStatement();
-			ResultSet result = statement.executeQuery(zapytanie);
-			byte[] nrKarty = null;
-			if (result.next()) {
-				nrKarty = result.getBytes("karta_kredytowa");
-			}
-			String aliasHasla = uzytkownik;
-			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
-			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty,
-					Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
-			String numerKartyKredytowej = new String(odszyfrowanyNumer);
-			System.out.println("Nr karty kredyt. " + numerKartyKredytowej);
-
-			char[] nrKartyKred = numerKartyKredytowej.toCharArray();
-			String message = "";
-			for (int i = 0; i < nrKartyKred.length; i++) {
-				if (i >= 11) {
-					message += nrKartyKred[i];
-				} else {
-					message += "*";
-				}
-			}
-			System.out.println("Nr karty kredyt. z * " + message);
-			request.setAttribute("fragmentNrKarty", message);
-			request.getRequestDispatcher("pobieraniePliku.jsp").forward(request, response);
-			// dispatcher.forward(request, response);
-			// RequestDispatcher dispatcher = request
-			// .getRequestDispatcher("pobieraniePliku.jsp");
-			// dispatcher.forward(request, response);
-
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition",

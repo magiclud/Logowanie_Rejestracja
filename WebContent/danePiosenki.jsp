@@ -16,7 +16,7 @@
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 			<form name="dane_piosenki" action="piosenka" method="get"></form>
-			<br /> Dane utworu:
+			<h3 >Dane utworu</h3>
 			<table>
 				<TR>
 					<TD>Tytul:</TD>
@@ -32,15 +32,18 @@
 				</TR>
 
 			</table>
-			<br /> <br />
+
 			<form name="pobierzPlikMuzyczny" action="pobierzMuzyczke"
 				method="post">
 
-				<br /> Pobierz <input type="submit" name="tytul" value="${tytul}"><br />
-				<br />
+				<br /> *Pobierz <input type="submit" name="tytul" value="${tytul}">
+				<h6>* Zostanie pobrana oplata z kart kredytowej o nr: ${fragmentNrKarty} </h6>
 
 			</form>
 			<br />
+			<a href="/Logowanie/listaKomentarzy">Zobacz komentarze/skomentuj</a>
+			
+
 		</div>
 		<div id="footer"
 			style="background-color: #FFA500; clear: both; text-align: center;">Jesli
