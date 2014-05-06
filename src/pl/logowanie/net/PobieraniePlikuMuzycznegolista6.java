@@ -33,58 +33,15 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("jestem w sevice method w pobieraniu muzyki z listy 6 ");
-
-		String tytul = (String) request.getAttribute("tytul");
-		System.out.println("Pobrano z sesji tytul muzyki: "+ tytul);
-		// informuje przegladarke ze system ma zamiar zwrocic plik zamiast
-		// normalnej strony html
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition",
-				"attachment;filename=music.mp3");
-
-		String sciezka = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\muzyka";
-		File katalog = new File(sciezka);
-		WyszukanieUtworu plikMuzyczny = new WyszukanieUtworu();
-		String sciezkaDoPliku;
-		try {
-			sciezkaDoPliku = plikMuzyczny.znajdzPlikiPasujaceDoTytulu(katalog, tytul);
-	
-		byte[] zdekodowanyPlik = przygotujPlikDoPrzeslania(sciezkaDoPliku);
-		ServletOutputStream out = response.getOutputStream();
-		out.write(zdekodowanyPlik);
-
-		// AudioInputStream outSteream;
-		// try {
-		// outSteream = AudioSystem
-		// .getAudioInputStream(new ByteArrayInputStream(
-		// zdekodowanyTekst));
-		// Clip clip = AudioSystem.getClip();
-		// clip.open(outSteream);
-		// clip.start();
-		// } catch (UnsupportedAudioFileException | LineUnavailableException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// JFrame a = new JFrame();
-		// // a.setVisible(true);
-		//
-		// }
-		//
-		out.flush();
-		out.close();
+		System.out
+				.println("jestem w sevice method w pobieraniu muzyki z listy 6 ");
 		
-		} catch (TagException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		String uzytkownik = (String) request.getSession().getAttribute(
 				"userZalogowany");
-		
+
 		System.out.println("Uzytkownik " + uzytkownik);
-		
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -104,29 +61,83 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 			}
 			String aliasHasla = uzytkownik;
 			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
-			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty, Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
-			String numerKartyKredytowej =  new String(odszyfrowanyNumer);
-			
+			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty,
+					Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
+			String numerKartyKredytowej = new String(odszyfrowanyNumer);
+			System.out.println("Nr karty kredyt. " + numerKartyKredytowej);
+
 			char[] nrKartyKred = numerKartyKredytowej.toCharArray();
-			String message = null;
-			for (int i=0; i<nrKartyKred.length; i++){
-				if(i>=11){
-					message +=nrKartyKred[i];
+			String message = "";
+			for (int i = 0; i < nrKartyKred.length; i++) {
+				if (i >= 11) {
+					message += nrKartyKred[i];
+				} else {
+					message += "*";
 				}
-				 message +="*"; 
 			}
-			
+			System.out.println("Nr karty kredyt. z * " + message);
 			request.setAttribute("fragmentNrKarty", message);
-			RequestDispatcher dispatcher = request
-					.getRequestDispatcher("pobieraniePliku.jsp");
-			dispatcher.forward(request, response);
-			
+			request.getRequestDispatcher("pobieraniePliku.jsp").forward(request, response);
+			// dispatcher.forward(request, response);
+			// RequestDispatcher dispatcher = request
+			// .getRequestDispatcher("pobieraniePliku.jsp");
+			// dispatcher.forward(request, response);
+
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-	
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition",
+				"attachment;filename=music.mp3");
+
+		String tytul = (String) request.getSession().getAttribute("tytul");
+
+		System.out.println("Pobrano z sesji tytul muzyki: " + tytul);
+		// informuje przegladarke ze system ma zamiar zwrocic plik zamiast
+		// normalnej strony html
+
+		String sciezka = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\muzyka";
+		File katalog = new File(sciezka);
+		WyszukanieUtworu plikMuzyczny = new WyszukanieUtworu();
+		String sciezkaDoPliku;
+		try {
+			sciezkaDoPliku = plikMuzyczny.znajdzPlikiPasujaceDoTytulu(katalog,
+					tytul);
+
+			byte[] zdekodowanyPlik = przygotujPlikDoPrzeslania(sciezkaDoPliku);
+			ServletOutputStream out = response.getOutputStream();
+			out.write(zdekodowanyPlik);
+
+			// AudioInputStream outSteream;
+			// try {
+			// outSteream = AudioSystem
+			// .getAudioInputStream(new ByteArrayInputStream(
+			// zdekodowanyTekst));
+			// Clip clip = AudioSystem.getClip();
+			// clip.open(outSteream);
+			// clip.start();
+			// } catch (UnsupportedAudioFileException | LineUnavailableException
+			// e)
+			// {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			//
+			// JFrame a = new JFrame();
+			// // a.setVisible(true);
+			//
+			// }
+			//
+			out.flush();
+			out.close();
+		} catch (TagException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
 	}
 
 	private byte[] przygotujPlikDoPrzeslania(String sciezkaDoPliku) {
@@ -137,12 +148,11 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 			OutputStream outStr = new DataOutputStream(bOut);
 			byte[] outputByte = new byte[4096];
 
-			while(fileIn.read(outputByte, 0, 4096) != -1)
-			{
+			while (fileIn.read(outputByte, 0, 4096) != -1) {
 				outStr.write(outputByte, 0, 4096);
 			}
-			
-			byte[]cipherText = bOut.toByteArray();
+
+			byte[] cipherText = bOut.toByteArray();
 
 			fileIn.close();
 			outStr.close();
@@ -150,7 +160,7 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return null;
 
 	}

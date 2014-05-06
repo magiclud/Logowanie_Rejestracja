@@ -45,7 +45,7 @@ public class DanePlikuMuzycznego extends HttpServlet {
 		String tytul = (String) request.getParameter("tytul");
 		
 		System.out.println("Tytul " + tytul);
-		request.setAttribute("tytul", tytul);
+		request.getSession().setAttribute("tytul", tytul);
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
