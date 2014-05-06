@@ -59,6 +59,10 @@
     <servlet-class>pl.logowanie.net.DanePlikuMuzycznego</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>Komentarz</servlet-name>
+    <servlet-class>pl.logowanie.net.Komentarze</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>ZmianaDanych</servlet-name>
     <servlet-class>pl.logowanie.net.ZmianaDanych</servlet-class>
   </servlet>
@@ -102,6 +106,11 @@
     <servlet-name>DanePlikuMuzycznego</servlet-name>
     <url-pattern>/piosenka</url-pattern>
   </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>Komentarz</servlet-name>
+    <url-pattern>/wyslijKomentarz</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>ZmianaDanych</servlet-name>
     <url-pattern>/zmiana_danych</url-pattern>

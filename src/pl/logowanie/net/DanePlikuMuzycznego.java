@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,11 +33,12 @@ public class DanePlikuMuzycznego extends HttpServlet {
 			"Showtunes", "Trailer", "Lo-Fi", "Tribal", "Acid Punk",
 			"Acid Jazz", "Polka", "Retro", "Musical", "Rock & Roll",
 			"Hard Rock" };
-	
-    public DanePlikuMuzycznego() {
-        super();
-    }
-    protected void service(HttpServletRequest request,
+
+	public DanePlikuMuzycznego() {
+		super();
+	}
+
+	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  service method w DanePlikuMuzycznego");
 
@@ -48,6 +50,7 @@ public class DanePlikuMuzycznego extends HttpServlet {
 		System.out.println("Tytul " + tytul);
 		request.getSession().setAttribute("tytul", tytul);
 
+		ArrayList<String> poprzednieKomentarze = new ArrayList<String>();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -67,14 +70,15 @@ public class DanePlikuMuzycznego extends HttpServlet {
 				wykonawca = result.getString("wykonawca");
 				gatunek = result.getString("gatunek");
 			}
-			
-			request.getSession().setAttribute("wykonawca", wykonawca); 
-			request.getSession().setAttribute("gatunek", tabGatunkow[Integer.parseInt(gatunek)]);
-			
-			 zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
+
+			request.getSession().setAttribute("wykonawca", wykonawca);
+			request.getSession().setAttribute("gatunek",
+					tabGatunkow[Integer.parseInt(gatunek)]);
+
+			zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
 					+ uzytkownik + "\" ";
 			statement = con.createStatement();
-			 result = statement.executeQuery(zapytanie);
+			result = statement.executeQuery(zapytanie);
 			byte[] nrKarty = null;
 			if (result.next()) {
 				nrKarty = result.getBytes("karta_kredytowa");
@@ -97,14 +101,33 @@ public class DanePlikuMuzycznego extends HttpServlet {
 			}
 			System.out.println("Nr karty kredyt. z * " + message);
 			request.setAttribute("fragmentNrKarty", message);
-			
+
+			zapytanie = "SELECT uzytkownik, komentarz from stronainternetowa.KOMENTARZE where tytul = \""
+					+ tytul + "\"";
+			statement = con.createStatement();
+			result = statement.executeQuery(zapytanie);
+			while (result.next()) {
+				String login = result.getString("uzytkownik") + ": ";
+				String wczesniejszyKomentarz = "      ~"+result.getString("komentarz");
+				System.out.println("Uzytk. " + login + " komen.: "
+						+ wczesniejszyKomentarz);
+				poprzednieKomentarze.add(login);
+				poprzednieKomentarze.add(wczesniejszyKomentarz);
+			}
+			if (poprzednieKomentarze.size() != 0) {
+				for (int i = 0; i < poprzednieKomentarze.size(); i++) {
+					request.getSession().setAttribute("komentarzeWbazie",
+							poprzednieKomentarze);
+				}
+			}
+
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher("danePiosenki.jsp");
 			dispatcher.forward(request, response);
-			
+
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 }

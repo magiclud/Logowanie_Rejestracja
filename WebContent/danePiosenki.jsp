@@ -16,7 +16,7 @@
 		<div id="content"
 			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
 			<form name="dane_piosenki" action="piosenka" method="get"></form>
-			<h3 >Dane utworu</h3>
+			<h3>Dane utworu</h3>
 			<table>
 				<TR>
 					<TD>Tytul:</TD>
@@ -36,13 +36,20 @@
 			<form name="pobierzPlikMuzyczny" action="pobierzMuzyczke"
 				method="post">
 
-				<br /> *Pobierz <input type="submit" name="tytul" value="${tytul}">
-				<h6>* Zostanie pobrana oplata z kart kredytowej o nr: ${fragmentNrKarty} </h6>
+				<br /> *Pobierz: <input type="submit" name="tytul" value="${tytul}">
+				<br /> * Zostanie pobrana oplata z kart kredytowej o nr:
+				${fragmentNrKarty}
 
 			</form>
+			<br /> Komentarze: <br />
+			<c:forEach var="kom" items="${komentarzeWbazie}">
+
+				<c:out value="${kom}" />
+			</c:forEach>
 			<br />
-			<a href="/Logowanie/listaKomentarzy">Zobacz komentarze/skomentuj</a>
-			
+			<br />
+			<a href="wyslijKomentarz.jsp">Skomentuj</a>
+
 
 		</div>
 		<div id="footer"

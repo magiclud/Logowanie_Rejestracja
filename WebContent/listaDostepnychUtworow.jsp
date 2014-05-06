@@ -28,10 +28,6 @@
 				<br />
 			</c:forEach>
 
-
-
-
-
 		</div>
 
 		<div id="footer"
