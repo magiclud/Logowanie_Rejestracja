@@ -6,14 +6,14 @@
 </head>
 <body>
 
-	<div id="container" style="width: 650px">
+	<div id="container" style="width: 850px">
 
 		<div id="header" style="background-color: #FFA500;">
 			<h1 style="margin-bottom: 0;">Rejestracja</h1>
 		</div>
 		<%@include file="menu.jsp"%>
 		
-		<div id="content" style="background-color: #EEEEEE; height: 400px; width:500px; float: left;">
+		<div id="content" style="background-color: #EEEEEE; height: 650px; width:700px; float: left;">
 			<form name="registerform" action="rejestracja_sprawdz" method="post">
 				<br /><strong>User Name:</strong> <input type="text" name="username"><br />
 				<br /><strong>Password:</strong> <input type="password" name="password"><br />

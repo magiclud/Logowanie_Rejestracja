@@ -1,7 +1,10 @@
 package pl.logowanie.net;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -49,6 +52,17 @@ public class WyszukanieUtworu extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
+		 InputStream in = request.getInputStream();
+		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
+		    StringBuffer buf = new StringBuffer();
+		    String line;
+		    while ((line = r.readLine())!=null) {
+			buf.append(line);
+		    }
+		    String s = buf.toString();
+		    System.out.println("!!!!!!     "+s+ "   !!!!!!!!!");
+		
 
 		String tytul = request.getParameter("tytul");
 		String wykonawca = request.getParameter("wykonawca");

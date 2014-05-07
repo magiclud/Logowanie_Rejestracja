@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div id="menu"
-	style="background-color: #FFD700; height: 400px; width: 150px; float: left;">
+	style="background-color: #FFD700; height: 650px; width: 150px; float: left;">
 	<c:if test="${empty sessionScope.userZalogowany}">
 		<br />
 		<br />

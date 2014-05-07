@@ -1,6 +1,9 @@
 package pl.logowanie.net;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -37,6 +40,16 @@ public class Logowanie extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  service method of selvlet");
 
+//		 InputStream in = request.getInputStream();
+//		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
+//		    StringBuffer buf = new StringBuffer();
+//		    String line;
+//		    while ((line = r.readLine())!=null) {
+//			buf.append(line);
+//		    }
+//		    String s = buf.toString();
+//		    System.out.println("!!!!!!     "+s+ "   !!!!!!!!!");
+//		
 		String uzytkownik = request.getParameter("username");
 		String hasloUzytkownika = request.getParameter("password");
 

@@ -8,7 +8,7 @@
 </head>
 <body>
 
-	<div id="container" style="width: 650px">
+	<div id="container" style="width: 850px">
 
 		<div id="header" style="background-color: #FFA500;">
 			<h1 style="margin-bottom: 0;">Uzytkownik zostal wylogowany</h1>
@@ -16,7 +16,7 @@
 		<%@include file="menu.jsp"%>
 
 		<div id="content"
-			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
+			style="background-color: #EEEEEE; height: 650px; width: 700px; float: left;">
 			<form name="wylog" action="wyloguj" method="post">
 				<br /> <br /> <br /> Zostales wylogowany <br /> <br />
 				<a href="/Logowanie/login.jsp">Zaloguj sie ponownie</a>

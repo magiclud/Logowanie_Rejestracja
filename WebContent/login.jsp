@@ -5,7 +5,7 @@
 <html>
 <body>
 
-	<div id="container" style="width: 650px">
+	<div id="container" style="width: 850px">
 
 		<div id="header" style="background-color: #FFA500;">
 			<h1 style="margin-bottom: 0;">Logowanie</h1>
@@ -13,7 +13,7 @@
 		<%@include file="menu.jsp"%>
 
 		<div id="content"
-			style="background-color: #EEEEEE; height: 400px; width: 500px; float: left;">
+			style="background-color: #EEEEEE; height: 650px; width: 700px; float: left;">
 			<form name="loginform" action="login_sprawdz" method="post">
 				<br />Enter User Name: <input type="text" name="username"><br />
 				<br />Enter Password: <input name="password" type="password"><br /><br />
