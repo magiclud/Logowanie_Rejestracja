@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/PoierzDaneOdKlienta")
 public class PoierzDaneOdKlienta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +26,9 @@ public class PoierzDaneOdKlienta extends HttpServlet {
 		StringBuffer buf = new StringBuffer();
 		String line;
 		while ((line = r.readLine()) != null) {
+			System.out.println("line " + line);
 			buf.append(line);
+			System.out.println("buf " + buf.toString());
 		}
 		String fileName = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\pobraneOdPlayera\\dane.txt";
 		String s = buf.toString();
