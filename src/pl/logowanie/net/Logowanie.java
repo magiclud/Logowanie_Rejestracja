@@ -111,8 +111,8 @@ public class Logowanie extends HttpServlet {
 						message = "Czesc " + uzytkownik
 								+ "! Twoje logowanie jest niepoprawne";
 					} else {
-						request.getSession().getServletContext().setAttribute("user",
-								uzytkownik);
+						request.getSession().getServletContext()
+								.setAttribute("user", uzytkownik);
 						request.getSession().setAttribute("userZalogowany",
 								uzytkownik);
 						message = "Czesc " + uzytkownik
@@ -127,8 +127,10 @@ public class Logowanie extends HttpServlet {
 						if (result.next()) {
 							liczbalogowan = result.getInt("LiczbaLogowan");
 						}
+						zapytanie = "UPDATE  stronainternetowa.UZYTKOWNICY SET LiczbaLogowan = ? where login = \""
+								+ uzytkownik + "\" ";
 						PreparedStatement preparedStatement = con
-								.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY SET LiczbaLogowan = ?");
+								.prepareStatement(zapytanie);
 						preparedStatement.setInt(1, liczbalogowan + 1);
 						preparedStatement.executeUpdate();
 

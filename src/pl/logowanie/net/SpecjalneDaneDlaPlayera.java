@@ -30,8 +30,8 @@ public class SpecjalneDaneDlaPlayera extends HttpServlet {
 		System.out
 				.println("jestem w sevice method w specjalne dane dla klienta  ");
 
-		String login = (String) request.getSession().getServletContext().getAttribute(
-				"user");
+		String login = (String) request.getSession().getServletContext()
+				.getAttribute("user");
 
 		Connection connection = (Connection) getServletContext().getAttribute(
 				"DBConnection");
@@ -53,19 +53,22 @@ public class SpecjalneDaneDlaPlayera extends HttpServlet {
 		}
 		ServletOutputStream con = response.getOutputStream();
 		DataOutputStream dstream = new DataOutputStream(con);
-		System.out.println("liczba "+liczba);
+		System.out.println("liczba " + liczba);
 		dstream.writeInt(liczba);
-		System.out.println("login "+login);
-		dstream.writeBytes(login);
-//		dstream.writeLong(mybytearray.length);
-//		dstream.write(mybytearray, 0, mybytearray.length);
-//		dstream.flush();
-//		System.out.println("!!!!!File " + fileName + " sent to Server.");
+		System.out.println("login " + login);
+		String hasloDoKeystorea = "muzyka";
+		dstream.writeBytes(login + "#" + hasloDoKeystorea);
+		// dstream.writeLong(mybytearray.length);
+		// dstream.write(mybytearray, 0, mybytearray.length);
+		// dstream.flush();
+		// System.out.println("!!!!!File " + fileName + " sent to Server.");
 		dstream.close();
+		request.getSession().setAttribute("hasloDoKeystorea",
+				hasloDoKeystorea);
 		request.setAttribute("liczbaLogowan", "#" + liczba + "#");
 		request.setAttribute("uzytkownik", "#" + login + "#");
-//		RequestDispatcher requestDispatcher = request
-//				.getRequestDispatcher("specjalneDaneDlaKienta.jsp");
-//		requestDispatcher.forward(request, response);
+		// RequestDispatcher requestDispatcher = request
+		// .getRequestDispatcher("specjalneDaneDlaKienta.jsp");
+		// requestDispatcher.forward(request, response);
 	}
 }
