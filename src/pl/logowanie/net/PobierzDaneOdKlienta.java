@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PoierzDaneOdKlienta extends HttpServlet {
+public class PobierzDaneOdKlienta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public PoierzDaneOdKlienta() {
+	public PobierzDaneOdKlienta() {
 		super();
 	}
 
