@@ -63,7 +63,7 @@ public class SpecjalneDaneDlaPlayera extends HttpServlet {
 		// dstream.flush();
 		// System.out.println("!!!!!File " + fileName + " sent to Server.");
 		dstream.close();
-		request.getSession().setAttribute("hasloDoKeystorea",
+		request.getSession().getServletContext().setAttribute("hasloDoKeystorea",
 				hasloDoKeystorea);
 		request.setAttribute("liczbaLogowan", "#" + liczba + "#");
 		request.setAttribute("uzytkownik", "#" + login + "#");

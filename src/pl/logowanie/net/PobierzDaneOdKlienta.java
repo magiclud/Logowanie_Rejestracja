@@ -38,7 +38,7 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 
 		String uzytkownik = (String) request.getSession().getServletContext()
 				.getAttribute("user");
-		String hasloDokeyStorea = (String) request.getSession().getAttribute(
+		String hasloDokeyStorea = (String) request.getSession().getServletContext().getAttribute(
 				"hasloDoKeystorea");
 		System.out.println("user: " + uzytkownik + ", haslo do keystore: "
 				+ hasloDokeyStorea);
