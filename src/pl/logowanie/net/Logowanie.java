@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,7 +28,7 @@ public class Logowanie extends HttpServlet {
 
 	private int dozwolonaIloscProbLogowan = 3;
 	private int czasCzekaniaGdyNieprawneLog = 30000; // w
-																// milisekundach
+														// milisekundach
 
 	public Logowanie() {
 		super();
@@ -40,20 +41,24 @@ public class Logowanie extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  service method of selvlet");
 
-//		 InputStream in = request.getInputStream();
-//		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
-//		    StringBuffer buf = new StringBuffer();
-//		    String line;
-//		    while ((line = r.readLine())!=null) {
-//			buf.append(line);
-//		    }
-//		    String s = buf.toString();
-//		    System.out.println("!!!!!!     "+s+ "   !!!!!!!!!");
-//		
+		// InputStream in = request.getInputStream();
+		// BufferedReader r = new BufferedReader(new InputStreamReader(in));
+		// StringBuffer buf = new StringBuffer();
+		// String line;
+		// while ((line = r.readLine())!=null) {
+		// buf.append(line);
+		// }
+		// String s = buf.toString();
+		// System.out.println("!!!!!!     "+s+ "   !!!!!!!!!");
+		//
 		String uzytkownik = request.getParameter("username");
 		String hasloUzytkownika = request.getParameter("password");
 
 		String message = null;
+		Statement statement;
+		Connection con;
+		String zapytanie;
+		ResultSet result;
 
 		if (uzytkownik == null || uzytkownik.equals("")
 				|| hasloUzytkownika == null || hasloUzytkownika.equals("")) {
@@ -64,22 +69,22 @@ public class Logowanie extends HttpServlet {
 					"czasOczekiwania");
 			long dataLogowania = new Date().getTime();
 			if (czasT == null || !(czasT >= dataLogowania)) {
-			
+
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
 					// nawiazywanie polaczenia z baza danych , mozna jeszcze
 					// dodać haslo jesli potrzeba
-					Connection con = DriverManager
+					con = DriverManager
 							.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 									+ "user=root");
 
 					Szyfrowanie zakoduj = new Szyfrowanie();
-					String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
+					zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
 							+ uzytkownik
 							+ "\" and haslo = \""
 							+ zakoduj.hashString(hasloUzytkownika) + "\"";
-					Statement statement = con.createStatement();
-					ResultSet result = statement.executeQuery(zapytanie);
+					statement = con.createStatement();
+					result = statement.executeQuery(zapytanie);
 
 					if (!result.next()) {
 						Integer iloscProbk = (Integer) request.getSession()
@@ -90,7 +95,8 @@ public class Logowanie extends HttpServlet {
 							int ilosc = iloscProbk;
 							if (ilosc >= dozwolonaIloscProbLogowan - 1) {
 
-								long time = dataLogowania + czasCzekaniaGdyNieprawneLog ;
+								long time = dataLogowania
+										+ czasCzekaniaGdyNieprawneLog;
 								request.getSession().setAttribute(
 										"czasOczekiwania", time);
 								request.getSession().setAttribute("iloscProb",
@@ -109,6 +115,22 @@ public class Logowanie extends HttpServlet {
 								uzytkownik);
 						message = "Czesc " + uzytkownik
 								+ "! Zostales poprawnie zalogowany";
+
+						int liczbalogowan = 0;
+						zapytanie = "SELECT LiczbaLogowan from stronainternetowa.UZYTKOWNICY where login = \""
+								+ uzytkownik + "\" ";
+						statement = con.createStatement();
+						result = statement.executeQuery(zapytanie);
+
+						if (result.next()) {
+							liczbalogowan = result.getInt("LiczbaLogowan");
+						}
+						PreparedStatement preparedStatement = con
+								.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY SET LiczbaLogowan = ?");
+						preparedStatement.setInt(1, liczbalogowan + 1);
+						preparedStatement.executeUpdate();
+
+						preparedStatement.close();
 					}
 
 				} catch (SQLException e) {

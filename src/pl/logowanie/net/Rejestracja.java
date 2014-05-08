@@ -75,7 +75,7 @@ public class Rejestracja extends HttpServlet {
 					
 					Szyfrowanie zakoduj = new Szyfrowanie();
 					preparedStatement = connection
-							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?, ?, default)");
+							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?, ?, default, default)");
 					String aliasHasla = login;
 					String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
 					byte[] zaszyfrowanyNumer = Szyfrowanie.zaszyfrowanieWiadomosci(
