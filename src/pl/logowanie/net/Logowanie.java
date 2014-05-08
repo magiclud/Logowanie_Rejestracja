@@ -111,6 +111,8 @@ public class Logowanie extends HttpServlet {
 						message = "Czesc " + uzytkownik
 								+ "! Twoje logowanie jest niepoprawne";
 					} else {
+						request.getSession().getServletContext().setAttribute("user",
+								uzytkownik);
 						request.getSession().setAttribute("userZalogowany",
 								uzytkownik);
 						message = "Czesc " + uzytkownik
