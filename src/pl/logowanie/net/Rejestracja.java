@@ -60,7 +60,8 @@ public class Rejestracja extends HttpServlet {
 		}
 		if (wiadomosc == null) {
 
-			connection = (Connection) getServletContext().getAttribute("DBConnection");
+			connection = (Connection) getServletContext().getAttribute(
+					"DBConnection");
 			try {
 				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
 						+ login + "\"";
@@ -71,24 +72,25 @@ public class Rejestracja extends HttpServlet {
 							+ " - jest juz w bazie, uzyj innej nazwy";
 
 				} else {
-					//hashString(haslo);
-					
+					// hashString(haslo);
+
 					Szyfrowanie zakoduj = new Szyfrowanie();
 					preparedStatement = connection
-							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?, ?, default, default)");
+							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?, ?,  default)");
 					String aliasHasla = login;
 					String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
-					byte[] zaszyfrowanyNumer = Szyfrowanie.zaszyfrowanieWiadomosci(
-							Szyfrowanie.dodajKlucz(sciezkaDoKeyStore, aliasHasla),
-							kartaKredytowa);
+					byte[] zaszyfrowanyNumer = Szyfrowanie
+							.zaszyfrowanieWiadomosci(Szyfrowanie.dodajKlucz(
+									sciezkaDoKeyStore, aliasHasla),
+									kartaKredytowa);
 					preparedStatement.setString(1, login);
-					System.out.println("emmial  "+email);
+					System.out.println("emmial  " + email);
 					preparedStatement.setString(2, email);
-					preparedStatement.setString(3, zakoduj.hashString(haslo));//haslo
+					preparedStatement.setString(3, zakoduj.hashString(haslo));// haslo
 					preparedStatement.setBytes(4, zaszyfrowanyNumer);
 					String grupa = "zwykla";
-					preparedStatement.setString(5,grupa);
-					//preparedStatement.setString(6, "");
+					preparedStatement.setString(5, grupa);
+					// preparedStatement.setString(6, "");
 					System.out.println(preparedStatement);
 					preparedStatement.executeUpdate();
 
@@ -110,7 +112,8 @@ public class Rejestracja extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 				// logger.error("Database connection problem");
-				throw new ServletException("Problem z polaczeniem z baza danych .");
+				throw new ServletException(
+						"Problem z polaczeniem z baza danych .");
 			}
 		} else {
 			request.setAttribute(
@@ -122,6 +125,5 @@ public class Rejestracja extends HttpServlet {
 		requestDispatcher.forward(request, response);
 
 	}
-
 
 }

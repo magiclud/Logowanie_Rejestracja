@@ -38,8 +38,8 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 
 		String uzytkownik = (String) request.getSession().getServletContext()
 				.getAttribute("user");
-		String hasloDokeyStorea = (String) request.getSession().getServletContext().getAttribute(
-				"hasloDoKeystorea");
+		String hasloDokeyStorea = (String) request.getSession()
+				.getServletContext().getAttribute("hasloDoKeystorea");
 		System.out.println("user: " + uzytkownik + ", haslo do keystore: "
 				+ hasloDokeyStorea);
 
@@ -62,35 +62,39 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 		output.close();
 		in.close();
 
-		String message = "dodano klucz do klienta ";
+		String message = "pobrano klucz do klienta ";
 
 		Key kluczUzytkownika = pobierzKlucz(newPath, uzytkownik,
 				hasloDokeyStorea);
-		String kluczDoBazy = kluczUzytkownika.toString();
+		// pobrano klucz z keystora od klienta
 
+		String sciezkaDoKeystoreaSerwera = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keystoreSerwera.ks";
+		String hasloDoKeystoreaSerwera = "zamek";
+		// zapisane klucz do keystorea serwera
+		KeyStore keyStore;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			// nawiazywanie polaczenia z baza danych , mozna jeszcze
-			// dodać haslo jesli potrzeba
-			Connection conection = DriverManager
-					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
-							+ "user=root");
-			String zapytanie = "UPDATE  stronainternetowa.UZYTKOWNICY SET klucz = ? where login = \""
-					+ uzytkownik + "\" ";
-			PreparedStatement preparedStatement = conection
-					.prepareStatement(zapytanie);
-			preparedStatement.setString(1, kluczDoBazy);
-			preparedStatement.executeUpdate();
-
-			preparedStatement.close();
-
-			request.setAttribute("wynikLogowania", message);
-			getServletContext().getRequestDispatcher("/index.jsp").forward(
-					request, response);
-		} catch (ClassNotFoundException | SQLException e) {
+			keyStore = KeyStore.getInstance("UBER", "BC");
+			InputStream inputStream = null;
+			keyStore.load(inputStream, hasloDoKeystoreaSerwera.toCharArray());
+			keyStore.setKeyEntry(uzytkownik, kluczUzytkownika,
+					hasloDoKeystoreaSerwera.toCharArray(), null);
+			// zapisz keyStore
+			FileOutputStream fos = new FileOutputStream(
+					sciezkaDoKeystoreaSerwera);
+			keyStore.store(fos, hasloDoKeystoreaSerwera.toCharArray());
+			fos.close();
+			// zappisano klucz do keystorea serwera
+		} catch (KeyStoreException | NoSuchProviderException
+				| NoSuchAlgorithmException | CertificateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("Zapisano klucz do keystorea serwera");
+
+		request.setAttribute("wynikLogowania", message);
+		getServletContext().getRequestDispatcher("/index.jsp").forward(request,
+				response);
+
 	}
 
 	static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla,
