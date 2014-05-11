@@ -133,6 +133,7 @@ public class Szyfrowanie {
 
 	public static byte[] zaszyfrowaniePliku(Key klucz,
 			String sciezkaWejsciowa) {
+		
 		IvParameterSpec ivSpec = new IvParameterSpec(new byte[16]);
 		Cipher aesCipher;
 		try {

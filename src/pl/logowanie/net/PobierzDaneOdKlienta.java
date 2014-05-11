@@ -66,10 +66,11 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 
 		Key kluczUzytkownika = pobierzKlucz(newPath, uzytkownik,
 				hasloDokeyStorea);
-		// pobrano klucz z keystora od klienta
 
 		String sciezkaDoKeystoreaSerwera = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keystoreSerwera.ks";
 		String hasloDoKeystoreaSerwera = "zamek";
+		request.getSession().getServletContext().setAttribute("hasloDoKeystoreaSerwera",
+				hasloDoKeystoreaSerwera);
 		// zapisane klucz do keystorea serwera
 		KeyStore keyStore;
 		try {

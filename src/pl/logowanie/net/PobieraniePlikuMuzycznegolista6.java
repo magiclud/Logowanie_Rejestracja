@@ -4,14 +4,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -24,8 +38,9 @@ import org.farng.mp3.TagException;
 public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	static String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
-	static String aliasHasla = "mojAlias";
+	static String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keystoreSerwera.ks";
+	static String aliasHasla;
+	static String hasloDoKeystoreaSerwera;
 
 	public PobieraniePlikuMuzycznegolista6() {
 		super();
@@ -41,6 +56,12 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 				"attachment;filename=music.mp3");
 
 		String tytul = (String) request.getSession().getAttribute("tytul");
+		String uzytkownik = (String) request.getSession().getServletContext()
+				.getAttribute("user");
+		hasloDoKeystoreaSerwera = (String) request.getSession().getAttribute(
+				"hasloDoKeystoreaSerwera");
+
+		aliasHasla = uzytkownik;
 
 		System.out.println("Pobrano z sesji tytul muzyki: " + tytul);
 		// informuje przegladarke ze system ma zamiar zwrocic plik zamiast
@@ -53,38 +74,21 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 		try {
 			sciezkaDoPliku = plikMuzyczny.znajdzPlikiPasujaceDoTytulu(katalog,
 					tytul);
-
+			System.out.println("plik muzyczny " + sciezkaDoPliku);
+			System.out.println("sciezka do keystorea "+ sciezkaDoKeyStore);
+			Key klucz = pobierzKlucz(sciezkaDoKeyStore, aliasHasla);
 			byte[] zdekodowanyPlik = przygotujPlikDoPrzeslania(sciezkaDoPliku);
+			byte[] zakodowanyPlik = zakoduj(new String(zdekodowanyPlik), klucz);
+			// byte[] zaszyfrowanyPlik= Szyfrowanie.zaszyfrowaniePliku(klucz,
+			// sciezkaDoPliku);
 			ServletOutputStream out = response.getOutputStream();
-			out.write(zdekodowanyPlik);
+			out.write(zakodowanyPlik);
 
-			// AudioInputStream outSteream;
-			// try {
-			// outSteream = AudioSystem
-			// .getAudioInputStream(new ByteArrayInputStream(
-			// zdekodowanyTekst));
-			// Clip clip = AudioSystem.getClip();
-			// clip.open(outSteream);
-			// clip.start();
-			// } catch (UnsupportedAudioFileException | LineUnavailableException
-			// e)
-			// {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			//
-			// JFrame a = new JFrame();
-			// // a.setVisible(true);
-			//
-			// }
-			//
 			out.flush();
 			out.close();
 		} catch (TagException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 	}
 
@@ -106,11 +110,39 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 			outStr.close();
 			return cipherText;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 
 	}
 
+	public static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla) {
+
+		try {
+			KeyStore ks = KeyStore.getInstance("UBER", "BC");
+			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
+			ks.load(inputStream, hasloDoKeystoreaSerwera.toCharArray());
+			Key klucz = ks.getKey(aliasHasla, hasloDoKeystoreaSerwera.toCharArray());
+			inputStream.close();
+			return klucz;
+		} catch (UnrecoverableKeyException | IOException | KeyStoreException
+				| NoSuchAlgorithmException | NoSuchProviderException
+				| CertificateException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	static byte[] zakoduj(String wiadomosc, Key key) {
+		try {
+			Cipher aesCipher = Cipher.getInstance("RC4");
+			aesCipher.init(Cipher.ENCRYPT_MODE, key);
+			return aesCipher.doFinal(wiadomosc.getBytes());
+		} catch (InvalidKeyException | NoSuchAlgorithmException
+				| NoSuchPaddingException | IllegalBlockSizeException
+				| BadPaddingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

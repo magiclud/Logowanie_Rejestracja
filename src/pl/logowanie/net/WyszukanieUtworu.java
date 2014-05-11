@@ -53,15 +53,15 @@ public class WyszukanieUtworu extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		 InputStream in = request.getInputStream();
-		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
-		    StringBuffer buf = new StringBuffer();
-		    String line;
-		    while ((line = r.readLine())!=null) {
-			buf.append(line);
-		    }
-		    String s = buf.toString();
-		    System.out.println("!!!!!!     "+s+ "   !!!!!!!!!");
+//		 InputStream in = request.getInputStream();
+//		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
+//		    StringBuffer buf = new StringBuffer();
+//		    String line;
+//		    while ((line = r.readLine())!=null) {
+//			buf.append(line);
+//		    }
+//		    String s = buf.toString();
+//		    System.out.println("!!!!!!     "+s+ "   !!!!!!!!!");
 		
 
 		String tytul = request.getParameter("tytul");
