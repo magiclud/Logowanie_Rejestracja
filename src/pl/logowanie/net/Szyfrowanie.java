@@ -105,7 +105,7 @@ public class Szyfrowanie {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
 			ks.load(inputStream, hasloDoKeystora.toCharArray());
-			inputStream.close();
+			//inputStream.close();
 			// inputStream.flush();
 			Key klucz = ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
 			inputStream.close();
