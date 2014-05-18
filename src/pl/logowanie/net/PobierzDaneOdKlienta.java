@@ -1,6 +1,5 @@
 package pl.logowanie.net;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,12 +12,9 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -74,6 +70,8 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 		// zapisane klucz do keystorea serwera
 		KeyStore keyStore;
 		try {
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			
 			keyStore = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = null;
 			keyStore.load(inputStream, hasloDoKeystoreaSerwera.toCharArray());
@@ -100,6 +98,8 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 
 	static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla,
 			String hasloDoKeystora) {
+
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
 		try {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");

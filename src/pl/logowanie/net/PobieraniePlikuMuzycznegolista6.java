@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,19 +13,14 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -58,7 +52,7 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 		String tytul = (String) request.getSession().getAttribute("tytul");
 		String uzytkownik = (String) request.getSession().getServletContext()
 				.getAttribute("user");
-		hasloDoKeystoreaSerwera = (String) request.getSession().getAttribute(
+		hasloDoKeystoreaSerwera = (String) request.getSession().getServletContext().getAttribute(
 				"hasloDoKeystoreaSerwera");
 
 		aliasHasla = uzytkownik;
@@ -103,7 +97,6 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 			while (fileIn.read(outputByte, 0, 4096) != -1) {
 				outStr.write(outputByte, 0, 4096);
 			}
-
 			byte[] cipherText = bOut.toByteArray();
 
 			fileIn.close();
@@ -118,6 +111,7 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 
 	public static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla) {
 
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		try {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);

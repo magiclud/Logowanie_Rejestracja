@@ -33,11 +33,7 @@ public class PrzesylaniePliku extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-	}
-
-	protected void doPost(HttpServletRequest request,
+	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
 		String uzytkownik = (String) request.getSession().getAttribute(
@@ -49,7 +45,7 @@ public class PrzesylaniePliku extends HttpServlet {
 		connection = (Connection) getServletContext().getAttribute(
 				"DBConnection");
 
-		String zapytanie = "SELECT grupa from stronainternetowa.UZYTKOWNICY where login = \""
+		String zapytanie = "SELECT grupa from stronainternetowa.UZYTKOWNICY_strony where login = \""
 				+ uzytkownik + "\"";
 		Statement statement;
 		try {

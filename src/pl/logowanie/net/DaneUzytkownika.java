@@ -1,7 +1,6 @@
 package pl.logowanie.net;
 
 import java.io.IOException;
-import java.security.Key;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -46,7 +45,7 @@ public class DaneUzytkownika extends HttpServlet {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String zapytanie = "SELECT email, KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
+			String zapytanie = "SELECT email, KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY_strony where login = \""
 					+ uzytkownik + "\" ";
 			Statement statement = con.createStatement();
 			ResultSet result = statement.executeQuery(zapytanie);
@@ -56,8 +55,10 @@ public class DaneUzytkownika extends HttpServlet {
 				e_mail = result.getString("email");
 				nrKarty = result.getBytes("karta_kredytowa");
 			}
+			System.out.println("Email: "+ e_mail+", nrKarty: "+nrKarty);
 			String aliasHasla = uzytkownik;
-			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+			System.out.println("Uzytkownik "+ uzytkownik + " nrKarty " + nrKarty);
+			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore2.ks";
 			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty, Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
 			String numerKartyKredytowej =  new String(odszyfrowanyNumer);
 			
@@ -92,8 +93,4 @@ public class DaneUzytkownika extends HttpServlet {
 		// ps.executeUpdate();
 	}
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-	
-	}
 }

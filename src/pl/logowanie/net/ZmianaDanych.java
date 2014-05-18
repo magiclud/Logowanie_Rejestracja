@@ -9,7 +9,6 @@ import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,11 +25,7 @@ public class ZmianaDanych extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-	}
-
-	protected void doPost(HttpServletRequest request,
+	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
 		String uzytkownik = (String) request.getSession().getAttribute(
@@ -48,7 +43,7 @@ public class ZmianaDanych extends HttpServlet {
 				"DBConnection");
 		try {
 			if ( !login.equals("") && !login.equals(uzytkownik)) {
-				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
+				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY_strony where login = \""
 						+ login + "\"";
 				Statement statement = connection.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
@@ -57,7 +52,7 @@ public class ZmianaDanych extends HttpServlet {
 							+ " - jest juz w bazie, uzyj innej nazwy";
 				} else {
 					preparedStatement = connection
-							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY SET login = ?");
+							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY_strony SET login = ?");
 					preparedStatement.setString(1, login);
 					preparedStatement.executeUpdate();
 
@@ -72,7 +67,7 @@ public class ZmianaDanych extends HttpServlet {
 					wiadomosc += "Niepoprawny e-mail adres.";
 				} else {
 					preparedStatement = connection
-							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY SET email = ?");
+							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY_strony SET email = ?");
 					preparedStatement.setString(2, email);
 					preparedStatement.executeUpdate();
 
@@ -81,13 +76,11 @@ public class ZmianaDanych extends HttpServlet {
 					preparedStatement.close();
 				}
 			}
-			if (haslo != null || !haslo.equals("")) {
-				if (hasloPtwierdzenie != null
-						|| hasloPtwierdzenie.equals(haslo)) {
-					Szyfrowanie zakoduj = new Szyfrowanie();
+			if (haslo != null && !haslo.equals("")) {
+				if ( hasloPtwierdzenie.equals(haslo)) {
 					preparedStatement = connection
-							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY SET haslo = ?");
-					preparedStatement.setString(3, zakoduj.hashString(haslo));
+							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY_strony SET haslo = ?");
+					preparedStatement.setString(3, Szyfrowanie.hashString(haslo));
 					preparedStatement.executeUpdate();
 
 					wiadomosc = wiadomosc + "Haslo zostalo zmienione\n";
@@ -100,11 +93,10 @@ public class ZmianaDanych extends HttpServlet {
 				if (!kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
 					wiadomosc += "Nieprawidlowy numer karty kredytowej, ma ona 16 cyfr.";
 				} else {
-					Szyfrowanie zakoduj = new Szyfrowanie();
 					preparedStatement = connection
-							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY SET karta_kredytowa = ?");
+							.prepareStatement("UPDATE  stronainternetowa.UZYTKOWNICY_strony SET karta_kredytowa = ?");
 					preparedStatement.setString(4,
-							zakoduj.hashString(kartaKredytowa));
+							Szyfrowanie.hashString(kartaKredytowa));
 					preparedStatement.executeUpdate();
 
 					wiadomosc = wiadomosc

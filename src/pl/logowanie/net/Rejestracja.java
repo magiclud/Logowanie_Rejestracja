@@ -1,10 +1,6 @@
 package pl.logowanie.net;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +25,7 @@ public class Rejestracja extends HttpServlet {
 	String poprawnyEMail = "^(.[A-Za-z0-9\\-]*\\w)+@+([A-Za-z0-9\\-]*\\w)+(\\.[A-Za-z]*\\w)+$";
 	String poprawnyNrKartyKredytowej = "[0-9]{16}";
 
-	protected void doPost(HttpServletRequest request,
+	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String haslo = request.getParameter("password");
@@ -37,10 +33,7 @@ public class Rejestracja extends HttpServlet {
 		String login = request.getParameter("username");
 		String kartaKredytowa = request.getParameter("creditCard");
 		String wiadomosc = null;
-		if (email == null || email.equals("")) {
-			wiadomosc = "Adres e-mail nie moze być null lub pusty.";
-		}
-		if (!email.matches(poprawnyEMail)) {
+		if (email == null || email.equals("") || !email.matches(poprawnyEMail)) {
 			wiadomosc = "Niepoprawny e-mail adres.";
 		}
 		if (haslo == null || haslo.equals("")) {
@@ -52,10 +45,7 @@ public class Rejestracja extends HttpServlet {
 		if (login == null || login.equals("")) {
 			wiadomosc = "Login nie moze byc null lub pusty.";
 		}
-		if (kartaKredytowa == null || kartaKredytowa.equals("")) {
-			wiadomosc = "Numer katy kredystowej nie moze byc null.";
-		}
-		if (!kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
+		if (kartaKredytowa == null || kartaKredytowa.equals("") || !kartaKredytowa.matches(poprawnyNrKartyKredytowej)) {
 			wiadomosc = "Nieprawidlowy numer karty kredytowej, ma ona 16 cyfr.";
 		}
 		if (wiadomosc == null) {
@@ -63,7 +53,7 @@ public class Rejestracja extends HttpServlet {
 			connection = (Connection) getServletContext().getAttribute(
 					"DBConnection");
 			try {
-				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
+				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY_strony where login = \""
 						+ login + "\"";
 				Statement statement = connection.createStatement();
 				ResultSet result = statement.executeQuery(zapytanie);
@@ -74,11 +64,10 @@ public class Rejestracja extends HttpServlet {
 				} else {
 					// hashString(haslo);
 
-					Szyfrowanie zakoduj = new Szyfrowanie();
 					preparedStatement = connection
-							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?, ?,  default)");
+							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY_strony values (default, ?, ?, ?, ?, ?,  default)");
 					String aliasHasla = login;
-					String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+					String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore2.ks";
 					byte[] zaszyfrowanyNumer = Szyfrowanie
 							.zaszyfrowanieWiadomosci(Szyfrowanie.dodajKlucz(
 									sciezkaDoKeyStore, aliasHasla),
@@ -86,7 +75,7 @@ public class Rejestracja extends HttpServlet {
 					preparedStatement.setString(1, login);
 					System.out.println("emmial  " + email);
 					preparedStatement.setString(2, email);
-					preparedStatement.setString(3, zakoduj.hashString(haslo));// haslo
+					preparedStatement.setString(3, Szyfrowanie.hashString(haslo));// haslo
 					preparedStatement.setBytes(4, zaszyfrowanyNumer);
 					String grupa = "zwykla";
 					preparedStatement.setString(5, grupa);

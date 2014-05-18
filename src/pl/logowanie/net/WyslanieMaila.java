@@ -1,9 +1,6 @@
 package pl.logowanie.net;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,7 +10,6 @@ import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Message;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.MessagingException;
@@ -62,13 +58,13 @@ public class WyslanieMaila extends HttpServlet {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY where login = \""
+			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY_strony where login = \""
 					+ uzytkownik + "\" and email = \""+email+"\" ";
 			Statement statement = con.createStatement();
 			ResultSet result = statement.executeQuery(zapytanie);
 
 			if (result.next()) {
-				this.adresat = email;
+				adresat = email;
 				
 				System.out.println("email: " + email);
 
@@ -133,8 +129,5 @@ public class WyslanieMaila extends HttpServlet {
 
 	}
 
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-	}
 
 }

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +44,6 @@ public class Komentarze extends HttpServlet {
 
 		connection = (Connection) getServletContext().getAttribute(
 				"DBConnection");
-		Szyfrowanie zakoduj = new Szyfrowanie();
 		try {
 
 			String zapytanie = "SELECT uzytkownik, komentarz from stronainternetowa.KOMENTARZE where tytul = \""

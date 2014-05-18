@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +57,7 @@ public class DanePlikuMuzycznego extends HttpServlet {
 			request.getSession().setAttribute("wykonawca", wykonawca);
 			request.getSession().setAttribute("gatunek", gatunek);
 
-			zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY where login = \""
+			zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY_strony where login = \""
 					+ uzytkownik + "\" ";
 			statement = con.createStatement();
 			result = statement.executeQuery(zapytanie);
@@ -67,7 +66,7 @@ public class DanePlikuMuzycznego extends HttpServlet {
 				nrKarty = result.getBytes("karta_kredytowa");
 			}
 			String aliasHasla = uzytkownik;
-			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore2.ks";
 			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty,
 					Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
 			String numerKartyKredytowej = new String(odszyfrowanyNumer);

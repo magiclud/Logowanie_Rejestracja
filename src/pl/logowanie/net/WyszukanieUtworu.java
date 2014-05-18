@@ -1,17 +1,11 @@
 package pl.logowanie.net;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,41 +40,23 @@ public class WyszukanieUtworu extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request,
+	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-	}
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+		pasujacePlikiMuzyczne.clear();
 		
-//		 InputStream in = request.getInputStream();
-//		    BufferedReader r = new BufferedReader(new InputStreamReader(in));
-//		    StringBuffer buf = new StringBuffer();
-//		    String line;
-//		    while ((line = r.readLine())!=null) {
-//			buf.append(line);
-//		    }
-//		    String s = buf.toString();
-//		    System.out.println("!!!!!!     "+s+ "   !!!!!!!!!");
-		
-
 		String tytul = request.getParameter("tytul");
 		String wykonawca = request.getParameter("wykonawca");
 		String gatunek = request.getParameter("gatunek");
 		String wiadomosc = null;
 
-		if (tytul.equals("") && wykonawca.equals("") && gatunek.equals("")) {
+		if ((tytul.equals("") && wykonawca.equals("") && gatunek.equals("")) || (tytul == null && wykonawca == null && gatunek == null)) {
 			wiadomosc = "Nie podales danych do wyszukania \n";
 		} else {
 			String sciezka = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\muzyka";
 			File katalog = new File(sciezka);
 			// wszyszukaj wszystkie pliki dodaj je do wspolnej listy
 			// znajdzWszystkiePlikiMuzyczne
-
-			// przekieruj na strone gdzie wyswitlisz wyniki z listy oraz
-			// uzmozliwisz pobranie pliku
-			// zasymuluj pobranie oplaty ujawniajcac 4 ostatnie cyfry karty
-			// kredytowej
 
 			try { // znjaduj plki pasujace do jednego ze wzorca i dodaj do
 					// listy wynikow
@@ -100,8 +76,9 @@ public class WyszukanieUtworu extends HttpServlet {
 								+ pasujacePlikiMuzyczne.get(i));
 						// TODO wyswietlenie informacji o ppiosenkach i
 						// umozliwienie ich pobrania
-						request.getSession().setAttribute("piosenki",
-								pasujacePlikiMuzyczne);
+//						request.getSession().setAttribute("piosenki",
+//								pasujacePlikiMuzyczne);
+						//TODO to przenioslam nizej
 					}
 				} else {
 					wiadomosc = "Nie znaleziono utwrów \n";
@@ -110,12 +87,11 @@ public class WyszukanieUtworu extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-
+		request.getSession().setAttribute("piosenki",
+				pasujacePlikiMuzyczne);
 		request.setAttribute("wynikWyszukiwania", wiadomosc);
 		requestDispatcher = request
-				.getRequestDispatcher("listaDostepnychUtworow.jsp");// TODO
-		// albo
-		// listaDOstepnychUtworow.jsp
+				.getRequestDispatcher("listaDostepnychUtworow.jsp");
 		requestDispatcher.forward(request, response);
 	}
 

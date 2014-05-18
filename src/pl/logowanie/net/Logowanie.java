@@ -1,12 +1,8 @@
 package pl.logowanie.net;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +28,6 @@ public class Logowanie extends HttpServlet {
 
 	public Logowanie() {
 		super();
-	}
-
-	public void init(ServletConfig config) throws ServletException {
 	}
 
 	protected void service(HttpServletRequest request,
@@ -78,11 +71,10 @@ public class Logowanie extends HttpServlet {
 							.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 									+ "user=root");
 
-					Szyfrowanie zakoduj = new Szyfrowanie();
-					zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY where login = \""
+					zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY_strony where login = \""
 							+ uzytkownik
 							+ "\" and haslo = \""
-							+ zakoduj.hashString(hasloUzytkownika) + "\"";
+							+ Szyfrowanie.hashString(hasloUzytkownika) + "\"";
 					statement = con.createStatement();
 					result = statement.executeQuery(zapytanie);
 
@@ -119,7 +111,7 @@ public class Logowanie extends HttpServlet {
 								+ "! Zostales poprawnie zalogowany";
 
 						int liczbalogowan = 0;
-						zapytanie = "SELECT LiczbaLogowan from stronainternetowa.UZYTKOWNICY where login = \""
+						zapytanie = "SELECT LiczbaLogowan from stronainternetowa.UZYTKOWNICY_strony where login = \""
 								+ uzytkownik + "\" ";
 						statement = con.createStatement();
 						result = statement.executeQuery(zapytanie);
@@ -127,7 +119,7 @@ public class Logowanie extends HttpServlet {
 						if (result.next()) {
 							liczbalogowan = result.getInt("LiczbaLogowan");
 						}
-						zapytanie = "UPDATE  stronainternetowa.UZYTKOWNICY SET LiczbaLogowan = ? where login = \""
+						zapytanie = "UPDATE  stronainternetowa.UZYTKOWNICY_strony SET LiczbaLogowan = ? where login = \""
 								+ uzytkownik + "\" ";
 						PreparedStatement preparedStatement = con
 								.prepareStatement(zapytanie);

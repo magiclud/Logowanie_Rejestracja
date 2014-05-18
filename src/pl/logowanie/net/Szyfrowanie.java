@@ -16,6 +16,7 @@ import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
@@ -27,10 +28,9 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
-import javax.servlet.ServletOutputStream;
 
 public class Szyfrowanie {
-	static String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
+	//static String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
 	static String trybSzyfrowania = "OFB";
 	static String hasloDoKeystora = "ala ma kota";
 	static String aliasHasla = "mojAlias";
@@ -82,6 +82,7 @@ public class Szyfrowanie {
 			inCipherStream.close();
 			bOut.close();
 			aesCipher.doFinal(cipherText);
+			outputStream.close();
 
 			return cipherText;
 		} catch (NoSuchAlgorithmException | NoSuchProviderException
@@ -99,9 +100,11 @@ public class Szyfrowanie {
 
 	public static Key pobierzKlucz(String sciezkaDoKeyStore, String aliasHasla) {
 
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		try {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
+			System.out.println("##W Szyfrowanie#   #sciezkaDoKeysotorea "+sciezkaDoKeyStore + ":\n # hasloDoKeyStorea: "+hasloDoKeystora);
 			ks.load(inputStream, hasloDoKeystora.toCharArray());
 			Key klucz = ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
 			inputStream.close();
@@ -240,6 +243,7 @@ public class Szyfrowanie {
 	}
 	
 	static Key dodajKlucz(String sciezkaDoKeyStore, String aliasHasla) {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		try {
 			System.out.println("aliash Hasla w dodaj klucz: " + aliasHasla);
 			KeyStore keyStore = KeyStore.getInstance("UBER", "BC");
@@ -255,11 +259,11 @@ public class Szyfrowanie {
 			File keystoreFile = new File(sciezkaDoKeyStore);
 			FileInputStream in = new FileInputStream(keystoreFile);
 			keyStore.load(in, hasloDoKeystora.toCharArray());
-			in.close();
 			// dodaj klucz
 			keyStore.setKeyEntry(aliasHasla, secretKey,
 					hasloDoKeystora.toCharArray(), null);
 			// zapisz nowy KeyStore
+			in.close();
 			// Save the new keystore contents
 			FileOutputStream out = new FileOutputStream(keystoreFile);
 			keyStore.store(out, hasloDoKeystora.toCharArray());
@@ -293,6 +297,7 @@ public class Szyfrowanie {
 	}
 	
 	public static byte[] zaszyfrowanieWiadomosci(Key klucz, String wiadomosc) {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		IvParameterSpec ivSpec = new IvParameterSpec(new byte[16]);
 		Cipher aesCipher;
 		try {
