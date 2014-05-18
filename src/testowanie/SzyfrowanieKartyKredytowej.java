@@ -16,6 +16,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.sql.Connection;
@@ -55,19 +56,20 @@ public class SzyfrowanieKartyKredytowej {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String uzytkownik = "Pietraszek";
+			String uzytkownik = "Romek";
 			String aliasHasla = uzytkownik;
 			String nrKartyKredytowej = "1234432112344321";
-			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore.ks";
-			// Key k1 = dodajKlucz(sciezkaDoKeyStore, aliasHasla);
-			// Key k2 = pobierzKlucz(sciezkaDoKeyStore, aliasHasla);
-			// System.out.println(k1);
-			// System.out.println(k2);
+			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore2.ks";
+			
+//			 Key k1 = dodajKlucz(sciezkaDoKeyStore, aliasHasla);
+//			 Key k2 = pobierzKlucz(sciezkaDoKeyStore, aliasHasla);
+//			 System.out.println(k1);
+//			 System.out.println(k2);
 			byte[] zaszyfrowanaWiadomosv = zaszyfrowanieWiadomosci(
 					dodajKlucz(sciezkaDoKeyStore, aliasHasla),
 					nrKartyKredytowej);
 			preparedStatement = conn
-					.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?)");
+					.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY values (default, ?, ?, ?, ?, default, default)");
 			// "login, e-mail, haslo, katakredyt");
 			// parameters start with 1
 			preparedStatement.setString(1, uzytkownik);
@@ -101,36 +103,83 @@ public class SzyfrowanieKartyKredytowej {
 			e.printStackTrace();
 		}
 	}
-
-	private static Key dodajKlucz(String sciezkaDoKeyStore, String aliasHasla) {
+	
+	private String zapiszKeyStore(KeyStore keyStore,
+			String hasloDoKeystora) {
 		try {
-			System.out.println("aliash Hasla w dodaj klucz: " + aliasHasla);
+			File keyStoreFile = new File("keyStoreNumbers.ks");
+			FileOutputStream fos = new FileOutputStream(keyStoreFile);
+			keyStore.store(fos, hasloDoKeystora.toCharArray());
+			fos.close();
+			System.out.println("sceizka do keystore"
+					+ keyStoreFile.getAbsolutePath());
+			return keyStoreFile.getAbsolutePath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private String createKeyStore(String hasloDoKeystora, String aliasHasla) {
+
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+		try {
 			KeyStore keyStore = KeyStore.getInstance("UBER", "BC");
-			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
+			InputStream inputStream = null;
 
 			keyStore.load(inputStream, hasloDoKeystora.toCharArray());
+			//dodajKlucz(keyStore, hasloDoKeystora, aliasHasla);
 
-			KeyGenerator keyGen = KeyGenerator.getInstance("ARC4", "BC");
-			Key secretKey = keyGen.generateKey();
+			return zapiszKeyStore(keyStore, hasloDoKeystora);
 
-			// inputStream.close();
-			// zaladuj zawartosc keyStore
-			File keystoreFile = new File(sciezkaDoKeyStore);
-			FileInputStream in = new FileInputStream(keystoreFile);
-			keyStore.load(in, hasloDoKeystora.toCharArray());
-			in.close();
-			// dodaj klucz
-			keyStore.setKeyEntry(aliasHasla, secretKey,
-					hasloDoKeystora.toCharArray(), null);
-			// zapisz nowy KeyStore
-			// Save the new keystore contents
-			FileOutputStream out = new FileOutputStream(keystoreFile);
-			keyStore.store(out, hasloDoKeystora.toCharArray());
-			out.close();
-			// ProtectionParameter protParam = new KeyStore.PasswordProtection(
-			// hasloDoKeystora.toCharArray());
-			// keyStore.setEntry(aliasHasla, entry, protParam);
-			// inputStream.close();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	private static Key dodajKlucz(String sciezkaDoKeyStore, String aliasHasla) {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+			// zapisane klucz do keystorea serwera
+			KeyStore keyStore;
+			try {
+				keyStore = KeyStore.getInstance("UBER", "BC");
+				InputStream inputStream = null;
+				keyStore.load(inputStream, hasloDoKeystora.toCharArray());
+				KeyGenerator keyGen = KeyGenerator.getInstance("ARC4", "BC");
+				Key secretKey = keyGen.generateKey();
+				keyStore.setKeyEntry(aliasHasla, secretKey,
+						hasloDoKeystora.toCharArray(), null);
+				// zapisz keyStore
+				FileOutputStream fos = new FileOutputStream(
+						sciezkaDoKeyStore);
+				keyStore.store(fos, hasloDoKeystora.toCharArray());
+				fos.close();
+				// zappisano klucz do keystorea serwera
 			return secretKey;
 		} catch (KeyStoreException e) {
 			// TODO Auto-generated catch block

@@ -104,8 +104,9 @@ public class Szyfrowanie {
 		try {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
-			System.out.println("##W Szyfrowanie#   #sciezkaDoKeysotorea "+sciezkaDoKeyStore + ":\n # hasloDoKeyStorea: "+hasloDoKeystora);
 			ks.load(inputStream, hasloDoKeystora.toCharArray());
+			inputStream.close();
+			// inputStream.flush();
 			Key klucz = ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
 			inputStream.close();
 			return klucz;
@@ -245,33 +246,18 @@ public class Szyfrowanie {
 	static Key dodajKlucz(String sciezkaDoKeyStore, String aliasHasla) {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		try {
-			System.out.println("aliash Hasla w dodaj klucz: " + aliasHasla);
 			KeyStore keyStore = KeyStore.getInstance("UBER", "BC");
-			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
-
+			InputStream inputStream = null;
 			keyStore.load(inputStream, hasloDoKeystora.toCharArray());
-
 			KeyGenerator keyGen = KeyGenerator.getInstance("ARC4", "BC");
 			Key secretKey = keyGen.generateKey();
-
-			// inputStream.close();
-			// zaladuj zawartosc keyStore
-			File keystoreFile = new File(sciezkaDoKeyStore);
-			FileInputStream in = new FileInputStream(keystoreFile);
-			keyStore.load(in, hasloDoKeystora.toCharArray());
-			// dodaj klucz
 			keyStore.setKeyEntry(aliasHasla, secretKey,
 					hasloDoKeystora.toCharArray(), null);
-			// zapisz nowy KeyStore
-			in.close();
-			// Save the new keystore contents
-			FileOutputStream out = new FileOutputStream(keystoreFile);
-			keyStore.store(out, hasloDoKeystora.toCharArray());
-			out.close();
-			// ProtectionParameter protParam = new KeyStore.PasswordProtection(
-			// hasloDoKeystora.toCharArray());
-			// keyStore.setEntry(aliasHasla, entry, protParam);
-			// inputStream.close();
+			// zapisz keyStore
+			FileOutputStream fos = new FileOutputStream(sciezkaDoKeyStore);
+			keyStore.store(fos, hasloDoKeystora.toCharArray());
+			fos.close();
+			
 			return secretKey;
 		} catch (KeyStoreException e) {
 			// TODO Auto-generated catch block
