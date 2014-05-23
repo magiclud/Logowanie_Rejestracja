@@ -166,7 +166,8 @@ public class SzyfrowanieKartyKredytowej {
 			KeyStore keyStore;
 			try {
 				keyStore = KeyStore.getInstance("UBER", "BC");
-				InputStream inputStream = null;
+				InputStream inputStream = new FileInputStream(
+						sciezkaDoKeyStore);
 				keyStore.load(inputStream, hasloDoKeystora.toCharArray());
 				KeyGenerator keyGen = KeyGenerator.getInstance("ARC4", "BC");
 				Key secretKey = keyGen.generateKey();
@@ -176,6 +177,7 @@ public class SzyfrowanieKartyKredytowej {
 				FileOutputStream fos = new FileOutputStream(
 						sciezkaDoKeyStore);
 				keyStore.store(fos, hasloDoKeystora.toCharArray());
+				inputStream.close();
 				fos.close();
 				// zappisano klucz do keystorea serwera
 			return secretKey;

@@ -50,7 +50,7 @@ public class WyszukanieUtworu extends HttpServlet {
 		String gatunek = request.getParameter("gatunek");
 		String wiadomosc = null;
 
-		if ((tytul.equals("") && wykonawca.equals("") && gatunek.equals("")) || (tytul == null && wykonawca == null && gatunek == null)) {
+		if ( (tytul == null && wykonawca == null && gatunek == null)|| (tytul.equals("") && wykonawca.equals("") && gatunek.equals("")) ) {
 			wiadomosc = "Nie podales danych do wyszukania \n";
 		} else {
 			String sciezka = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\muzyka";

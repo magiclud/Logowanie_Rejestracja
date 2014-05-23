@@ -25,7 +25,7 @@ public class ZmianaDanych extends HttpServlet {
 		super();
 	}
 
-	protected void service(HttpServletRequest request,
+	protected synchronized void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
 		String uzytkownik = (String) request.getSession().getAttribute(
@@ -42,7 +42,7 @@ public class ZmianaDanych extends HttpServlet {
 		connection = (Connection) getServletContext().getAttribute(
 				"DBConnection");
 		try {
-			if ( !login.equals("") && !login.equals(uzytkownik)) {
+			if ( !login.equals("") && !login.equals(uzytkownik)&& login!= null) {
 				String zapytanie = "SELECT login from stronainternetowa.UZYTKOWNICY_strony where login = \""
 						+ login + "\"";
 				Statement statement = connection.createStatement();

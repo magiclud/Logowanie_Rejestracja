@@ -16,6 +16,10 @@ import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -45,6 +49,7 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 		System.out
 				.println("jestem w sevice method w pobieraniu muzyki z listy 6 ");
 
+		
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition",
 				"attachment;filename=music.mp3");
@@ -52,38 +57,73 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 		String tytul = (String) request.getSession().getAttribute("tytul");
 		String uzytkownik = (String) request.getSession().getServletContext()
 				.getAttribute("user");
-		hasloDoKeystoreaSerwera = (String) request.getSession().getServletContext().getAttribute(
-				"hasloDoKeystoreaSerwera");
+		hasloDoKeystoreaSerwera = (String) request.getSession()
+				.getServletContext().getAttribute("hasloDoKeystoreaSerwera");
 
 		aliasHasla = uzytkownik;
+		
+		String message = null;
+		
+		String login = (String) request.getSession().getServletContext()
+				.getAttribute("user");
 
-		System.out.println("Pobrano z sesji tytul muzyki: " + tytul);
-		// informuje przegladarke ze system ma zamiar zwrocic plik zamiast
-		// normalnej strony html
+		Connection connection = (Connection) getServletContext().getAttribute(
+				"DBConnection");
 
-		String sciezka = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\muzyka";
-		File katalog = new File(sciezka);
-		WyszukanieUtworu plikMuzyczny = new WyszukanieUtworu();
-		String sciezkaDoPliku;
+		String zapytanie = "SELECT LiczbaLogowan from stronainternetowa.UZYTKOWNICY_strony where login = \""
+				+ login + "\"";
+		Statement statement;
+		int liczba = 0;
 		try {
-			sciezkaDoPliku = plikMuzyczny.znajdzPlikiPasujaceDoTytulu(katalog,
-					tytul);
-			System.out.println("plik muzyczny " + sciezkaDoPliku);
-			System.out.println("sciezka do keystorea "+ sciezkaDoKeyStore);
-			Key klucz = pobierzKlucz(sciezkaDoKeyStore, aliasHasla);
-			byte[] zdekodowanyPlik = przygotujPlikDoPrzeslania(sciezkaDoPliku);
-			byte[] zakodowanyPlik = zakoduj(new String(zdekodowanyPlik), klucz);
-			// byte[] zaszyfrowanyPlik= Szyfrowanie.zaszyfrowaniePliku(klucz,
-			// sciezkaDoPliku);
-			ServletOutputStream out = response.getOutputStream();
-			out.write(zakodowanyPlik);
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(zapytanie);
+			if (result.next()) {
+				liczba = result.getInt("LiczbaLogowan");
+				if (liczba > 1) {
+					System.out
+							.println("Pobrano z sesji tytul muzyki: " + tytul);
+					// informuje przegladarke ze system ma zamiar zwrocic plik
+					// zamiast
+					// normalnej strony html
 
-			out.flush();
-			out.close();
-		} catch (TagException e) {
+					String sciezka = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\muzyka";
+					File katalog = new File(sciezka);
+					WyszukanieUtworu plikMuzyczny = new WyszukanieUtworu();
+					String sciezkaDoPliku;
+					try {
+						sciezkaDoPliku = plikMuzyczny
+								.znajdzPlikiPasujaceDoTytulu(katalog, tytul);
+						System.out.println("plik muzyczny " + sciezkaDoPliku);
+						System.out.println("sciezka do keystorea "
+								+ sciezkaDoKeyStore);
+						Key klucz = pobierzKlucz(sciezkaDoKeyStore, aliasHasla);
+						byte[] zdekodowanyPlik = przygotujPlikDoPrzeslania(sciezkaDoPliku);
+						byte[] zakodowanyPlik = zakoduj(new String(
+								zdekodowanyPlik), klucz);
+						// byte[] zaszyfrowanyPlik=
+						// Szyfrowanie.zaszyfrowaniePliku(klucz,
+						// sciezkaDoPliku);
+						ServletOutputStream out = response.getOutputStream();
+						out.write(zakodowanyPlik);
+
+						out.flush();
+						out.close();
+						message = "Pobrano plik muzyczny";
+					} catch (TagException e) {
+						e.printStackTrace();
+					}
+				}else{
+					message = "Niemozliwe pobranie pliku muzycznego - nalezy uruchomic Playera";
+				}
+			}else{
+				message = "Nieudane  polaczenie z baza danych";
+			}
+
+			request.setAttribute("wynikPobierania", message);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	private byte[] przygotujPlikDoPrzeslania(String sciezkaDoPliku) {
@@ -116,7 +156,8 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
 			ks.load(inputStream, hasloDoKeystoreaSerwera.toCharArray());
-			Key klucz = ks.getKey(aliasHasla, hasloDoKeystoreaSerwera.toCharArray());
+			Key klucz = ks.getKey(aliasHasla,
+					hasloDoKeystoreaSerwera.toCharArray());
 			inputStream.close();
 			return klucz;
 		} catch (UnrecoverableKeyException | IOException | KeyStoreException

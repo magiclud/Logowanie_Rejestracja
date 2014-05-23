@@ -3,6 +3,7 @@ package pl.logowanie.net;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,7 +45,7 @@ public class WyslanieMaila extends HttpServlet {
 	// Treść wiadomości
 	private static String wiadomosc;
 
-	protected void doPost(HttpServletRequest request,
+	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  doPost method w WyslanieMaila");
 
@@ -58,10 +59,15 @@ public class WyslanieMaila extends HttpServlet {
 					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 							+ "user=root");
 
-			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY_strony where login = \""
+		/*	String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY_strony where login = \""
 					+ uzytkownik + "\" and email = \""+email+"\" ";
 			Statement statement = con.createStatement();
-			ResultSet result = statement.executeQuery(zapytanie);
+			ResultSet result = statement.executeQuery(zapytanie);*/
+			String zapytanie = "SELECT email from stronainternetowa.UZYTKOWNICY_strony where login = ? and email = ? ";
+			PreparedStatement  statement = con.prepareStatement(zapytanie);
+			statement.setString(1, uzytkownik);
+			statement.setString(2, email);
+			ResultSet result = statement.executeQuery();
 
 			if (result.next()) {
 				adresat = email;
@@ -102,15 +108,18 @@ public class WyslanieMaila extends HttpServlet {
 				// transport.close();
 				
 				//aktalizacja w bazie danych 
-				statement = con.createStatement();
+				statement = con.prepareStatement("update stronainternetowa.UZYTKOWNICY SET `HASLO` =?  where uzytkownicy.login =?");
+				statement.setString(1,wiadomosc );
+				statement.setString(2, uzytkownik);
 				// wykonanie polecenia
 				//TODO
-				statement.executeUpdate("update stronainternetowa.UZYTKOWNICY SET `HASLO` =\""
-								+ wiadomosc
-								+ "\"  where uzytkownicy.login = \""
-								+ uzytkownik
-								+ "\"");
-				
+				statement.executeUpdate();
+//				statement.executeUpdate("update stronainternetowa.UZYTKOWNICY SET `HASLO` =\""
+//								+ wiadomosc
+//								+ "\"  where uzytkownicy.login = \""
+//								+ uzytkownik
+//								+ "\"");
+//				
 				System.out.println("Wyslano e-maila");
 
 				request.setAttribute("mail",

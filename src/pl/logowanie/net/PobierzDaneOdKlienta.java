@@ -1,6 +1,7 @@
 package pl.logowanie.net;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -68,23 +69,41 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 		request.getSession().getServletContext().setAttribute("hasloDoKeystoreaSerwera",
 				hasloDoKeystoreaSerwera);
 		// zapisane klucz do keystorea serwera
-		KeyStore keyStore;
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		try {
-			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			
-			keyStore = KeyStore.getInstance("UBER", "BC");
-			InputStream inputStream = null;
+			KeyStore keyStore = KeyStore.getInstance("UBER", "BC");
+			InputStream inputStream = new FileInputStream(sciezkaDoKeystoreaSerwera);
 			keyStore.load(inputStream, hasloDoKeystoreaSerwera.toCharArray());
+			// zaladuj zawartosc keyStore
+			File keystoreFile = new File(sciezkaDoKeystoreaSerwera);
+			FileInputStream in1 = new FileInputStream(keystoreFile);
+			keyStore.load(in1,hasloDoKeystoreaSerwera.toCharArray());
+			in1.close();
+			// dodaj klucz
 			keyStore.setKeyEntry(uzytkownik, kluczUzytkownika,
 					hasloDoKeystoreaSerwera.toCharArray(), null);
-			// zapisz keyStore
-			FileOutputStream fos = new FileOutputStream(
-					sciezkaDoKeystoreaSerwera);
-			keyStore.store(fos, hasloDoKeystoreaSerwera.toCharArray());
-			fos.close();
-			// zappisano klucz do keystorea serwera
-		} catch (KeyStoreException | NoSuchProviderException
-				| NoSuchAlgorithmException | CertificateException e) {
+			// zapisz nowy KeyStore
+			// Save the new keystore contents
+			FileOutputStream out = new FileOutputStream(keystoreFile);
+			keyStore.store(out, hasloDoKeystoreaSerwera.toCharArray());
+			out.close();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -100,13 +119,13 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 			String hasloDoKeystora) {
 
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-
 		try {
 			KeyStore ks = KeyStore.getInstance("UBER", "BC");
 			InputStream inputStream = new FileInputStream(sciezkaDoKeyStore);
 			ks.load(inputStream, hasloDoKeystora.toCharArray());
-
-			return ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
+			Key klucz = ks.getKey(aliasHasla, hasloDoKeystora.toCharArray());
+			inputStream.close();
+			return klucz;
 		} catch (UnrecoverableKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,4 +150,5 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 		}
 		return null;
 	}
+
 }

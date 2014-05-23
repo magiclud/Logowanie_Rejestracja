@@ -61,7 +61,7 @@ public class PrzesylaniePliku extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (grupaUzytkownika.equals("admin")) {
+		if (grupaUzytkownika!=null &&grupaUzytkownika.equals("admin")) {
 			// checks if the request actually contains upload file
 			if (!ServletFileUpload.isMultipartContent(request)) {
 				PrintWriter writer = response.getWriter();

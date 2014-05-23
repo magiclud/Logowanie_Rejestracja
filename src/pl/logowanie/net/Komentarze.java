@@ -65,7 +65,7 @@ public class Komentarze extends HttpServlet {
 				}
 			}
 
-			if (komentarz != null) {
+			if (komentarz != null && tytul!=null && uzytkownik!= null ) {
 
 				preparedStatement = connection
 						.prepareStatement("insert into  stronainternetowa.komentarze values (default, ?, ?, ?)");

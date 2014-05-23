@@ -19,7 +19,7 @@
 				<br />Enter Password: <input name="password" type="password"><br /><br />
 				<input type="submit">
 			</form>
-			<br /> <br /> Zapomniales hasla? <br /> -> <a
+			<br /> <br /> Zapomniales hasla? <br />  <a
 				href="/Logowanie/zapomnianeHaslo.jsp">kliknij </a>a otrzymasz nowe
 			haslo na poczcie
 

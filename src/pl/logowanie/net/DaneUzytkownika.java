@@ -28,8 +28,6 @@ public class DaneUzytkownika extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  service method w DaneUzytkownika");
 		
-
-
 		String uzytkownik = (String) request.getSession().getAttribute(
 				"userZalogowany");
 		
@@ -58,7 +56,7 @@ public class DaneUzytkownika extends HttpServlet {
 			System.out.println("Email: "+ e_mail+", nrKarty: "+nrKarty);
 			String aliasHasla = uzytkownik;
 			System.out.println("Uzytkownik "+ uzytkownik + " nrKarty " + nrKarty);
-			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore2.ks";
+			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keystorePasswords.ks";
 			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty, Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
 			String numerKartyKredytowej =  new String(odszyfrowanyNumer);
 			

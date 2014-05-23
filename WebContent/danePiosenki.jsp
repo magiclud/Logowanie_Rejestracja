@@ -35,7 +35,7 @@
 
 			<form name="pobierzPlikMuzyczny" action="pobierzMuzyczke"
 				method="post">
-
+				${wynikPobierania}
 				<br /> *Pobierz: <input type="submit" name="tytul" value="${tytul}">
 				<br /> * Zostanie pobrana oplata z kart kredytowej o nr:
 				${fragmentNrKarty}

@@ -21,7 +21,7 @@ public class DanePlikuMuzycznego extends HttpServlet {
 		super();
 	}
 
-	protected void service(HttpServletRequest request,
+	protected synchronized void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Jestem w  service method w DanePlikuMuzycznego");
 
@@ -34,83 +34,87 @@ public class DanePlikuMuzycznego extends HttpServlet {
 		request.getSession().setAttribute("tytul", tytul);
 
 		ArrayList<String> poprzednieKomentarze = new ArrayList<String>();
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
 
-			// nawiazywanie polaczenia z baza danych , mozna jeszcze
-			// dodać haslo jesli potrzeba
-			Connection con = DriverManager
-					.getConnection("jdbc:mysql://localhost/stronainternetowa?"
-							+ "user=root");
+		if (tytul != null && uzytkownik != null) {
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
 
-			String zapytanie = "SELECT WYKONAWCA, gatunek from stronainternetowa.pliki_muzyczne where tytul = \""
-					+ tytul + "\" ";
-			Statement statement = con.createStatement();
-			ResultSet result = statement.executeQuery(zapytanie);
-			String wykonawca = null;
-			String gatunek = null;
-			if (result.next()) {
-				wykonawca = result.getString("wykonawca");
-				gatunek = result.getString("gatunek");
-			}
+				// nawiazywanie polaczenia z baza danych , mozna jeszcze
+				// dodać haslo jesli potrzeba
+				Connection con = DriverManager
+						.getConnection("jdbc:mysql://localhost/stronainternetowa?"
+								+ "user=root");
 
-			request.getSession().setAttribute("wykonawca", wykonawca);
-			request.getSession().setAttribute("gatunek", gatunek);
-
-			zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY_strony where login = \""
-					+ uzytkownik + "\" ";
-			statement = con.createStatement();
-			result = statement.executeQuery(zapytanie);
-			byte[] nrKarty = null;
-			if (result.next()) {
-				nrKarty = result.getBytes("karta_kredytowa");
-			}
-			String aliasHasla = uzytkownik;
-			String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore2.ks";
-			byte[] odszyfrowanyNumer = Szyfrowanie.dekodujWiadomosc(nrKarty,
-					Szyfrowanie.pobierzKlucz(sciezkaDoKeyStore, aliasHasla));
-			String numerKartyKredytowej = new String(odszyfrowanyNumer);
-			System.out.println("Nr karty kredyt. " + numerKartyKredytowej);
-
-			char[] nrKartyKred = numerKartyKredytowej.toCharArray();
-			String message = "";
-			for (int i = 0; i < nrKartyKred.length; i++) {
-				if (i >= 11) {
-					message += nrKartyKred[i];
-				} else {
-					message += "*";
+				String zapytanie = "SELECT WYKONAWCA, gatunek from stronainternetowa.pliki_muzyczne where tytul = \""
+						+ tytul + "\" ";
+				Statement statement = con.createStatement();
+				ResultSet result = statement.executeQuery(zapytanie);
+				String wykonawca = null;
+				String gatunek = null;
+				if (result.next()) {
+					wykonawca = result.getString("wykonawca");
+					gatunek = result.getString("gatunek");
 				}
-			}
-			System.out.println("Nr karty kredyt. z * " + message);
-			request.setAttribute("fragmentNrKarty", message);
 
-			zapytanie = "SELECT uzytkownik, komentarz from stronainternetowa.KOMENTARZE where tytul = \""
-					+ tytul + "\"";
-			statement = con.createStatement();
-			result = statement.executeQuery(zapytanie);
-			while (result.next()) {
-				String login = result.getString("uzytkownik") + ": ";
-				String wczesniejszyKomentarz = "      ~"
-						+ result.getString("komentarz");
-				System.out.println("Uzytk. " + login + " komen.: "
-						+ wczesniejszyKomentarz);
-				poprzednieKomentarze.add(login);
-				poprzednieKomentarze.add(wczesniejszyKomentarz);
-			}
-			if (poprzednieKomentarze.size() != 0) {
-				for (int i = 0; i < poprzednieKomentarze.size(); i++) {
-					request.getSession().setAttribute("komentarzeWbazie",
-							poprzednieKomentarze);
+				request.getSession().setAttribute("wykonawca", wykonawca);
+				request.getSession().setAttribute("gatunek", gatunek);
+
+				zapytanie = "SELECT  KARTA_KREDYTOWA from stronainternetowa.UZYTKOWNICY_strony where login = \""
+						+ uzytkownik + "\" ";
+				statement = con.createStatement();
+				result = statement.executeQuery(zapytanie);
+				byte[] nrKarty = null;
+				if (result.next()) {
+					nrKarty = result.getBytes("karta_kredytowa");
 				}
+				String aliasHasla = uzytkownik;
+				String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keystorePasswords.ks";
+				byte[] odszyfrowanyNumer = Szyfrowanie
+						.dekodujWiadomosc(nrKarty, Szyfrowanie.pobierzKlucz(
+								sciezkaDoKeyStore, aliasHasla));
+				String numerKartyKredytowej = new String(odszyfrowanyNumer);
+				System.out.println("Nr karty kredyt. " + numerKartyKredytowej);
+
+				char[] nrKartyKred = numerKartyKredytowej.toCharArray();
+				String message = "";
+				for (int i = 0; i < nrKartyKred.length; i++) {
+					if (i >= 11) {
+						message += nrKartyKred[i];
+					} else {
+						message += "*";
+					}
+				}
+				System.out.println("Nr karty kredyt. z * " + message);
+				request.setAttribute("fragmentNrKarty", message);
+
+				zapytanie = "SELECT uzytkownik, komentarz from stronainternetowa.KOMENTARZE where tytul = \""
+						+ tytul + "\"";
+				statement = con.createStatement();
+				result = statement.executeQuery(zapytanie);
+				while (result.next()) {
+					String login = result.getString("uzytkownik") + ": ";
+					String wczesniejszyKomentarz = "      ~"
+							+ result.getString("komentarz");
+					System.out.println("Uzytk. " + login + " komen.: "
+							+ wczesniejszyKomentarz);
+					poprzednieKomentarze.add(login);
+					poprzednieKomentarze.add(wczesniejszyKomentarz);
+				}
+				if (poprzednieKomentarze.size() != 0) {
+					for (int i = 0; i < poprzednieKomentarze.size(); i++) {
+						request.getSession().setAttribute("komentarzeWbazie",
+								poprzednieKomentarze);
+					}
+				}
+
+				RequestDispatcher dispatcher = request
+						.getRequestDispatcher("danePiosenki.jsp");
+				dispatcher.forward(request, response);
+
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-			RequestDispatcher dispatcher = request
-					.getRequestDispatcher("danePiosenki.jsp");
-			dispatcher.forward(request, response);
-
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }

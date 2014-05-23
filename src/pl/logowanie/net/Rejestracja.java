@@ -15,17 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Rejestracja extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	PreparedStatement preparedStatement = null;
 	Connection connection;
 	RequestDispatcher requestDispatcher;
 	String poprawnyEMail = "^(.[A-Za-z0-9\\-]*\\w)+@+([A-Za-z0-9\\-]*\\w)+(\\.[A-Za-z]*\\w)+$";
-	String poprawnyNrKartyKredytowej = "[0-9]{16}";
+	String poprawnyNrKartyKredytowej = "[0-9]+{16}";
 
-	protected void service(HttpServletRequest request,
+	protected  synchronized void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String haslo = request.getParameter("password");
@@ -67,7 +64,7 @@ public class Rejestracja extends HttpServlet {
 					preparedStatement = connection
 							.prepareStatement("insert into  stronainternetowa.UZYTKOWNICY_strony values (default, ?, ?, ?, ?, ?,  default)");
 					String aliasHasla = login;
-					String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keyStore2.ks";
+					String sciezkaDoKeyStore = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keystorePasswords.ks";
 					byte[] zaszyfrowanyNumer = Szyfrowanie
 							.zaszyfrowanieWiadomosci(Szyfrowanie.dodajKlucz(
 									sciezkaDoKeyStore, aliasHasla),
