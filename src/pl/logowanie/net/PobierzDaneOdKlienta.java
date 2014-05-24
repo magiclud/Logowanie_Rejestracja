@@ -17,6 +17,9 @@ import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +43,18 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 		System.out.println("user: " + uzytkownik + ", haslo do keystore: "
 				+ hasloDokeyStorea);
 
+		SSLServerSocketFactory sslSrvFact = (SSLServerSocketFactory) SSLServerSocketFactory
+				.getDefault();
+		int PORT_NO = 8443;
+		SSLServerSocket sSock = (SSLServerSocket) sslSrvFact
+				.createServerSocket(PORT_NO);
+		SSLSocket sslSock = (SSLSocket) sSock.accept();
+		sslSock.getSession();
+
 		int bytesRead;
 		InputStream in = request.getInputStream();
-		DataInputStream clientData = new DataInputStream(in);
+		DataInputStream clientData = new DataInputStream(
+				sslSock.getInputStream());
 		String fileName = clientData.readUTF();
 		System.out.println("nazwa pobranego pliku " + fileName);
 		String newPath = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\pobraneOdPlayera\\"
@@ -58,6 +70,7 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 		}
 		output.close();
 		in.close();
+		sslSock.close();
 
 		String message = "pobrano klucz do klienta ";
 
@@ -66,18 +79,21 @@ public class PobierzDaneOdKlienta extends HttpServlet {
 
 		String sciezkaDoKeystoreaSerwera = "D:\\Programy\\eclipseEE\\wokspace\\Logowanie\\keystoreSerwera.ks";
 		String hasloDoKeystoreaSerwera = "zamek";
-		request.getSession().getServletContext().setAttribute("hasloDoKeystoreaSerwera",
-				hasloDoKeystoreaSerwera);
+		request.getSession()
+				.getServletContext()
+				.setAttribute("hasloDoKeystoreaSerwera",
+						hasloDoKeystoreaSerwera);
 		// zapisane klucz do keystorea serwera
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		try {
 			KeyStore keyStore = KeyStore.getInstance("UBER", "BC");
-			InputStream inputStream = new FileInputStream(sciezkaDoKeystoreaSerwera);
+			InputStream inputStream = new FileInputStream(
+					sciezkaDoKeystoreaSerwera);
 			keyStore.load(inputStream, hasloDoKeystoreaSerwera.toCharArray());
 			// zaladuj zawartosc keyStore
 			File keystoreFile = new File(sciezkaDoKeystoreaSerwera);
 			FileInputStream in1 = new FileInputStream(keystoreFile);
-			keyStore.load(in1,hasloDoKeystoreaSerwera.toCharArray());
+			keyStore.load(in1, hasloDoKeystoreaSerwera.toCharArray());
 			in1.close();
 			// dodaj klucz
 			keyStore.setKeyEntry(uzytkownik, kluczUzytkownika,

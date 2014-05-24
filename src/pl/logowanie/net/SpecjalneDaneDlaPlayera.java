@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.security.KeyStore;
 import java.security.Security;
 import java.sql.Connection;
@@ -13,6 +14,9 @@ import java.sql.Statement;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -22,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class SpecjalneDaneDlaPlayera extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	static final int PORT_NO = 2000;
 
 	public SpecjalneDaneDlaPlayera() {
 		super();
@@ -77,9 +82,12 @@ public class SpecjalneDaneDlaPlayera extends HttpServlet {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-
-		ServletOutputStream con = response.getOutputStream();
-		DataOutputStream dstream = new DataOutputStream(con);
+		 SSLServerSocketFactory sslSrvFact = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+		  SSLServerSocket        sSock = (SSLServerSocket)sslSrvFact.createServerSocket(PORT_NO);
+		  SSLSocket sslSock = (SSLSocket)sSock.accept();
+			sslSock.getSession();
+		  
+		DataOutputStream dstream = new DataOutputStream( sslSock.getOutputStream());
 		System.out.println("liczba " + liczba);
 		dstream.writeInt(liczba);
 		System.out.println("login " + login);
@@ -90,6 +98,7 @@ public class SpecjalneDaneDlaPlayera extends HttpServlet {
 		// dstream.flush();
 		// System.out.println("!!!!!File " + fileName + " sent to Server.");
 		dstream.close();
+		sslSock.close();
 		request.getSession().getServletContext()
 				.setAttribute("hasloDoKeystorea", hasloDoKeystorea);
 		request.setAttribute("liczbaLogowan", "#" + liczba + "#");
@@ -98,6 +107,7 @@ public class SpecjalneDaneDlaPlayera extends HttpServlet {
 		// .getRequestDispatcher("specjalneDaneDlaKienta.jsp");
 		// requestDispatcher.forward(request, response);
 	}
+
 
 	private void readRequest(InputStream in) throws IOException {
 		System.out.println("Zadanie");
@@ -146,3 +156,4 @@ public class SpecjalneDaneDlaPlayera extends HttpServlet {
 		return sslContext;
 	}
 }
+

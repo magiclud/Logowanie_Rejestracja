@@ -50,6 +50,7 @@ public class PobieraniePlikuMuzycznegolista6 extends HttpServlet {
 				.println("jestem w sevice method w pobieraniu muzyki z listy 6 ");
 
 		
+		//TODO przekierowani do innej klasy i wysyaniem danych do klienta - albo zbudowanie servera i zaleznie od wyniku przekierowanie na odpowiednia strone
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition",
 				"attachment;filename=music.mp3");
