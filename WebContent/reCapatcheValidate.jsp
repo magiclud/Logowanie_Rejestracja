@@ -21,7 +21,7 @@
 			<%
 				String remoteAddr = request.getRemoteAddr();
 				ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-				reCaptcha.setPrivateKey("6LfwU-kSAAAAAGiis8gP7kS42ty9Wt_1euOGzj3J");
+				reCaptcha.setPrivateKey("6Lfge_QSAAAAAM2UICmv7mb_8eNd7V4yDwetUSgC");
 
 				String challenge = request
 						.getParameter("recaptcha_challenge_field");
@@ -35,6 +35,12 @@
 					out.print("Answer is wrong");
 				}
 			%>
-		
+		</div>
+		<div id="footer"
+			style="background-color: #FFA500; clear: both; text-align: center;">"Jesli
+			potrzeba jest matka wynalazkow, to zapewne zagrozenie jest matka
+			kryptoanalizy." Simon Singh -Ksiega szyfrow-</div>
+
+	</div>
 </body>
 </html>

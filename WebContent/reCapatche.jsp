@@ -21,8 +21,7 @@
 
 			<form action="reCapatcheValidate.jsp" method="post">
 				<%
-        //ReCaptcha c = ReCaptchaFactory.newReCaptcha("your_public_key", "your_private_key", false);
-        ReCaptcha captcha = ReCaptchaFactory.newReCaptcha("6Lc0e_QSAAAAAMzvm3zJWWzbkcJ4TwmZvwxJK6fT", "6Lc0e_QSAAAAABtMBUcCRfDHDATJWZ8TD104tzVr", false);
+        ReCaptcha captcha = ReCaptchaFactory.newReCaptcha("6Lfge_QSAAAAAFhyWqrSC3aafCFAFLRM9ZL1-Y0K", "6Lfge_QSAAAAAM2UICmv7mb_8eNd7V4yDwetUSgC", false);
         out.print(captcha.createRecaptchaHtml(null, null));
       %>
 				<input type="submit" value="submit" />

@@ -10,7 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.junit.Test;
+import net.tanesha.recaptcha.ReCaptcha;
 
+ import net.tanesha.recaptcha.ReCaptchaFactory;
 public class TestZapytaniaDoBazyDanych {
 
 	private Connection connect = null;
@@ -20,7 +22,8 @@ public class TestZapytaniaDoBazyDanych {
 
 	@Test
 	public void test() {
-
+		 ReCaptcha captcha = ReCaptchaFactory.newReCaptcha("6Lfge_QSAAAAAFhyWqrSC3aafCFAFLRM9ZL1-Y0K", "6Lfge_QSAAAAAM2UICmv7mb_8eNd7V4yDwetUSgC", false);
+	      
 		// zaladowanie sterownika do bazy danych
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
