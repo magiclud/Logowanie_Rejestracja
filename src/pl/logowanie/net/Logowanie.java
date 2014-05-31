@@ -129,7 +129,12 @@ public class Logowanie extends HttpServlet {
 							request.getSession().setAttribute("iloscProb",
 									ilosc);
 						} else {
+							//pierwsze nieudane logowanie 
+							//TODO
 							request.getSession().setAttribute("iloscProb", 1);
+							RequestDispatcher dispatcher = request
+									.getRequestDispatcher("reCapatche.jsp");
+							dispatcher.forward(request, response);
 						}
 						message = "Czesc " + uzytkownik
 								+ "! Twoje logowanie jest niepoprawne";
