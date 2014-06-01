@@ -25,18 +25,10 @@
 					Username: <input type="text" name="user">
 				</p>
 				<p>
-					Password: <input type="password" name="password">
+					Password:asd <input type="password" name="password">
 				</p>
 				<p>
-					<%
-						ReCaptcha captcha = ReCaptchaFactory.newReCaptcha(
-								"6Lfge_QSAAAAAFhyWqrSC3aafCFAFLRM9ZL1-Y0K",
-								"6Lfge_QSAAAAAM2UICmv7mb_8eNd7V4yDwetUSgC", false);
-						String captchaScript = captcha.createRecaptchaHtml(
-								request.getParameter("error"), null);
-						 <img src="capatchaScript" />
-						out.print(captchaScript);
-					%>
+					
 				</p>
 				<input type="submit" value="submit" />
 			</form>
