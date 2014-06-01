@@ -83,6 +83,7 @@ public class Logowanie extends HttpServlet {
 		Connection con;
 		String zapytanie;
 		ResultSet result;
+		RequestDispatcher dispatcher = null;
 
 		if (uzytkownik == null || uzytkownik.equals("")
 				|| hasloUzytkownika == null || hasloUzytkownika.equals("")) {
@@ -109,13 +110,14 @@ public class Logowanie extends HttpServlet {
 					statement = con.createStatement();
 					result = statement.executeQuery(zapytanie);
 
+					int nrLogowania = 0;
 					if (!result.next()) {
-						Integer iloscProbk = (Integer) request.getSession()
+						nrLogowania++;
+						Integer iloscProb = (Integer) request.getSession()
 								.getAttribute("iloscProb");
-
-						if (iloscProbk != null) {
-
-							int ilosc = iloscProbk;
+						
+						if (iloscProb != null) {
+							 int ilosc = iloscProb;
 							if (ilosc >= dozwolonaIloscProbLogowan - 1) {
 
 								long time = dataLogowania
@@ -129,15 +131,16 @@ public class Logowanie extends HttpServlet {
 							request.getSession().setAttribute("iloscProb",
 									ilosc);
 						} else {
-							//pierwsze nieudane logowanie 
-							//TODO
+
 							request.getSession().setAttribute("iloscProb", 1);
-							RequestDispatcher dispatcher = request
-									.getRequestDispatcher("reCapatche.jsp");
-							dispatcher.forward(request, response);
 						}
 						message = "Czesc " + uzytkownik
 								+ "! Twoje logowanie jest niepoprawne";
+						System.out.print("Ilosc logowan "+nrLogowania);
+						if (nrLogowania == 1) {
+							dispatcher = request
+									.getRequestDispatcher("reCapatche.jsp");
+						}
 					} else {
 						request.getSession().getServletContext()
 								.setAttribute("user", uzytkownik);
@@ -168,6 +171,9 @@ public class Logowanie extends HttpServlet {
 						// SpecjalneDaneDlaPlayera();
 						// infoDlaPlayera.service(request, response);
 
+						/******************************/
+						//tutaj polaczenie z klientem lista 7 - wlacz gdy potrzebne
+						/*
 						try {
 							int N = 50, L = 100, R = 2;
 							PrintWriter out = new PrintWriter(System.out);
@@ -181,7 +187,6 @@ public class Logowanie extends HttpServlet {
 									.getInstance("SSL");
 							sslContext.init(null, null, null);
 							SSLContext.getDefault();
-							/*****************************************************/
 
 							out.println("ServerJsse: SSL server context created.");
 
@@ -193,9 +198,9 @@ public class Logowanie extends HttpServlet {
 							String enabled[] = factory
 									.getSupportedCipherSuites();
 							out.println("ServerJsse: enabled cipher suites");
-//							for (int i = 0; i < enabled.length; i++)
-//								out.println(enabled[i]);
-//							out.flush();
+							// for (int i = 0; i < enabled.length; i++)
+							// out.println(enabled[i]);
+							// out.flush();
 
 							// Create an SSL session over port 8050
 							SSLServerSocket ssl_server_sock = (SSLServerSocket) factory
@@ -220,7 +225,7 @@ public class Logowanie extends HttpServlet {
 										out.println("   cipher suite:       "
 												+ session.getCipherSuite());
 									} catch (IOException se) {
-										//System.err.println(se);
+										// System.err.println(se);
 										out.println("ServerJsse: client connection refused\n"
 												+ se);
 										break;
@@ -294,22 +299,17 @@ public class Logowanie extends HttpServlet {
 								Thread.sleep(1000);
 							}
 						} catch (InterruptedException | KeyManagementException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}
+						}*/
 					}
 
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 
-				} catch (NoSuchAlgorithmException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
+					
 			} else {
 				long czekaj = czasT - dataLogowania;
 				message = "Nieporpawne logowanie, musisz poczekac " + czekaj
@@ -322,8 +322,10 @@ public class Logowanie extends HttpServlet {
 
 		request.setAttribute("wynikLogowania", message);
 
-		RequestDispatcher dispatcher = request
-				.getRequestDispatcher("index.jsp");
+		// TODO
+		if (dispatcher == null) {
+			dispatcher = request.getRequestDispatcher("index.jsp");
+		}
 		dispatcher.forward(request, response);
 	}
 
