@@ -54,8 +54,10 @@ public class Logowanie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private int dozwolonaIloscProbLogowan = 3;
-	private int czasCzekaniaGdyNieprawneLog = 30000; // w
-														// milisekundach
+	private int czasCzekaniaGdyNieprawneLog = 180000; 
+	//10 minut = 600000 milisekund, 3 minuty = 1800000 milisekund
+	private int czasDoWyswietlaniaCapatche = 600000; 
+			
 
 	public Logowanie() {
 		super();
@@ -96,9 +98,8 @@ public class Logowanie extends HttpServlet {
 			if (czasT == null || !(czasT >= dataLogowania)) {
 
 				try {
+					//nawiaz polaczenie z baza danych
 					Class.forName("com.mysql.jdbc.Driver");
-					// nawiazywanie polaczenia z baza danych , mozna jeszcze
-					// dodać haslo jesli potrzeba
 					con = DriverManager
 							.getConnection("jdbc:mysql://localhost/stronainternetowa?"
 									+ "user=root");
@@ -117,7 +118,7 @@ public class Logowanie extends HttpServlet {
 								.getAttribute("iloscProb");
 						
 						if (iloscProb != null) {
-							 int ilosc = iloscProb;
+							int ilosc = iloscProb;
 							if (ilosc >= dozwolonaIloscProbLogowan - 1) {
 
 								long time = dataLogowania
@@ -131,15 +132,22 @@ public class Logowanie extends HttpServlet {
 							request.getSession().setAttribute("iloscProb",
 									ilosc);
 						} else {
-
 							request.getSession().setAttribute("iloscProb", 1);
 						}
 						message = "Czesc " + uzytkownik
 								+ "! Twoje logowanie jest niepoprawne";
 						System.out.print("Ilosc logowan "+nrLogowania);
+						
 						if (nrLogowania == 1) {
+							System.out.println("jestem w if, powinno przekierowac na capatcha");
+							String logowanie= "bledne";
+							request.getSession().setAttribute("bledneLogowanie",
+									logowanie);
+						//wyswietlenie capatcha 
 							dispatcher = request
 									.getRequestDispatcher("reCapatche.jsp");
+//							request.getSession().setAttribute(
+//									"czasWaznosciCapatche", time);//TODO
 						}
 					} else {
 						request.getSession().getServletContext()

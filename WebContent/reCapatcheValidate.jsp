@@ -20,12 +20,16 @@
 
 			<%
 				String remoteAddr = request.getRemoteAddr();
+		//	out.println(remoteAddr);
 				ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+		//		out.println(reCaptcha);
 				reCaptcha.setPrivateKey("6Lfge_QSAAAAAM2UICmv7mb_8eNd7V4yDwetUSgC");
 
 				String challenge = request
 						.getParameter("recaptcha_challenge_field");
+		//		out.println(challenge);
 				String uresponse = request.getParameter("recaptcha_response_field");
+		//		out.println(uresponse);
 				ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(
 						remoteAddr, challenge, uresponse);
 
@@ -33,6 +37,7 @@
 					out.print("Answer was entered correctly!");
 				} else {
 					out.print("Answer is wrong");
+					
 				}
 			%>
 		</div>
